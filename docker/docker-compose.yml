@@ -1,0 +1,19 @@
+services:
+  database:
+    image: postgres:18-alpine
+    container_name: demo-db
+    restart: always
+    environment:
+      POSTGRES_USER: demouser
+      POSTGRES_PASSWORD: qwerasdf1234
+      POSTGRES_DB: demodb
+
+    volumes:
+      - demo_database_volume:/var/lib/postgresql/18/docker
+    ports:
+      - "5432:5432"
+
+
+
+volumes:
+  demo_database_volume:
