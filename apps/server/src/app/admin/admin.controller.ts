@@ -8,10 +8,10 @@ import { AdminSignInDTO } from "./dtos/admin-sign-in.dto";
 @ApiTags('Admin')
 @Controller('admins')
 export class AdminController {
-  constructor(private readonly adminService: AdminService) {};
+  constructor(private readonly adminService: AdminService) { };
 
   @Get('hello')
-  @ApiOperation({ summary: '인사말'})
+  @ApiOperation({ summary: '인사말' })
   gethello() {
     return this.adminService.getHello();
   }
@@ -26,7 +26,7 @@ export class AdminController {
     type: AdminDTO,
     isArray: true,
   })
-  async findAll() {
+  async findAll(): Promise<AdminDTO[]> {
     const admins = await this.adminService.findAll();
     return plainToInstance(AdminDTO, admins);
 
