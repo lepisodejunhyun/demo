@@ -2,44 +2,40 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
-export class FaqDTO {
+export class NoticeDTO {
     @ApiProperty({
-        description: 'FAQ 고유 식별자'
+        description: '공지사항 고유 식별자'
     })
     @Expose()
     id: string;
 
     @ApiProperty({
-        description: 'FAQ 질문'
+        description: '공지사항 제목'
     })
     @Expose()
-    question: string;
+    title: string;
 
     @ApiProperty({
-        description: 'FAQ 답변'
+        description: '공지사항 내용'
     })
     @Expose()
-    answer: string;
+    content: string;
 
     @ApiProperty({
-        description: 'FAQ 등록일시'
+        description: '공지사항 등록일시'
     })
     @Expose()
     createdAt: Date;
 
     @ApiProperty({
-        description: 'FAQ 수정일시'
+        description: '공지사항 수정일시'
     })
     @Expose()
     updatedAt: Date;
 
     @ApiProperty({
-        description: 'FAQ 삭제일시'
+        description: '공지사항 삭제일시'
     })
     @Expose()
     deletedAt: Date | null;
-
 }
-
-
-

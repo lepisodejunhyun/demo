@@ -7,9 +7,11 @@ services:
       POSTGRES_USER: demouser
       POSTGRES_PASSWORD: qwerasdf1234
       POSTGRES_DB: demodb
+      TZ: Asia/Seoul
+      PGDATA: /data/pgdata
 
     volumes:
-      - demo_database_volume:/var/lib/postgresql/18/docker
+      - demo_database_volume:/data
     ports:
       - "5432:5432"
 

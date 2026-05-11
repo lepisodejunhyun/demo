@@ -8,6 +8,9 @@ export { Api } from './api';
 
 export type { AdminDto } from './models/admin-dto';
 export type { AdminSignInDto } from './models/admin-sign-in-dto';
+export type { FaqCreateDto } from './models/faq-create-dto';
+export type { FaqDto } from './models/faq-dto';
+export type { NoticeDto } from './models/notice-dto';
 
 export type { AppControllerGetData$Params as AppControllerGetData$Params } from './fn/app/app-controller-get-data';
 export { appControllerGetData as appControllerGetData } from './fn/app/app-controller-get-data';
@@ -17,3 +20,11 @@ export type { AdminControllerFindAll$Params as AdminControllerFindAll$Params } f
 export { adminControllerFindAll as adminControllerFindAll } from './fn/admin/admin-controller-find-all';
 export type { AdminControllerSignin$Params as AdminControllerSignin$Params } from './fn/admin/admin-controller-signin';
 export { adminControllerSignin as adminControllerSignin } from './fn/admin/admin-controller-signin';
+export type { FaqControllerFindAll$Params as FaqControllerFindAll$Params } from './fn/faq/faq-controller-find-all';
+export { faqControllerFindAll as faqControllerFindAll } from './fn/faq/faq-controller-find-all';
+export type { FaqControllerCreate$Params as FaqControllerCreate$Params } from './fn/faq/faq-controller-create';
+export { faqControllerCreate as faqControllerCreate } from './fn/faq/faq-controller-create';
+export type { FaqControllerFindById$Params as FaqControllerFindById$Params } from './fn/faq/faq-controller-find-by-id';
+export { faqControllerFindById as faqControllerFindById } from './fn/faq/faq-controller-find-by-id';
+export type { NoticeControllerFindAll$Params as NoticeControllerFindAll$Params } from './fn/notice/notice-controller-find-all';
+export { noticeControllerFindAll as noticeControllerFindAll } from './fn/notice/notice-controller-find-all';

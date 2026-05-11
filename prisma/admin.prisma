@@ -1,25 +1,68 @@
-/// @id: 기본키(Primary Key)
-/// @default(uuid): 값이 없으면 자동으로 UUID 생성
-/// String: 필수값 (Not Null)
-/// String?: 선택값 (Nullable). 값이 비어있어도 저장 가능
+/// ============================================================
+/// [ Prisma 스키마 파일이란? ]
+/// 데이터베이스의 테이블 구조를 코드로 정의하는 파일.
+/// 여기서 정의한 model이 실제 PostgreSQL 테이블로 변환됨.
+/// prisma/ 폴더 아래에 기능별로 분리하여 관리 (admin.prisma, faq.prisma 등).
+/// ============================================================
 
-/// 관리자
+/// ============================================================
+/// [ 필드 타입 & 데코레이터 규칙 ]
+///
+/// 타입:
+///   String     필수값 (Not Null) — 반드시 값이 있어야 저장 가능
+///   String?    선택값 (Nullable) — 값이 비어있어도 저장 가능
+///   Int        정수 (예: 0, 1, 5)
+///   DateTime   날짜+시간 (예: 2026-05-11T10:00:00)
+///   DateTime?  선택적 날짜+시간 — null이면 "아직 없음"
+///
+/// 데코레이터:
+///   @id              기본키(Primary Key) — 각 행(row)을 고유하게 식별
+///   @default(uuid()) 값이 없으면 UUID 자동 생성
+///   @unique          중복 불가 — 같은 값의 행이 2개 이상 존재 불가
+///   @default(now())  현재 시각 자동 기록
+///   @updatedAt       데이터 수정 시 자동으로 시각 갱신
+///   @default(값)     값을 지정하지 않으면 기본값 사용
+/// ============================================================
+
+/// ============================================================
+/// [ model = 데이터베이스 테이블 ]
+/// model Admin { ... } → PostgreSQL에 "Admin" 테이블 생성.
+/// 각 필드는 테이블의 컬럼(열)이 됨.
+/// ============================================================
 model Admin {
+  /// 기본키 — 모든 테이블에 필수. uuid()로 랜덤 문자열 자동 생성.
   id          String      @id     @default(uuid())
+
+  /// 기본 정보
   name        String
-  email       String      @unique
+  email       String      @unique   /// @unique: 이메일 중복 방지. DB 레벨에서 강제.
   password    String
+
+  /// 역할 — enum(열거형)으로 정의된 값만 허용. 기본값은 '관리자'.
   role        AdminRole           @default(관리자)
 
-  failCount   Int                 @default(0)
-  lockedUntil DateTime?
-  lastLoginAt DateTime?
+  /// 보안 관련
+  failCount   Int                 @default(0)       /// 로그인 실패 횟수 (잠금 처리용)
+  lockedUntil DateTime?                              /// 계정 잠금 해제 시각. null이면 잠기지 않은 상태.
+  lastLoginAt DateTime?                              /// 마지막 로그인 시각.
 
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @default(now()) @updatedAt
+  /// 시간 관련 — 거의 모든 테이블에 공통으로 들어가는 패턴
+  createdAt   DateTime            @default(now())    /// 생성 시각 — 자동 기록
+  updatedAt   DateTime            @default(now()) @updatedAt  /// 수정 시각 — 변경 시 자동 갱신
+
+  /// [ Soft Delete 패턴 ]
+  /// 실제로 DB에서 삭제(DELETE)하지 않고, 삭제 시각을 기록.
+  /// null = 활성 상태, 값이 있으면 = 삭제된 상태.
+  /// 장점: 실수로 삭제해도 복구 가능, 삭제 이력 추적 가능.
   deletedAt   DateTime?
 }
 
+/// ============================================================
+/// [ enum이란? ]
+/// "이 필드에는 이 값들만 들어갈 수 있다"를 정의하는 타입.
+/// 문자열 자유 입력이 아니라, 미리 정해진 목록 중 하나만 선택 가능.
+/// 잘못된 값(예: '슈퍼관리자')을 넣으면 DB가 거부함.
+/// ============================================================
 enum AdminRole {
   관리자
   최고관리자
