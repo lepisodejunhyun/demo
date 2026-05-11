@@ -48,8 +48,12 @@ export const appRoutes: Route[] = [
      * path: ''       → 아무 경로 없이 접속했을 때 (예: http://localhost:4200/)
      * redirectTo     → 자동으로 이 경로로 이동시킴
      * pathMatch      → 경로 매칭 방식
-     *   'full'       → URL이 정확히 ''(빈 문자열)일 때만 리다이렉트
-     *   'prefix'     → URL이 ''로 시작하면 리다이렉트 (모든 URL이 해당되므로 위험!)
+     *   'full'       → URL이 path와 완전히 같을 때만 매칭
+     *   'prefix'     → URL이 path로 시작하기만 하면 매칭 (기본값)
+     *
+     * 주의: path: '' + redirectTo 조합에서는 반드시 'full'을 써야 함.
+     *   → 'prefix'를 쓰면 ''는 모든 URL의 접두사이므로 모든 경로가 리다이렉트되어 무한 루프 발생!
+     *   → 단, children을 가진 부모 라우트에서는 'prefix'가 정상 (자식 경로를 매칭하기 위해 필요).
      *
      * 결과: http://localhost:4200/ → http://localhost:4200/sign-in 으로 자동 이동
      */
@@ -142,9 +146,24 @@ export const appRoutes: Route[] = [
                 loadComponent: () => import('./pages/faq/faq-detail/faq-detail.page'),
             },
             {
+                path: 'faq/create',
+                data: {title: 'FAQ 등록 '},
+                loadComponent: () => import('./pages/faq/faq-form/faq-form.page'),
+            },
+            {
                 path: 'notice',
                 data: { title: '공지사항 관리' },
                 loadComponent: () => import('./pages/notice/notice.page'),
+            },
+            {
+                path: 'notice/:id',
+                data: {title: '공지사항 상세' },
+                loadComponent: () => import('./pages/notice/notice-detail/notice-detail.page'),
+            },
+            {
+                path: 'notice/create',
+                data: {title: '공지사항 등록' },
+                loadComponent: () => import('./pages/notice/notice-form/notice-form.page'),
             },
             {
                 path: 'settings',

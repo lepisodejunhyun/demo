@@ -1,8 +1,9 @@
-import { Controller, Get } from "@nestjs/common";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { NoticeService } from "./notice.service";
 import { NoticeDTO } from "./dtos/notice.dto";
 import { plainToInstance } from "class-transformer";
+import { NoticeCreateDTO } from "./notice-create.dto";
 
 @ApiTags('notice')
 @Controller('notice')
@@ -25,5 +26,39 @@ export class NoticeController {
         const notices = await this.noticeService.findAll();
 
         return plainToInstance(NoticeDTO, notices);
+    }
+
+    @Post('create')
+    @ApiOperation({
+        summary: '공지사항 신규 등록',
+        description: '공지사항을 신규 등록 합니다.',
+    })
+    @ApiOkResponse({
+        description: '공지사항 신규 등록 성공',
+        type: NoticeDTO,
+    })
+    async create(@Body() data: NoticeCreateDTO): Promise<NoticeDTO> {
+        const notice = await this.noticeService.create(data);
+
+        return plainToInstance(NoticeDTO, notice);
+    }
+
+    @Get(':id')
+    @ApiParam({
+        name: 'id',
+        type: String,
+    })
+    @ApiOperation({
+        summary: '공지사항 상세 조회',
+        description: '공지사항을 상세 조회 합니다.',
+    })
+    @ApiOkResponse({
+        description: '공지사항 상세 조회 성공',
+        type: NoticeDTO,
+    })
+    async findById(@Param('id') id: string): Promise<NoticeDTO> {
+        const notice = await this.noticeService.findById(id);
+
+        return plainToInstance(NoticeDTO, notice);
     }
 }

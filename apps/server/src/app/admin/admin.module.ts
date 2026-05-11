@@ -78,7 +78,7 @@ export class AdminModule implements OnModuleInit {
    * || '' → 환경 변수가 없으면 빈 문자열을 기본값으로 사용.
    */
   private readonly defaultAdminEmail = process.env.DEFAULT_ADMIN_USERNAME || '';
-  private readonly defaultAdminpassword = process.env.DEFAULT_ADMIN_PASSWORD || '';
+  private readonly defaultAdminPassword = process.env.DEFAULT_ADMIN_PASSWORD || '';
 
   /**
    * [ 의존성 주입 (Dependency Injection) ]
@@ -108,7 +108,7 @@ export class AdminModule implements OnModuleInit {
   async onModuleInit() {
     try {
 
-      if (!this.defaultAdminEmail || !this.defaultAdminpassword) {
+      if (!this.defaultAdminEmail || !this.defaultAdminPassword) {
         this.logger.warn('최고 관리자 이메일 또는 비밀번호가 설정되지 않았습니다. 환경 변수를 확인하세요.');
         return;
       }
@@ -133,15 +133,15 @@ export class AdminModule implements OnModuleInit {
        * 평문 비밀번호를 해시(암호화)로 변환.
        * 10 = 솔트 라운드 수 (높을수록 보안↑ 속도↓).
        * 결과: "password123" → "$2a$10$xK3v..." (복원 불가능)
-      *
-     * [ AdminRole.최고관리자 ]
-     * Prisma가 admin.prisma의 enum AdminRole을 TypeScript enum으로 자동 생성.
-     * 문자열 '최고관리자' 대신 enum을 사용하면 오타 방지 + 자동완성 지원.
-     */
+       *
+       * [ AdminRole.최고관리자 ]
+       * Prisma가 admin.prisma의 enum AdminRole을 TypeScript enum으로 자동 생성.
+       * 문자열 '최고관리자' 대신 enum을 사용하면 오타 방지 + 자동완성 지원.
+       */
       await this.prisma.admin.create({
         data: {
           email: this.defaultAdminEmail,
-          password: hashSync(this.defaultAdminpassword, 10),
+          password: hashSync(this.defaultAdminPassword, 10),
           name: '최고 관리자',
           role: AdminRole.최고관리자,
         }

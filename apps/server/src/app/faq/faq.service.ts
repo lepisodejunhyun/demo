@@ -43,7 +43,7 @@ export class FaqService {
                 question: question,
                 answer: answer,
             },
-        })
+        });
 
         return faq;
     }
@@ -54,7 +54,7 @@ export class FaqService {
                 id: id,
                 deletedAt: null,
             }
-        })
+        });
 
         if (!faq) throw new NotFoundException('FAQ를 찾을 수 없습니다.');
 
