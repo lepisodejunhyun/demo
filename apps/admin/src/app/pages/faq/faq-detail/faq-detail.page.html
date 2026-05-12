@@ -26,6 +26,10 @@
     <h2 class="text-[30px] leading-[38px] tracking-[-0.02em] font-bold text-on-surface mb-6">
         {{ faq.question }}
     </h2>
+    <div class="mb-6 flex items-center gap-4 text-xs text-on-surface-variant">
+        <span>등록일: {{ faq.createdAt | date:'yyyy.MM.dd HH:mm' }}</span>
+        <span>수정일: {{ faq.updatedAt | date:'yyyy.MM.dd HH:mm' }}</span>
+    </div>
     <div class="text-base leading-relaxed text-on-surface-variant whitespace-pre-wrap">
         {{ faq.answer }}
     </div>

@@ -8,7 +8,6 @@ import $RefParser from '@apidevtools/json-schema-ref-parser';
 import { NgOpenApiGen } from 'ng-openapi-gen';
 import { Options } from 'ng-openapi-gen/lib/options';
 
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

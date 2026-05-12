@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule, Location } from "@angular/common";
 import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
@@ -13,6 +13,7 @@ export default class NoticeFormPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly cdr = inject(ChangeDetectorRef);
+    private readonly location = inject(Location);
 
     id = input<string>();
 
@@ -75,6 +76,10 @@ export default class NoticeFormPage implements OnInit {
             });
             this.cdr.markForCheck();
         }
+    }
+
+    goBack(): void {
+        this.location.back();
     }
 
 }
