@@ -53,4 +53,31 @@ export class NoticeService {
 
         return notice;
     }
+
+    async remove(id: string): Promise<Notice> {
+        const notice = await this.prisma.notice.update({
+            where: { id: id },
+            data: { deletedAt: new Date() },
+        });
+
+        return notice;
+    }
+
+    async update(id: string, data: NoticeCreateDTO): Promise<Notice> {
+        await this.findById(id);
+
+        const { title, content } = data;
+
+        const notice = await this.prisma.notice.update({
+            where: {
+                id: id,
+            },
+            data: {
+                title: title,
+                content: content,
+            }
+        });
+
+        return notice;
+    }
 }

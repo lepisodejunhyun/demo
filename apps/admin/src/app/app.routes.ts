@@ -141,14 +141,19 @@ export const appRoutes: Route[] = [
                 loadComponent: () => import('./pages/faq/faq.page'),
             },
             {
+                path: 'faq/create',
+                data: { title: 'FAQ 등록 ' },
+                loadComponent: () => import('./pages/faq/faq-form/faq-form.page'),
+            },
+            {
+                path: 'faq/:id/edit',
+                data: { title: 'FAQ 수정' },
+                loadComponent: () => import('./pages/faq/faq-form/faq-form.page'),
+            },
+            {
                 path: 'faq/:id',
                 data: { title: 'FAQ 상세' },
                 loadComponent: () => import('./pages/faq/faq-detail/faq-detail.page'),
-            },
-            {
-                path: 'faq/create',
-                data: {title: 'FAQ 등록 '},
-                loadComponent: () => import('./pages/faq/faq-form/faq-form.page'),
             },
             {
                 path: 'notice',
@@ -156,14 +161,19 @@ export const appRoutes: Route[] = [
                 loadComponent: () => import('./pages/notice/notice.page'),
             },
             {
-                path: 'notice/:id',
-                data: {title: '공지사항 상세' },
-                loadComponent: () => import('./pages/notice/notice-detail/notice-detail.page'),
+                path: 'notice/create',
+                data: { title: '공지사항 등록' },
+                loadComponent: () => import('./pages/notice/notice-form/notice-form.page'),
             },
             {
-                path: 'notice/create',
-                data: {title: '공지사항 등록' },
+                path: 'notice/:id/edit',
+                data: { title: '공지사항 수정' },
                 loadComponent: () => import('./pages/notice/notice-form/notice-form.page'),
+            },
+            {
+                path: 'notice/:id',
+                data: { title: '공지사항 상세' },
+                loadComponent: () => import('./pages/notice/notice-detail/notice-detail.page'),
             },
             {
                 path: 'settings',

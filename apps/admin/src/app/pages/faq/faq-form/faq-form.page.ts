@@ -1,17 +1,22 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
-import { Api, faqControllerCreate } from "@api-client";
+import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Router, RouterLink } from "@angular/router";
+import { Api, faqControllerCreate, faqControllerFindById, faqControllerUpdate } from "@api-client";
 
 @Component({
     selector: 'app-faq-form',
     templateUrl: './faq-form.page.html',
-    imports: [CommonModule],
+    imports: [CommonModule, RouterLink, ReactiveFormsModule],
 })
-export default class FaqFormPage {
+export default class FaqFormPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
+    private readonly cdr = inject(ChangeDetectorRef);
+
+    id = input<string>();
+
+    get isEditMode() { return !!this.id(); }
 
     form = new FormGroup({
         question: new FormControl('', {
@@ -32,23 +37,44 @@ export default class FaqFormPage {
 
     async onSubmit() {
         if (this.form.invalid) return;
-
         const data = this.form.getRawValue();
 
         try {
-            const faq = await this.api.invoke(faqControllerCreate, {
-                body: {
-                    question: data.question,
-                    answer: data.answer,
-                },
-            });
-
-            console.log('FAQ 신규 등록 성공');
-
-            this.router.navigate(['/faq']);
-
+            if (this.isEditMode) {
+                await this.api.invoke(faqControllerUpdate, {
+                    id: this.id()!,
+                    body: {
+                        question: data.question,
+                        answer: data.answer,
+                    },
+                });
+                this.router.navigate(['/faq', this.id()]);
+            } else {
+                const faq = await this.api.invoke(faqControllerCreate, {
+                    body: {
+                        question: data.question,
+                        answer: data.answer,
+                    },
+                });
+                this.router.navigate(['/faq', faq.id]);
+            }
         } catch (error: any) {
-            this.errorMessage = error?.error?.message || 'FAQ 신규 등록에 실패했습니다.'
+            this.errorMessage = error?.error?.message || '요청이 실패했습니다.'
+        }
+    }
+
+    async ngOnInit() {
+        const id = this.id();
+
+        if (id) {
+            const faq = await this.api.invoke(faqControllerFindById, {
+                id: id,
+            });
+            this.form.patchValue({
+                question: faq.question,
+                answer: faq.answer,
+            });
+            this.cdr.markForCheck();
         }
     }
 

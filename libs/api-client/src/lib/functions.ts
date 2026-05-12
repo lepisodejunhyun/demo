@@ -15,5 +15,17 @@ export type { FaqControllerCreate$Params as FaqControllerCreate$Params } from '.
 export { faqControllerCreate as faqControllerCreate } from './fn/faq/faq-controller-create';
 export type { FaqControllerFindById$Params as FaqControllerFindById$Params } from './fn/faq/faq-controller-find-by-id';
 export { faqControllerFindById as faqControllerFindById } from './fn/faq/faq-controller-find-by-id';
+export type { FaqControllerRemove$Params as FaqControllerRemove$Params } from './fn/faq/faq-controller-remove';
+export { faqControllerRemove as faqControllerRemove } from './fn/faq/faq-controller-remove';
+export type { FaqControllerUpdate$Params as FaqControllerUpdate$Params } from './fn/faq/faq-controller-update';
+export { faqControllerUpdate as faqControllerUpdate } from './fn/faq/faq-controller-update';
 export type { NoticeControllerFindAll$Params as NoticeControllerFindAll$Params } from './fn/notice/notice-controller-find-all';
 export { noticeControllerFindAll as noticeControllerFindAll } from './fn/notice/notice-controller-find-all';
+export type { NoticeControllerCreate$Params as NoticeControllerCreate$Params } from './fn/notice/notice-controller-create';
+export { noticeControllerCreate as noticeControllerCreate } from './fn/notice/notice-controller-create';
+export type { NoticeControllerFindById$Params as NoticeControllerFindById$Params } from './fn/notice/notice-controller-find-by-id';
+export { noticeControllerFindById as noticeControllerFindById } from './fn/notice/notice-controller-find-by-id';
+export type { NoticeControllerRemove$Params as NoticeControllerRemove$Params } from './fn/notice/notice-controller-remove';
+export { noticeControllerRemove as noticeControllerRemove } from './fn/notice/notice-controller-remove';
+export type { NoticeControllerUpdate$Params as NoticeControllerUpdate$Params } from './fn/notice/notice-controller-update';
+export { noticeControllerUpdate as noticeControllerUpdate } from './fn/notice/notice-controller-update';

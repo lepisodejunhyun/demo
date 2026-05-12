@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { NoticeService } from "./notice.service";
 import { NoticeDTO } from "./dtos/notice.dto";
@@ -61,4 +61,43 @@ export class NoticeController {
 
         return plainToInstance(NoticeDTO, notice);
     }
+
+    @Delete(':id')
+    @ApiParam({
+        name: 'id',
+        type: String,
+    })
+    @ApiOperation({
+        summary: '공지사항 삭제',
+        description: '공지사항을 삭제합니다. (소프트 딜리트)',
+    })
+    @ApiOkResponse({
+        description: '공지사항 삭제 성공',
+        type: NoticeDTO,
+    })
+    async remove(@Param('id') id: string): Promise<NoticeDTO> {
+        const notice = await this.noticeService.remove(id);
+
+        return plainToInstance(NoticeDTO, notice);
+    }
+
+    @Patch(':id')
+    @ApiParam({
+        name: 'id',
+        type: String,
+    })
+    @ApiOperation({
+        summary: '공지사항 수정',
+        description: '공지사항을 수정합니다.',
+    })
+    @ApiOkResponse({
+        description: '공지사항 수정 성공',
+        type: NoticeDTO,
+    })
+    async update(@Param('id') id: string, @Body() data: NoticeCreateDTO): Promise<NoticeDTO> {
+        const notice = await this.noticeService.update(id, data);
+
+        return plainToInstance(NoticeDTO, notice);
+    }
+
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { FaqService } from "./faq.service";
 import { plainToInstance } from "class-transformer";
@@ -56,6 +56,44 @@ export class FaqController {
     })
     async findById(@Param('id') id: string): Promise<FaqDTO> {
         const faq = await this.faqService.findById(id);
+
+        return plainToInstance(FaqDTO, faq);
+    }
+
+    @Delete(':id')
+    @ApiParam({
+        name: 'id',
+        type: String,
+    })
+    @ApiOperation({
+        summary: 'FAQ 삭제',
+        description: 'FAQ를 삭제합니다. (소프트 딜리트)',
+    })
+    @ApiOkResponse({
+        description: 'FAQ 삭제 성공',
+        type: FaqDTO,
+    })
+    async remove(@Param('id') id: string): Promise<FaqDTO> {
+        const faq = await this.faqService.remove(id);
+
+        return plainToInstance(FaqDTO, faq);
+    }
+
+    @Patch(':id')
+    @ApiParam({
+        name: 'id',
+        type: String,
+    })
+    @ApiOperation({
+        summary: 'FAQ 수정',
+        description: 'FAQ를 수정합니다.',
+    })
+    @ApiOkResponse({
+        description: 'FAQ 수정 성공',
+        type: FaqDTO,
+    })
+    async update(@Param('id') id: string, @Body() data: FaqCreateDTO): Promise<FaqDTO> {
+        const faq = await this.faqService.update(id, data);
 
         return plainToInstance(FaqDTO, faq);
     }

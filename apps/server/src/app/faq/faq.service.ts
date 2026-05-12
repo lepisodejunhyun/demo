@@ -61,4 +61,31 @@ export class FaqService {
         return faq;
 
     }
+
+    async remove(id: string): Promise<Faq> {
+        const faq = await this.prisma.faq.update({
+            where: { id: id },
+            data: { deletedAt: new Date() },
+        });
+
+        return faq;
+    }
+
+    async update(id: string, data: FaqCreateDTO): Promise<Faq> {
+        await this.findById(id);
+
+        const { question, answer } = data;
+
+        const faq = await this.prisma.faq.update({
+            where: {
+                id: id,
+            },
+            data: {
+                question: question,
+                answer: answer,
+            }
+        });
+
+        return faq;
+    }
 }
