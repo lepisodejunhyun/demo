@@ -27,8 +27,13 @@ export class NoticeService {
         return notices;
     }
 
+    /**
+     * @name create
+     * @description 공지사항 신규 등록
+     * @param {NoticeCreateDTO} data
+     * @returns {Promise<Notice>}
+     */
     async create(data: NoticeCreateDTO): Promise<Notice> {
-
         const { title, content } = data;
 
         const notice = await this.prisma.notice.create({
