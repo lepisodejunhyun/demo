@@ -1,37 +1,9 @@
 @if (notice) {
-<!-- Breadcrumbs & Actions -->
-<div class="mb-8 flex items-center justify-between">
-    <nav class="flex items-center gap-2">
-        <a routerLink="/notice" class="flex items-center gap-1 text-primary font-semibold text-xs hover:underline">
-            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
-            목록으로
-        </a>
-    </nav>
-    <div class="flex items-center gap-3">
-        <button [routerLink]="['/notice', notice.id, 'edit']"
-            class="px-4 py-2 bg-surface-container-lowest border border-outline-variant text-secondary font-semibold text-xs hover:bg-surface-container-low transition-colors flex items-center gap-2 rounded cursor-pointer">
-            <span class="material-symbols-outlined text-[18px]">edit</span>
-            수정
-        </button>
-        <button (click)="onDelete()"
-            class="px-4 py-2 bg-error text-on-error font-semibold text-xs hover:opacity-90 transition-colors flex items-center gap-2 rounded cursor-pointer">
-            <span class="material-symbols-outlined text-[18px]">delete</span>
-            삭제
-        </button>
-    </div>
-</div>
+<app-detail-layout [breadcrumbs]="breadcrumbs" [title]="notice.title" [createdAt]="notice.createdAt"
+    [updatedAt]="notice.updatedAt" backLink="/notice" [editLink]="'/notice/' + notice.id + '/edit'"
+    (delete)="onDelete()">
 
-<!-- Notice Detail -->
-<div class="bg-surface-container-lowest border border-outline-variant p-8 rounded">
-    <h2 class="text-[30px] leading-[38px] tracking-[-0.02em] font-bold text-on-surface mb-6">
-        {{ notice.title }}
-    </h2>
-    <div class="mb-6 flex items-center gap-4 text-xs text-on-surface-variant">
-        <span>등록일: {{ notice.createdAt | date:'yyyy.MM.dd HH:mm' }}</span>
-        <span>수정일: {{ notice.updatedAt | date:'yyyy.MM.dd HH:mm' }}</span>
-    </div>
-    <div class="text-base leading-relaxed text-on-surface-variant whitespace-pre-wrap">
-        {{ notice.content }}
-    </div>
-</div>
+    <div class="whitespace-pre-wrap">{{ notice.content }}</div>
+
+</app-detail-layout>
 }

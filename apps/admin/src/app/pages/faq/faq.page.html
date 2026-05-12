@@ -1,62 +1,6 @@
-<!-- Page Header & Actions -->
-<div class="flex justify-between items-end mb-8">
-    <div>
-        <h2 class="text-[30px] leading-[38px] tracking-[-0.02em] font-bold text-on-surface mb-1">FAQ 관리</h2>
-        <p class="text-base leading-6 text-on-surface-variant">자주 묻는 질문을 관리합니다.</p>
-    </div>
-    <button routerLink="/faq/create"
-        class="bg-primary-container text-white px-6 py-2.5 rounded font-semibold text-xs flex items-center gap-2 hover:bg-primary transition-colors cursor-pointer">
-        <span class="material-symbols-outlined text-[18px]">add</span>
-        새 FAQ 등록
-    </button>
-</div>
+<div class="max-w-5xl mx-auto px-10 py-10">
+    <app-page-header title="FAQ 관리" description="자주 묻는 질문을 관리합니다." buttonText="새 FAQ 등록" buttonLink="/faq/create" />
 
-<!-- Data Table -->
-<div class="bg-surface-container-lowest border border-outline-variant rounded overflow-hidden">
-    <table class="w-full text-left border-collapse">
-        <!-- Table Header -->
-        <thead
-            class="bg-surface border-b border-outline-variant text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
-            <tr>
-                <th class="py-3 px-6 w-20">번호</th>
-                <th class="py-3 px-6">질문</th>
-                <th class="py-3 px-6">답변</th>
-                <th class="py-3 px-6 w-44">등록일</th>
-                <!-- <th class="py-3 px-6 w-24 text-right">Actions</th> -->
-            </tr>
-        </thead>
-
-        <!-- Table Body -->
-        <tbody class="divide-y divide-outline-variant text-sm text-on-surface">
-            @for (faq of faqs; track faq.id; let i = $index) {
-            <tr [routerLink]="['/faq', faq.id]" class="hover:bg-surface-container-low transition-colors group">
-                <td class="py-4 px-6 font-mono text-xs text-on-surface-variant">{{ faqs.length - i }}</td>
-                <td class="py-4 px-6 font-medium truncate max-w-sm">{{ faq.question }}</td>
-                <td class="py-4 px-6 text-on-surface-variant truncate max-w-xs">{{ faq.answer }}</td>
-                <td class="py-4 px-6 text-on-surface-variant">{{ faq.createdAt | date: 'yyyy.MM.dd' }}</td>
-                <!-- <td class="py-4 px-6 text-right opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div class="flex justify-end gap-2">
-                        <button class="text-on-surface-variant hover:text-primary transition-colors p-1 cursor-pointer"
-                            title="수정">
-                            <span class="material-symbols-outlined text-[20px]">edit</span>
-                        </button>
-                        <button class="text-on-surface-variant hover:text-error transition-colors p-1 cursor-pointer"
-                            title="삭제">
-                            <span class="material-symbols-outlined text-[20px]">delete</span>
-                        </button>
-                    </div>
-                </td> -->
-            </tr>
-            } @empty {
-            <tr>
-                <td class="py-12 text-center text-on-surface-variant" colspan="4">
-                    <div class="flex flex-col items-center gap-2">
-                        <span class="material-symbols-outlined text-[40px] text-outline-variant">quiz</span>
-                        <p class="text-sm">등록된 FAQ가 없습니다.</p>
-                    </div>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
+    <app-data-table [columns]="columns" [items]="faqs" [pageInfo]="pageInfo" emptyMessage="등록된 FAQ가 없습니다."
+        (rowClick)="goDetail($event)" (pageChange)="loadData($event)" />
 </div>

@@ -8,13 +8,29 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { NoticeDto } from '../../models/notice-dto';
+import { PageInfoDto } from '../../models/page-info-dto';
 
 export interface NoticeControllerFindAll$Params {
+
+/**
+ * 페이지 번호
+ */
+  page?: number;
+
+/**
+ * 페이지당 항목 수
+ */
+  limit?: number;
 }
 
-export function noticeControllerFindAll(http: HttpClient, rootUrl: string, params?: NoticeControllerFindAll$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<NoticeDto>>> {
+export function noticeControllerFindAll(http: HttpClient, rootUrl: string, params?: NoticeControllerFindAll$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+'items'?: Array<NoticeDto>;
+'pageInfo'?: PageInfoDto;
+}>> {
   const rb = new RequestBuilder(rootUrl, noticeControllerFindAll.PATH, 'get');
   if (params) {
+    rb.query('page', params.page, {});
+    rb.query('limit', params.limit, {});
   }
 
   return http.request(
@@ -22,7 +38,10 @@ export function noticeControllerFindAll(http: HttpClient, rootUrl: string, param
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<NoticeDto>>;
+      return r as StrictHttpResponse<{
+      'items'?: Array<NoticeDto>;
+      'pageInfo'?: PageInfoDto;
+      }>;
     })
   );
 }

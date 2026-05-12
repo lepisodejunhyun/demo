@@ -8,13 +8,29 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { FaqDto } from '../../models/faq-dto';
+import { PageInfoDto } from '../../models/page-info-dto';
 
 export interface FaqControllerFindAll$Params {
+
+/**
+ * 페이지 번호
+ */
+  page?: number;
+
+/**
+ * 페이지당 항목 수
+ */
+  limit?: number;
 }
 
-export function faqControllerFindAll(http: HttpClient, rootUrl: string, params?: FaqControllerFindAll$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<FaqDto>>> {
+export function faqControllerFindAll(http: HttpClient, rootUrl: string, params?: FaqControllerFindAll$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+'items'?: Array<FaqDto>;
+'pageInfo'?: PageInfoDto;
+}>> {
   const rb = new RequestBuilder(rootUrl, faqControllerFindAll.PATH, 'get');
   if (params) {
+    rb.query('page', params.page, {});
+    rb.query('limit', params.limit, {});
   }
 
   return http.request(
@@ -22,7 +38,10 @@ export function faqControllerFindAll(http: HttpClient, rootUrl: string, params?:
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<FaqDto>>;
+      return r as StrictHttpResponse<{
+      'items'?: Array<FaqDto>;
+      'pageInfo'?: PageInfoDto;
+      }>;
     })
   );
 }

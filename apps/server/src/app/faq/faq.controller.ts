@@ -1,11 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
-import { ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { FaqService } from "./faq.service";
 import { plainToInstance } from "class-transformer";
 import { FaqDTO } from "./dtos/faq.dto";
 import { FaqCreateDTO } from "./dtos/faq-create.dto";
+import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from "../../libs/dtos";
 
 @ApiTags('faq')
+@ApiExtraModels(PageInfoDTO)
 @Controller('faq')
 export class FaqController {
     constructor(private readonly faqService: FaqService) { };
@@ -13,17 +15,29 @@ export class FaqController {
     @Get()
     @ApiOperation({
         summary: 'FAQ 전체 조회',
-        description: '모든 FAQ 목록을 조회합니다.'
+        description: "FAQ 목록을 최신순으로 조회합니다."
     })
     @ApiResponse({
-        description: 'FAQ 목록 조회 성공',
-        type: FaqDTO,
-        isArray: true,
+        description: "FAQ 목록 조회 성공",
+        schema: {
+            properties: {
+                items: {
+                    type: 'array',
+                    items: { $ref: '#/components/schemas/FaqDTO' },
+                },
+                pageInfo: {
+                    $ref: '#/components/schemas/PageInfoDTO',
+                },
+            },
+        },
     })
-    async findAll(): Promise<FaqDTO[]> {
-        const faqs = await this.faqService.findAll();
+    async findAll(@Query() query: PaginationQueryDTO): Promise<OffsetPaginationDTO<FaqDTO>> {
+        const result = await this.faqService.findAll(query.page, query.limit);
 
-        return plainToInstance(FaqDTO, faqs);
+        return {
+            items: plainToInstance(FaqDTO, result.items),
+            pageInfo: result.pageInfo,
+        };
     }
 
     @Post('create')

@@ -7,3 +7,4 @@ export type { FaqCreateDto } from './models/faq-create-dto';
 export type { FaqDto } from './models/faq-dto';
 export type { NoticeCreateDto } from './models/notice-create-dto';
 export type { NoticeDto } from './models/notice-dto';
+export type { PageInfoDto } from './models/page-info-dto';

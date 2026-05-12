@@ -1,11 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
-import { ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { NoticeService } from "./notice.service";
 import { NoticeDTO } from "./dtos/notice.dto";
 import { plainToInstance } from "class-transformer";
-import { NoticeCreateDTO } from "./notice-create.dto";
+import { NoticeCreateDTO } from "./dtos/notice-create.dto";
+import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from "../../libs/dtos";
 
 @ApiTags('notice')
+@ApiExtraModels(PageInfoDTO)
 @Controller('notice')
 export class NoticeController {
     constructor(
@@ -19,13 +21,25 @@ export class NoticeController {
     })
     @ApiResponse({
         description: "공지사항 목록 조회 성공",
-        type: NoticeDTO,
-        isArray: true,
+        schema: {
+            properties: {
+                items: {
+                    type: 'array',
+                    items: { $ref: '#/components/schemas/NoticeDTO' },
+                },
+                pageInfo: {
+                    $ref: '#/components/schemas/PageInfoDTO',
+                },
+            },
+        },
     })
-    async findAll(): Promise<NoticeDTO[]> {
-        const notices = await this.noticeService.findAll();
+    async findAll(@Query() query: PaginationQueryDTO): Promise<OffsetPaginationDTO<NoticeDTO>> {
+        const result = await this.noticeService.findAll(query.page, query.limit);
 
-        return plainToInstance(NoticeDTO, notices);
+        return {
+            items: plainToInstance(NoticeDTO, result.items),
+            pageInfo: result.pageInfo,
+        };
     }
 
     @Post('create')

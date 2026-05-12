@@ -1,12 +1,13 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 import { Api, noticeControllerFindById, noticeControllerRemove, NoticeDto } from "@api-client";
+import { Breadcrumb, DetailLayoutComponent } from "../../../components/detail-layout/detail-layout.component";
 
 @Component({
     selector: 'app-notice-detail',
     templateUrl: 'notice-detail.page.html',
-    imports: [CommonModule, RouterLink]
+    imports: [CommonModule, DetailLayoutComponent]
 })
 export default class NoticeDetailPage implements OnInit {
     private readonly api = inject(Api);
@@ -16,6 +17,11 @@ export default class NoticeDetailPage implements OnInit {
     id = input<string>();
 
     notice: NoticeDto | null = null;
+
+    breadcrumbs: Breadcrumb[] = [
+        { label: '공지사항 관리', link: '/notice' },
+        { label: '상세 보기' },
+    ];
 
     async ngOnInit() {
         const id = this.id();

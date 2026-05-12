@@ -2,11 +2,12 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { Api, faqControllerFindById, faqControllerRemove, FaqDto } from "@api-client";
+import { Breadcrumb, DetailLayoutComponent } from "../../../components/detail-layout/detail-layout.component";
 
 @Component({
     selector: 'app-faq-detail',
     templateUrl: './faq-detail.page.html',
-    imports: [CommonModule, RouterLink]
+    imports: [CommonModule, DetailLayoutComponent]
 })
 export default class FaqDetailPage implements OnInit {
     private readonly api = inject(Api);
@@ -16,6 +17,11 @@ export default class FaqDetailPage implements OnInit {
     id = input<string>();
 
     faq: FaqDto | null = null;
+
+    breadcrumbs: Breadcrumb[] = [
+        { label: 'FAQ 관리', link: '/faq' },
+        { label: '상세 보기' },
+    ];
 
     async ngOnInit() {
         const id = this.id();
