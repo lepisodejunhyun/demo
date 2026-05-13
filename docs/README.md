@@ -26,6 +26,12 @@
 - 예시: "게시판" 도메인을 처음부터 만들기.
 - 필요한 15~20개 파일을 어떤 순서로 작성하는지.
 
+### 보너스 — GitHub을 더 잘 쓰기
+**[05-github-tips.md](05-github-tips.md)** — GitHub 활용 팁
+- github.dev처럼 잘 안 알려진 기능들 모음.
+- 키보드 단축키, Mermaid 다이어그램, alert 박스, Codespaces 등.
+- 학습 문서를 더 보기 좋게 만드는 데 활용.
+
 ---
 
 ## 다른 학습 자료
@@ -58,3 +64,4 @@
 | 03-architecture-decisions | 30분 | ★★☆ |
 | 01-flow-walkthrough | 40~60분 | ★★☆ |
 | 02-new-domain-recipe | 1~2시간 (실습 포함) | ★★★ |
+| 05-github-tips | 20~30분 | ★☆☆ |
