@@ -1,15 +1,17 @@
 import { CommonModule, Location } from "@angular/common";
 import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 import { Api, faqControllerCreate, faqControllerFindById, faqControllerUpdate } from "@api-client";
-import { FormLayoutComponent } from "../../../components/form-layout/form-layout.component";
-import { Breadcrumb } from "../../../components/detail-layout/detail-layout.component";
+import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
+import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
+import { FormViewComponent } from "../../../components/form-view/form-view.component";
+import { FormFieldComponent } from "../../../components/form-field/form-field.component";
 
 @Component({
     selector: 'app-faq-form',
     templateUrl: './faq-form.page.html',
-    imports: [CommonModule, ReactiveFormsModule, FormLayoutComponent],
+    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent],
 })
 export default class FaqFormPage implements OnInit {
     private readonly api = inject(Api);

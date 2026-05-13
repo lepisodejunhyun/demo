@@ -1,0 +1,7 @@
+<div>
+    <label class="block font-semibold text-xs text-on-surface-variant mb-2" [attr.for]="for() || null">
+        {{ label() }}
+    </label>
+    <ng-content />
+    <ng-content select="[slot=error]" />
+</div>

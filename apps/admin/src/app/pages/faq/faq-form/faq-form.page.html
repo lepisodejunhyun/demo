@@ -1,26 +1,23 @@
-<app-form-layout [breadcrumbs]="breadcrumbs" [title]="isEditMode ? 'FAQ 수정' : 'FAQ 작성'"
-    [description]="isEditMode ? 'FAQ 내용을 수정합니다.' : '새로운 FAQ를 작성하여 팀원들과 공유하세요.'"
-    [submitText]="isEditMode ? '수정하기' : '등록하기'" (cancel)="goBack()" (submit)="onSubmit()">
+<app-page-header [title]="isEditMode ? 'FAQ 수정' : 'FAQ 작성'">
+    <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
+    <p slot="description" class="text-base leading-6 text-on-surface-variant mt-6">
+        {{ isEditMode ? 'FAQ 내용을 수정합니다.' : '새로운 FAQ를 작성하여 팀원들과 공유하세요.' }}
+    </p>
+</app-page-header>
 
-    <form [formGroup]="form" class="space-y-6">
-        <!-- Question -->
-        <div>
-            <label class="block font-semibold text-xs text-on-surface-variant mb-2" for="faq-question">질문</label>
-            <input formControlName="question" id="faq-question" type="text" maxlength="200" placeholder="질문을 입력하세요"
-                class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
-        </div>
+<app-form-view [formGroup]="form" [submitText]="isEditMode ? '수정하기' : '등록하기'" (cancel)="goBack()"
+    (submit)="onSubmit()">
+    <app-form-field label="질문" for="faq-question">
+        <input formControlName="question" id="faq-question" type="text" maxlength="200" placeholder="질문을 입력하세요"
+            class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
+    </app-form-field>
 
-        <!-- Answer -->
-        <div>
-            <label class="block font-semibold text-xs text-on-surface-variant mb-2" for="faq-answer">답변</label>
-            <textarea formControlName="answer" id="faq-answer" rows="16" maxlength="5000" placeholder="답변을 입력하세요"
-                class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all placeholder:text-outline resize-none"></textarea>
-        </div>
+    <app-form-field label="답변" for="faq-answer">
+        <textarea formControlName="answer" id="faq-answer" rows="16" maxlength="5000" placeholder="답변을 입력하세요"
+            class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all placeholder:text-outline resize-none"></textarea>
+    </app-form-field>
 
-        <!-- Error Message -->
-        @if (errorMessage) {
-        <p class="text-error text-sm">{{ errorMessage }}</p>
-        }
-    </form>
-
-</app-form-layout>
+    @if (errorMessage) {
+    <p class="text-error text-sm">{{ errorMessage }}</p>
+    }
+</app-form-view>

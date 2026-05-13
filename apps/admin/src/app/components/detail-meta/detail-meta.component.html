@@ -1,0 +1,14 @@
+<div class="flex items-center gap-6 text-xs font-semibold text-on-surface-variant mb-10">
+    @if (createdAt()) {
+    <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+        <span>{{ createdAt() | date:'yyyy.MM.dd HH:mm' }}</span>
+    </div>
+    }
+    @if (updatedAt()) {
+    <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[18px]">edit_calendar</span>
+        <span>{{ updatedAt() | date:'yyyy.MM.dd HH:mm' }}</span>
+    </div>
+    }
+</div>

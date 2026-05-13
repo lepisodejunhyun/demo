@@ -71,6 +71,3 @@ package-lock.json
 
 # Docker
 docker/data/
-
-# docs
-docs/

@@ -1,8 +1,19 @@
 @if (faq) {
-<app-detail-layout [breadcrumbs]="breadcrumbs" [title]="faq.question" [createdAt]="faq.createdAt"
-    [updatedAt]="faq.updatedAt" backLink="/faq" [editLink]="'/faq/' + faq.id + '/edit'" (delete)="onDelete()">
+<app-page-header [title]="faq.question">
+    <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
+    <a slot="actions" [routerLink]="'/faq/' + faq.id + '/edit'"
+        class="px-4 py-2 text-primary font-semibold text-xs border border-outline-variant rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">edit</span>
+        수정
+    </a>
+    <button slot="actions" (click)="onDelete()"
+        class="px-4 py-2 text-error font-semibold text-xs border border-transparent rounded hover:bg-error-container/20 transition-colors flex items-center gap-1 cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">delete</span>
+        삭제
+    </button>
+</app-page-header>
 
+<app-detail-view [createdAt]="faq.createdAt" [updatedAt]="faq.updatedAt" backLink="/faq">
     <div class="whitespace-pre-wrap">{{ faq.answer }}</div>
-
-</app-detail-layout>
+</app-detail-view>
 }

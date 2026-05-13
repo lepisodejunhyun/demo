@@ -1,0 +1,5 @@
+<form [formGroup]="formGroup()" class="space-y-6 border-t border-outline-variant pt-10">
+    <ng-content />
+</form>
+
+<app-form-actions [submitText]="submitText()" (cancel)="onCancel()" (submit)="onSubmit()" />

@@ -2,12 +2,14 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { Api, faqControllerFindById, faqControllerRemove, FaqDto } from "@api-client";
-import { Breadcrumb, DetailLayoutComponent } from "../../../components/detail-layout/detail-layout.component";
+import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
+import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
+import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
 
 @Component({
     selector: 'app-faq-detail',
     templateUrl: './faq-detail.page.html',
-    imports: [CommonModule, DetailLayoutComponent]
+    imports: [CommonModule, RouterLink, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent]
 })
 export default class FaqDetailPage implements OnInit {
     private readonly api = inject(Api);

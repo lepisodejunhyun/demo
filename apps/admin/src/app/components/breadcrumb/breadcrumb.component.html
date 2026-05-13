@@ -1,0 +1,9 @@
+<nav class="flex items-center gap-2 text-xs font-semibold text-on-surface-variant mb-12 h-10">
+    @for (crumb of items(); track crumb.label) {
+    <a [routerLink]="crumb.link" class="transition-colors"
+        [class]="crumb.link ? 'hover:text-primary cursor-pointer' : 'text-on-surface cursor-default'">
+        {{ crumb.label }}
+    </a>
+    <span class="material-symbols-outlined text-[14px] last:hidden">chevron_right</span>
+    }
+</nav>
