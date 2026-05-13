@@ -65,7 +65,37 @@ export const appRoutes: Route[] = [
                 path: 'settings',
                 data: { title: '설정' },
                 loadComponent: () => import('./pages/setting/setting.page'),
-            }
+            },
+            {
+                path: 'event',
+                data: { title: '행사 관리' },
+                loadComponent: () => import('./pages/event/event.page'),
+            },
+            {
+                path: 'pre-registration',
+                data: { title: '사전 등록 관리' },
+                loadComponent: () => import('./pages/pre-registration/pre-registration.page'),
+            },
+            {
+                path: 'gallery',
+                data: { title: '갤러리 관리' },
+                loadComponent: () => import('./pages/gallery/gallery.page'),
+            },
+            {
+                path: 'business-info',
+                data: { title: '사업자 정보' },
+                loadComponent: () => import('./pages/business-info/business-info.page'),
+            },
+            {
+                path: 'terms',
+                data: { title: '약관 관리' },
+                loadComponent: () => import('./pages/terms/terms.page'),
+            },
+            {
+                path: 'inquiry',
+                data: { title: '1:1 문의' },
+                loadComponent: () => import('./pages/inquiry/inquiry.page'),
+            },
         ]
     }
 ];

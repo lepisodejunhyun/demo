@@ -6,9 +6,10 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { FaqModule } from './faq/faq.module';
 import { NoticeModule } from './notice/notice.module';
+import { EventModule } from './event/event.module';
 
 @Module({
-  imports: [PrismaModule, AdminModule, EventEmitterModule.forRoot(), FaqModule, NoticeModule],
+  imports: [PrismaModule, AdminModule, EventEmitterModule.forRoot(), FaqModule, NoticeModule, EventModule],
   controllers: [AppController],
   providers: [AppService],
 })

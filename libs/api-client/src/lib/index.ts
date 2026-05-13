@@ -8,6 +8,7 @@ export { Api } from './api';
 
 export type { AdminDto } from './models/admin-dto';
 export type { AdminSignInDto } from './models/admin-sign-in-dto';
+export type { EventDto } from './models/event-dto';
 export type { FaqCreateDto } from './models/faq-create-dto';
 export type { FaqDto } from './models/faq-dto';
 export type { NoticeCreateDto } from './models/notice-create-dto';
@@ -42,3 +43,5 @@ export type { NoticeControllerRemove$Params as NoticeControllerRemove$Params } f
 export { noticeControllerRemove as noticeControllerRemove } from './fn/notice/notice-controller-remove';
 export type { NoticeControllerUpdate$Params as NoticeControllerUpdate$Params } from './fn/notice/notice-controller-update';
 export { noticeControllerUpdate as noticeControllerUpdate } from './fn/notice/notice-controller-update';
+export type { EventControllerFindAll$Params as EventControllerFindAll$Params } from './fn/event/event-controller-find-all';
+export { eventControllerFindAll as eventControllerFindAll } from './fn/event/event-controller-find-all';

@@ -29,3 +29,5 @@ export type { NoticeControllerRemove$Params as NoticeControllerRemove$Params } f
 export { noticeControllerRemove as noticeControllerRemove } from './fn/notice/notice-controller-remove';
 export type { NoticeControllerUpdate$Params as NoticeControllerUpdate$Params } from './fn/notice/notice-controller-update';
 export { noticeControllerUpdate as noticeControllerUpdate } from './fn/notice/notice-controller-update';
+export type { EventControllerFindAll$Params as EventControllerFindAll$Params } from './fn/event/event-controller-find-all';
+export { eventControllerFindAll as eventControllerFindAll } from './fn/event/event-controller-find-all';

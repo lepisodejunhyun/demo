@@ -3,6 +3,7 @@
 
 export type { AdminDto } from './models/admin-dto';
 export type { AdminSignInDto } from './models/admin-sign-in-dto';
+export type { EventDto } from './models/event-dto';
 export type { FaqCreateDto } from './models/faq-create-dto';
 export type { FaqDto } from './models/faq-dto';
 export type { NoticeCreateDto } from './models/notice-create-dto';
