@@ -3,11 +3,13 @@ import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/co
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
 import { Api, faqControllerCreate, faqControllerFindById, faqControllerUpdate } from "@api-client";
+import { FormLayoutComponent } from "../../../components/form-layout/form-layout.component";
+import { Breadcrumb } from "../../../components/detail-layout/detail-layout.component";
 
 @Component({
     selector: 'app-faq-form',
     templateUrl: './faq-form.page.html',
-    imports: [CommonModule, RouterLink, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, FormLayoutComponent],
 })
 export default class FaqFormPage implements OnInit {
     private readonly api = inject(Api);
@@ -18,6 +20,8 @@ export default class FaqFormPage implements OnInit {
     id = input<string>();
 
     get isEditMode() { return !!this.id(); }
+
+    breadcrumbs: Breadcrumb[] = [];
 
     form = new FormGroup({
         question: new FormControl('', {
@@ -66,6 +70,11 @@ export default class FaqFormPage implements OnInit {
 
     async ngOnInit() {
         const id = this.id();
+
+        this.breadcrumbs = [
+            { label: 'FAQ 관리', link: '/faq' },
+            { label: this.isEditMode ? '수정' : '작성' },
+        ];
 
         if (id) {
             const faq = await this.api.invoke(faqControllerFindById, {

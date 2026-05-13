@@ -23,7 +23,6 @@ export default class NoticeFormPage implements OnInit {
 
     breadcrumbs: Breadcrumb[] = [];
 
-
     form = new FormGroup({
         title: new FormControl('', {
             validators: [
