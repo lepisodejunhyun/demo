@@ -1,0 +1,20 @@
+model SocialAccount {
+    id              String          @id     @default(uuid())
+
+    // Member 외래키
+    memberId        String
+    member          Member          @relation(fields: [memberId], references: [id])
+
+    // 소셜 제공자 정보
+    provider        AuthProvider                                    // KAKAO 등
+    providerId      String                                          // 제공자에서의 고유 ID
+
+    createdAt       DateTime        @default(now())
+
+    @@unique([provider, providerId])                                // 같은 제공자의 같은 ID 중복 방지
+}
+
+enum AuthProvider {
+    KAKAO
+    // 향후: GOOGLE, NAVER, APPLE 등
+}

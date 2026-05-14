@@ -1,0 +1,18 @@
+model Member {
+    id              String          @id     @default(uuid())
+
+    // 로그인/식별 (최소한)
+    email           String          @unique
+    password        String?                                         // 소셜 전용 회원은 null
+    name            String
+
+    // 역방향 관계
+    socialAccounts  SocialAccount[]                                 // 연결된 소셜 계정들
+    inquiries       Inquiry[]
+    preRegistrations PreRegistration[]                              // 회원이 한 사전 등록들 (비회원 등록은 여기 안 잡힘)
+
+    // 시간 / Soft Delete
+    createdAt       DateTime        @default(now())
+    updatedAt       DateTime        @default(now()) @updatedAt
+    deletedAt       DateTime?
+}

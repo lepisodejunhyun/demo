@@ -122,6 +122,21 @@ export const appRoutes: Route[] = [
                 loadComponent: () => import('./pages/terms/terms.page'),
             },
             {
+                path: 'terms/create',
+                data: { title: '약관 등록' },
+                loadComponent: () => import('./pages/terms/terms-form/terms-form.page'),
+            },
+            {
+                path: 'terms/:id/edit',
+                data: { title: '약관 수정' },
+                loadComponent: () => import('./pages/terms/terms-form/terms-form.page'),
+            },
+            {
+                path: 'terms/:id',
+                data: { title: '약관 상세' },
+                loadComponent: () => import('./pages/terms/terms-detail/terms-detail.page'),
+            },
+            {
                 path: 'inquiry',
                 data: { title: '1:1 문의' },
                 loadComponent: () => import('./pages/inquiry/inquiry.page'),

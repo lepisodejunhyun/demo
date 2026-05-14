@@ -1,0 +1,18 @@
+/// 사업자 정보 — 단일 레코드(싱글톤) 패턴
+/// 회사 정보는 시스템 전체에 하나만 존재.
+/// 처음엔 행이 없음 → 첫 PATCH 호출 시 자동 생성(upsert) → 이후엔 수정만.
+model BusinessInfo {
+    id                      String          @id     @default(uuid())
+
+    // 사업자 기본 정보 (모두 필수)
+    name                    String                                          // 상호명 (최대 50자, 코드 레벨 검증)
+    representativeName      String                                          // 대표자명 (최대 20자)
+    registrationNumber      String                                          // 사업자등록번호 (최대 12자)
+    address                 String                                          // 주소 (최대 200자)
+    contactNumber           String                                          // 연락처 (최대 20자)
+    email                   String                                          // 이메일 (최대 50자, 형식 검증)
+
+    // 시간 (Soft Delete 없음 — 단일 레코드라 삭제 안 함)
+    createdAt               DateTime        @default(now())
+    updatedAt               DateTime        @default(now()) @updatedAt
+}

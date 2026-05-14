@@ -11,6 +11,10 @@ model Event {
     operatingEndTime        String
     preRegStartDate         DateTime?
     preRegEndDate           DateTime?
+
+    // 역방향 관계
+    preRegistrations        PreRegistration[]
+
     createdAt               DateTime            @default(now())
     updatedAt               DateTime            @default(now())     @updatedAt
     deletedAt               DateTime?
