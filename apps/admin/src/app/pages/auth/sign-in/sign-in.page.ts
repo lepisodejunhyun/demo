@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angula
 import { adminControllerSignin, Api } from "@api-client";
 import { AdminStore } from "../../../stores/admin.store";
 import { Router } from "@angular/router";
+import { AuthService } from "../../../services/auth.service";
 
 @Component({
     selector: 'app-sign-in',
@@ -13,6 +14,7 @@ import { Router } from "@angular/router";
 export default class SignInPage {
     private readonly api = inject(Api);
     private readonly adminStore = inject(AdminStore);
+    private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
 
     errorMessage = '';
@@ -50,18 +52,18 @@ export default class SignInPage {
         const values = this.form.getRawValue();
 
         try {
-            const user = await this.api.invoke(adminControllerSignin, {
+            const result = await this.api.invoke(adminControllerSignin, {
                 body: {
                     email: values.email,
                     password: values.password,
                 },
             });
 
-            console.log('로그인 성공');
+            this.authService.setToken(result.accessToken);
+            this.authService.setStoredUser(result.admin);
+            this.adminStore.setUser(result.admin);
 
-            this.adminStore.setUser(user);
-
-            this.router.navigate(['/dashboard']);
+            window.location.href = '/';
         } catch (error: any) {
             this.errorMessage = error?.error?.message || '로그인에 실패했습니다.';
         }

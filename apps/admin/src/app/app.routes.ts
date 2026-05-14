@@ -1,23 +1,23 @@
 import { Route } from '@angular/router';
+import { inject } from '@angular/core';
 import DefaultLayout from './layout/default/layout.component';
+import { AuthService } from './services/auth.service';
 
 export const appRoutes: Route[] = [
     {
         path: '',
-        redirectTo: 'sign-in',
         pathMatch: 'full',
-    },
-    {
-        path: 'sign-in',
         data: { title: '관리자 로그인' },
+        canMatch: [() => !inject(AuthService).isLoggedIn()],
         loadComponent: () => import('./pages/auth/sign-in/sign-in.page'),
     },
     {
         path: '',
         component: DefaultLayout,
+        canMatch: [() => inject(AuthService).isLoggedIn()],
         children: [
             {
-                path: 'dashboard',
+                path: '',
                 data: { title: '관리자 대시보드' },
                 loadComponent: () => import('./pages/dashboard/dashboard.page'),
             },
@@ -72,6 +72,21 @@ export const appRoutes: Route[] = [
                 loadComponent: () => import('./pages/event/event.page'),
             },
             {
+                path: 'event/create',
+                data: { title: '행사 정보 등록' },
+                loadComponent: () => import('./pages/event/event-form/event-form.page'),
+            },
+            {
+                path: 'event/:id/edit',
+                data: { title: '행사 정보 수정' },
+                loadComponent: () => import('./pages/event/event-form/event-form.page'),
+            },
+            {
+                path: 'event/:id',
+                data: { title: '행사 정보 상세 조회' },
+                loadComponent: () => import('./pages/event/event-detail/event-detail.page')
+            },
+            {
                 path: 'pre-registration',
                 data: { title: '사전 등록 관리' },
                 loadComponent: () => import('./pages/pre-registration/pre-registration.page'),
@@ -80,6 +95,21 @@ export const appRoutes: Route[] = [
                 path: 'gallery',
                 data: { title: '갤러리 관리' },
                 loadComponent: () => import('./pages/gallery/gallery.page'),
+            },
+            {
+                path: 'gallery/create',
+                data: { title: '갤러리 등록' },
+                loadComponent: () => import('./pages/gallery/gallery-form/gallery-form.page'),
+            },
+            {
+                path: 'gallery/:id',
+                data: { title: '갤러리 상세 조회' },
+                loadComponent: () => import('./pages/gallery/gallery-detail/gallery-detail.page'),
+            },
+            {
+                path: 'gallery/:id/edit',
+                data: { title: '갤러리 수정' },
+                loadComponent: () => import('./pages/gallery/gallery-form/gallery-form.page'),
             },
             {
                 path: 'business-info',
@@ -96,6 +126,6 @@ export const appRoutes: Route[] = [
                 data: { title: '1:1 문의' },
                 loadComponent: () => import('./pages/inquiry/inquiry.page'),
             },
-        ]
+        ],
     }
 ];

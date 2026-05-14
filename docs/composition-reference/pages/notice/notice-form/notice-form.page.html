@@ -1,0 +1,50 @@
+<!--
+    [컴포넌트 조합 방식] notice-form.page.html
+
+    Before (래핑 방식):
+    <app-form-layout [breadcrumbs]="..." [title]="..." (submit)="..." (cancel)="...">
+        <form> ... </form>
+    </app-form-layout>
+
+    After (조합 방식):
+    독립 컴포넌트들을 나란히 배치하여 페이지를 조립
+-->
+<div class="max-w-5xl mx-auto px-10 py-10">
+    <!-- Breadcrumb -->
+    <app-breadcrumb [items]="breadcrumbs" />
+
+    <!-- 제목 + 설명 -->
+    <app-page-title
+        [title]="isEditMode ? '공지사항 수정' : '공지사항 작성'"
+        [description]="isEditMode ? '공지사항 내용을 수정합니다.' : '새로운 공지사항을 작성하여 팀원들과 공유하세요.'" />
+
+    <!-- 폼 콘텐츠 (자유롭게 배치) -->
+    <div class="border-t border-outline-variant pt-10">
+        <form [formGroup]="form" class="space-y-6">
+            <!-- Title -->
+            <div>
+                <label class="block font-semibold text-xs text-on-surface-variant mb-2" for="notice-title">제목</label>
+                <input formControlName="title" id="notice-title" type="text" maxlength="200" placeholder="제목을 입력하세요"
+                    class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
+            </div>
+
+            <!-- Content -->
+            <div>
+                <label class="block font-semibold text-xs text-on-surface-variant mb-2" for="notice-content">내용</label>
+                <textarea formControlName="content" id="notice-content" rows="16" maxlength="5000" placeholder="내용을 입력하세요"
+                    class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all placeholder:text-outline resize-none"></textarea>
+            </div>
+
+            <!-- Error Message -->
+            @if (errorMessage) {
+            <p class="text-error text-sm">{{ errorMessage }}</p>
+            }
+        </form>
+    </div>
+
+    <!-- 하단 액션 버튼 -->
+    <app-form-actions
+        [submitText]="isEditMode ? '수정하기' : '등록하기'"
+        (cancel)="goBack()"
+        (submit)="onSubmit()" />
+</div>

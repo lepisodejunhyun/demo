@@ -1,0 +1,63 @@
+@if (event) {
+<app-page-header [title]="event.title">
+    <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
+    <a slot="actions" [routerLink]="'/event/' + event.id + '/edit'"
+        class="px-4 py-2 text-primary font-semibold text-xs border border-outline-variant rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">edit</span>
+        수정
+    </a>
+    <button slot="actions" (click)="onDelete()"
+        class="px-4 py-2 text-error font-semibold text-xs border border-transparent rounded hover:bg-error-container/20 transition-colors flex items-center gap-1 cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">delete</span>
+        삭제
+    </button>
+</app-page-header>
+
+<app-detail-view [createdAt]="event.createdAt" [updatedAt]="event.updatedAt">
+    <div class="flex gap-10">
+
+        <!-- 포스터 이미지 (왼쪽) -->
+        @if (event.posterImage) {
+        <div class="shrink-0">
+            <img [src]="event.posterImage" [alt]="event.title" class="w-130 border border-outline-variant shadow-sm"
+                (error)="$any($event.target).style.display='none'" />
+        </div>
+        }
+
+        <!-- 행사 기본 정보 (오른쪽) -->
+        <div class="grid grid-cols-[140px_1fr] gap-y-6 text-base content-start flex-1">
+            <span class="font-semibold text-on-surface-variant">행사 기간</span>
+            <span>{{ event.startDate | date:'yyyy.MM.dd' }} ~ {{ event.endDate | date:'yyyy.MM.dd' }}</span>
+
+            <span class="font-semibold text-on-surface-variant">운영 시간</span>
+            <span>{{ event.operatingStartTime }} ~ {{ event.operatingEndTime }}</span>
+
+            @if (event.location) {
+            <span class="font-semibold text-on-surface-variant">행사 장소</span>
+            <span>{{ event.location }}</span>
+            }
+
+            @if (event.contactNumber) {
+            <span class="font-semibold text-on-surface-variant">연락처</span>
+            <span>{{ event.contactNumber }}</span>
+            }
+
+            @if (event.preRegStartDate && event.preRegEndDate) {
+            <span class="font-semibold text-on-surface-variant">사전 등록 기간</span>
+            <span>{{ event.preRegStartDate | date:'yyyy.MM.dd' }} ~ {{ event.preRegEndDate | date:'yyyy.MM.dd' }}</span>
+            }
+        </div>
+
+    </div>
+
+
+    <!-- 행사 상세 내용 -->
+    @if (event.content) {
+    <div class="mt-10 pt-10 border-t border-outline-variant">
+        <h3 class="text-sm font-semibold text-on-surface-variant mb-4">상세 내용</h3>
+        <div class="whitespace-pre-wrap text-base leading-relaxed">{{ event.content }}</div>
+    </div>
+    }
+
+</app-detail-view>
+}

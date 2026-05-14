@@ -1,0 +1,31 @@
+<!--
+    [컴포넌트 조합 방식] notice-detail.page.html
+
+    Before (래핑 방식):
+    <app-detail-layout [breadcrumbs]="..." [title]="..." ...>
+        콘텐츠
+    </app-detail-layout>
+
+    After (조합 방식):
+    독립 컴포넌트들을 나란히 배치하여 페이지를 조립
+-->
+@if (notice) {
+<div class="max-w-5xl mx-auto px-10 py-10">
+    <!-- Breadcrumb + Actions를 나란히 배치 -->
+    <div class="flex justify-between items-center">
+        <app-breadcrumb [items]="breadcrumbs" />
+        <app-detail-actions [editLink]="'/notice/' + notice.id + '/edit'" (delete)="onDelete()" />
+    </div>
+
+    <!-- 제목 + 날짜 메타정보 -->
+    <app-page-title [title]="notice.title" [createdAt]="notice.createdAt" [updatedAt]="notice.updatedAt" />
+
+    <!-- 콘텐츠 (자유롭게 배치) -->
+    <div class="border-t border-outline-variant pt-10 text-base leading-relaxed text-secondary">
+        <div class="whitespace-pre-wrap">{{ notice.content }}</div>
+    </div>
+
+    <!-- 하단 네비게이션 -->
+    <app-back-link link="/notice" />
+</div>
+}

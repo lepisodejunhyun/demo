@@ -1,0 +1,60 @@
+<!-- Card Grid -->
+<div class="grid gap-6"
+    [ngStyle]="{ 'grid-template-columns': 'repeat(' + columns() + ', minmax(0, 1fr))' }">
+    @for (item of items(); track $index) {
+    <div (click)="onCardClick(item)"
+        class="group overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer">
+
+        <!-- 이미지 영역 -->
+        <div class="aspect-[4/3] overflow-hidden bg-surface-container">
+            @if (getValue(item, config().imageField)) {
+            <img [src]="getValue(item, config().imageField)" [alt]="getValue(item, config().titleField)"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+            } @else {
+            <div class="w-full h-full flex items-center justify-center">
+                <span class="material-symbols-outlined text-5xl text-outline-variant">image</span>
+            </div>
+            }
+        </div>
+
+        <!-- 정보 영역 -->
+        <div class="p-4">
+            <h3 class="font-semibold text-sm text-on-surface truncate">{{ getValue(item, config().titleField) }}</h3>
+            @if (config().dateField && getValue(item, config().dateField!)) {
+            <p class="text-xs text-outline mt-1.5">{{ getValue(item, config().dateField!) | date: 'yyyy.MM.dd' }}</p>
+            }
+        </div>
+    </div>
+    } @empty {
+    <div class="col-span-full py-20 text-center text-on-surface-variant"
+        [ngStyle]="{ 'grid-column': 'span ' + columns() }">
+        <div class="flex flex-col items-center gap-3">
+            <span class="material-symbols-outlined text-[48px] text-outline-variant">{{ emptyIcon() }}</span>
+            <p class="text-sm">{{ emptyMessage() }}</p>
+        </div>
+    </div>
+    }
+</div>
+
+<!-- Pagination -->
+@if (pageInfo() && pageInfo()!.totalPages > 1) {
+<div class="flex justify-center items-center gap-2 mt-10">
+    <button (click)="onPageChange(pageInfo()!.page - 1)" [disabled]="pageInfo()!.page === 1"
+        class="px-3 py-2 text-xs rounded border border-outline-variant hover:bg-surface-container-low disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+    </button>
+
+    @for (p of pages; track p) {
+    <button (click)="onPageChange(p)" class="px-3 py-2 text-xs rounded cursor-pointer" [class]="p === pageInfo()!.page
+            ? 'bg-primary text-on-primary font-semibold'
+            : 'border border-outline-variant hover:bg-surface-container-low'">
+        {{ p }}
+    </button>
+    }
+
+    <button (click)="onPageChange(pageInfo()!.page + 1)" [disabled]="pageInfo()!.page === pageInfo()!.totalPages"
+        class="px-3 py-2 text-xs rounded border border-outline-variant hover:bg-surface-container-low disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+    </button>
+</div>
+}

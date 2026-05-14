@@ -1,0 +1,9 @@
+model Attachment {
+    id         String   @id @default(uuid())
+    url        String
+    fileName   String?
+    sortOrder  Int      @default(0)
+    entityType String
+    entityId   String
+    createdAt  DateTime @default(now())
+}

@@ -7,12 +7,12 @@
 
 <app-form-view [formGroup]="form" [submitText]="isEditMode ? '수정하기' : '등록하기'" (cancel)="goBack()"
     (submit)="onSubmit()">
-    <app-form-field label="제목" for="notice-title">
+    <app-form-field label="제목" for="notice-title" [required]="true">
         <input formControlName="title" id="notice-title" type="text" maxlength="200" placeholder="제목을 입력하세요"
             class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
     </app-form-field>
 
-    <app-form-field label="내용" for="notice-content">
+    <app-form-field label="내용" for="notice-content" [required]="true">
         <textarea formControlName="content" id="notice-content" rows="16" maxlength="5000" placeholder="내용을 입력하세요"
             class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all placeholder:text-outline resize-none"></textarea>
     </app-form-field>

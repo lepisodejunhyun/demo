@@ -1,0 +1,10 @@
+<div class="flex items-center justify-end gap-3 pt-8 mt-8 border-t border-outline-variant">
+    <button type="button" (click)="onCancel()"
+        class="px-6 py-2.5 rounded border border-outline-variant text-secondary font-semibold text-xs hover:bg-surface-container-low transition-colors cursor-pointer">
+        취소
+    </button>
+    <button type="button" (click)="onSubmit()"
+        class="px-6 py-2.5 rounded bg-primary-container text-white font-semibold text-xs hover:opacity-90 active:scale-[0.98] transition-all cursor-pointer">
+        {{ submitText() }}
+    </button>
+</div>

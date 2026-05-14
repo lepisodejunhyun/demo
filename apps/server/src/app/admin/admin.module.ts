@@ -5,11 +5,21 @@ import { PrismaService } from "../../prisma/prisma.service";
 import { hashSync } from "bcryptjs"
 import { AdminRole } from '@prisma/client';
 import { AdminListener } from "./admin.listener";
+import { JwtModule } from "@nestjs/jwt";
+import { PassportModule } from "@nestjs/passport";
+import { JwtStrategy } from "./strategies/jwt.strategy";
 
 @Module({
-  imports: [],
+  imports: [
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || 'default-secret-key',
+      signOptions: { expiresIn: '1h' },
+    }),
+  ],
   controllers: [AdminController],
-  providers: [AdminService, AdminListener],
+  providers: [AdminService, AdminListener, JwtStrategy],
+  exports: [JwtModule, PassportModule],
 })
 export class AdminModule implements OnModuleInit {
   private readonly logger = new Logger(AdminModule.name);

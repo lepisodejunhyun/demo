@@ -1,13 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { NoticeService } from "./notice.service";
 import { NoticeDTO } from "./dtos/notice.dto";
 import { plainToInstance } from "class-transformer";
 import { NoticeCreateDTO } from "./dtos/notice-create.dto";
 import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from "../../libs/dtos";
+import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 
 @ApiTags('notice')
 @ApiExtraModels(PageInfoDTO)
+@UseGuards(JwtAuthGuard)
 @Controller('notice')
 export class NoticeController {
     constructor(

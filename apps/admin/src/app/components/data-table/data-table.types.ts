@@ -1,6 +1,6 @@
 export interface ColumnDef {
     field: string;
-    name: string;
+    name?: string;
     type?: 'text' | 'date' | 'number';
     dateFormat?: string;
     truncate?: boolean;

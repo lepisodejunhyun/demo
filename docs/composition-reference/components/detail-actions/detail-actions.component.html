@@ -1,0 +1,15 @@
+<!-- Top Actions (수정/삭제) -->
+<div class="flex items-center gap-2">
+    @if (editLink()) {
+    <button [routerLink]="editLink()"
+        class="px-4 py-2 text-primary font-semibold text-xs border border-outline-variant rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">edit</span>
+        수정
+    </button>
+    }
+    <button (click)="onDelete()"
+        class="px-4 py-2 text-error font-semibold text-xs border border-transparent rounded hover:bg-error-container/20 transition-colors flex items-center gap-1 cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">delete</span>
+        삭제
+    </button>
+</div>

@@ -7,12 +7,12 @@
 
 <app-form-view [formGroup]="form" [submitText]="isEditMode ? '수정하기' : '등록하기'" (cancel)="goBack()"
     (submit)="onSubmit()">
-    <app-form-field label="질문" for="faq-question">
+    <app-form-field label="질문" for="faq-question" [required]="true">
         <input formControlName="question" id="faq-question" type="text" maxlength="200" placeholder="질문을 입력하세요"
             class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
     </app-form-field>
 
-    <app-form-field label="답변" for="faq-answer">
+    <app-form-field label="답변" for="faq-answer" [required]="true">
         <textarea formControlName="answer" id="faq-answer" rows="16" maxlength="5000" placeholder="답변을 입력하세요"
             class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all placeholder:text-outline resize-none"></textarea>
     </app-form-field>

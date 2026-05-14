@@ -7,14 +7,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AdminDto } from '../../models/admin-dto';
 import { AdminSignInDto } from '../../models/admin-sign-in-dto';
+import { SignInResponseDto } from '../../models/sign-in-response-dto';
 
 export interface AdminControllerSignin$Params {
       body: AdminSignInDto
 }
 
-export function adminControllerSignin(http: HttpClient, rootUrl: string, params: AdminControllerSignin$Params, context?: HttpContext): Observable<StrictHttpResponse<AdminDto>> {
+export function adminControllerSignin(http: HttpClient, rootUrl: string, params: AdminControllerSignin$Params, context?: HttpContext): Observable<StrictHttpResponse<SignInResponseDto>> {
   const rb = new RequestBuilder(rootUrl, adminControllerSignin.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
@@ -25,7 +25,7 @@ export function adminControllerSignin(http: HttpClient, rootUrl: string, params:
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<AdminDto>;
+      return r as StrictHttpResponse<SignInResponseDto>;
     })
   );
 }

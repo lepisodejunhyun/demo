@@ -3,9 +3,14 @@
 
 export type { AdminDto } from './models/admin-dto';
 export type { AdminSignInDto } from './models/admin-sign-in-dto';
+export type { AttachmentDto } from './models/attachment-dto';
+export type { EventCreateDto } from './models/event-create-dto';
 export type { EventDto } from './models/event-dto';
 export type { FaqCreateDto } from './models/faq-create-dto';
 export type { FaqDto } from './models/faq-dto';
+export type { GalleryCreateDto } from './models/gallery-create-dto';
+export type { GalleryDto } from './models/gallery-dto';
 export type { NoticeCreateDto } from './models/notice-create-dto';
 export type { NoticeDto } from './models/notice-dto';
 export type { PageInfoDto } from './models/page-info-dto';
+export type { SignInResponseDto } from './models/sign-in-response-dto';

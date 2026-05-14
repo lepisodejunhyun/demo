@@ -1,0 +1,51 @@
+@if (gallery) {
+<app-page-header [title]="gallery.title">
+    <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
+    <a slot="actions" [routerLink]="'/gallery/' + gallery.id + '/edit'"
+        class="px-4 py-2 text-primary font-semibold text-xs border border-outline-variant rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">edit</span>
+        수정
+    </a>
+    <button slot="actions" (click)="onDelete()"
+        class="px-4 py-2 text-error font-semibold text-xs border border-transparent rounded hover:bg-error-container/20 transition-colors flex items-center gap-1 cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">delete</span>
+        삭제
+    </button>
+</app-page-header>
+
+<app-detail-view [createdAt]="gallery.createdAt" [updatedAt]="gallery.updatedAt">
+
+    <!-- 이미지 그리드 -->
+    @if (gallery.images && gallery.images.length > 0) {
+    <div class="grid grid-cols-4 gap-4">
+        @for (img of gallery.images; track img.id) {
+        <div (click)="openImage(img.url)" class="aspect-[4/3] overflow-hidden bg-surface-container cursor-pointer">
+            <img [src]="img.url" [alt]="gallery.title"
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+        </div>
+        }
+    </div>
+    } @else {
+    <div class="py-16 text-center text-on-surface-variant">
+        <span class="material-symbols-outlined text-[48px] text-outline-variant">photo_library</span>
+        <p class="text-sm mt-3">등록된 이미지가 없습니다.</p>
+    </div>
+    }
+
+    <!-- 본문 내용 -->
+    @if (gallery.content) {
+    <div class="mt-10 pt-10 border-t border-outline-variant">
+        <h3 class="text-sm font-semibold text-on-surface-variant mb-4">상세 내용</h3>
+        <div class="whitespace-pre-wrap text-base leading-relaxed">{{ gallery.content }}</div>
+    </div>
+    }
+
+</app-detail-view>
+
+<!-- 이미지 확대 보기 -->
+@if (selectedImage) {
+<div (click)="closeImage()" class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center cursor-pointer">
+    <img [src]="selectedImage" class="max-w-[90vw] max-h-[90vh] object-contain" />
+</div>
+}
+}

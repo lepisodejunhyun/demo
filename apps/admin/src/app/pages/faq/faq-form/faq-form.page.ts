@@ -50,18 +50,12 @@ export default class FaqFormPage implements OnInit {
             if (this.isEditMode) {
                 await this.api.invoke(faqControllerUpdate, {
                     id: this.id()!,
-                    body: {
-                        question: data.question,
-                        answer: data.answer,
-                    },
+                    body: data,
                 });
                 this.router.navigate(['/faq', this.id()]);
             } else {
                 const faq = await this.api.invoke(faqControllerCreate, {
-                    body: {
-                        question: data.question,
-                        answer: data.answer,
-                    },
+                    body: data,
                 });
                 this.router.navigate(['/faq', faq.id]);
             }
@@ -80,12 +74,9 @@ export default class FaqFormPage implements OnInit {
 
         if (id) {
             const faq = await this.api.invoke(faqControllerFindById, {
-                id: id,
+                id,
             });
-            this.form.patchValue({
-                question: faq.question,
-                answer: faq.answer,
-            });
+            this.form.patchValue(faq);
             this.cdr.markForCheck();
         }
     }

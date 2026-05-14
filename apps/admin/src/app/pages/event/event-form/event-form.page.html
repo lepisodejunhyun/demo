@@ -1,0 +1,120 @@
+<app-page-header [title]="isEditMode ? '행사 정보 수정' : '행사 정보 등록'">
+    <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
+    <p slot="description" class="text-base leading-6 text-on-surface-variant mt-6">
+        {{ isEditMode ? '행사 정보를 수정합니다.' : '새로운 행사 정보를 등록합니다.' }}
+    </p>
+</app-page-header>
+
+<app-form-view [formGroup]="form" [submitText]="isEditMode ? '수정하기' : '등록하기'" (cancel)="goBack()" (submit)="onSubmit()">
+
+    <!-- 행사명 -->
+    <app-form-field label="행사명" for="event-title" [required]="true">
+        <input formControlName="title" id="event-title" type="text" maxlength="200" placeholder="행사명을 입력하세요"
+            class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
+    </app-form-field>
+
+    <!-- 행사 내용 -->
+    <app-form-field label="행사 내용" for="event-content" [required]="true">
+        <textarea formControlName="content" id="event-content" rows="10" maxlength="5000" placeholder="행사 내용을 입력하세요"
+            class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all placeholder:text-outline resize-none"></textarea>
+    </app-form-field>
+
+    <!-- 행사 기간 (2열) -->
+    <div class="grid grid-cols-2 gap-4">
+        <app-form-field label="행사 시작일" for="event-start-date" [required]="true">
+            <input formControlName="startDate" id="event-start-date" type="date"
+                (click)="$any($event.target).showPicker()"
+                class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all cursor-pointer" />
+        </app-form-field>
+
+        <app-form-field label="행사 종료일" for="event-end-date" [required]="true">
+            <input formControlName="endDate" id="event-end-date" type="date" (click)="$any($event.target).showPicker()"
+                class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all cursor-pointer" />
+        </app-form-field>
+    </div>
+
+    <!-- 운영 시간 (2열) -->
+    <div class="grid grid-cols-2 gap-4">
+        <app-form-field label="운영 시작 시간" for="event-start-time" [required]="true">
+            <input formControlName="operatingStartTime" id="event-start-time" type="time"
+                (click)="$any($event.target).showPicker()"
+                class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all cursor-pointer" />
+        </app-form-field>
+
+        <app-form-field label="운영 종료 시간" for="event-end-time" [required]="true">
+            <input formControlName="operatingEndTime" id="event-end-time" type="time"
+                (click)="$any($event.target).showPicker()"
+                class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all cursor-pointer" />
+        </app-form-field>
+    </div>
+
+    <!-- 장소 & 연락처 (2열) -->
+    <div class="grid grid-cols-2 gap-4">
+        <app-form-field label="행사 장소" for="event-location">
+            <input formControlName="location" id="event-location" type="text" maxlength="200" placeholder="행사 장소를 입력하세요"
+                class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
+        </app-form-field>
+
+        <app-form-field label="연락처" for="event-contact">
+            <input formControlName="contactNumber" id="event-contact" type="text" maxlength="13"
+                (input)="onPhoneInput($event)" placeholder="연락처를 입력하세요"
+                class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
+        </app-form-field>
+    </div>
+
+    <!-- 사전 등록 기간 (2열) -->
+    <div class="grid grid-cols-2 gap-4">
+        <app-form-field label="사전 등록 시작일" for="event-prereg-start">
+            <input formControlName="preRegStartDate" id="event-prereg-start" type="date"
+                (click)="$any($event.target).showPicker()"
+                class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all cursor-pointer" />
+        </app-form-field>
+
+        <app-form-field label="사전 등록 종료일" for="event-prereg-end">
+            <input formControlName="preRegEndDate" id="event-prereg-end" type="date"
+                (click)="$any($event.target).showPicker()"
+                class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all cursor-pointer" />
+        </app-form-field>
+    </div>
+
+    <!-- 포스터 이미지 (선택) -->
+    <app-form-field label="포스터 이미지" for="event-poster">
+        <div class="flex items-start gap-6">
+            <!-- 미리보기 영역 -->
+            <div
+                class="w-40 h-52 rounded-lg border-2 border-dashed border-outline-variant flex items-center justify-center overflow-hidden bg-surface-container shrink-0">
+                @if (imagePreview) {
+                <img [src]="imagePreview" alt="포스터 미리보기" class="w-full h-full object-cover" />
+                } @else {
+                <div class="text-center text-outline">
+                    <span class="material-symbols-outlined text-3xl">image</span>
+                    <p class="text-xs mt-1">미리보기</p>
+                </div>
+                }
+            </div>
+
+            <!-- 업로드 버튼 영역 -->
+            <div class="flex flex-col gap-2">
+                <label for="event-poster"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-container-highest text-on-surface rounded font-medium text-sm cursor-pointer hover:bg-outline-variant transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">upload</span>
+                    이미지 선택
+                </label>
+                <input id="event-poster" type="file" accept="image/*" (change)="onFileSelected($event)"
+                    (cancel)="$event.stopPropagation()" class="hidden" />
+                <p class="text-xs text-outline">JPG, PNG, WebP (최대 5MB)</p>
+
+                @if (uploading) {
+                <p class="text-sm text-primary font-medium flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
+                    업로드 중...
+                </p>
+                }
+            </div>
+        </div>
+    </app-form-field>
+
+    @if (errorMessage) {
+    <p class="text-error text-sm">{{ errorMessage }}</p>
+    }
+</app-form-view>

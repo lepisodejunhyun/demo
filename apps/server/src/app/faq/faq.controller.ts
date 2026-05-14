@@ -1,13 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { FaqService } from "./faq.service";
 import { plainToInstance } from "class-transformer";
 import { FaqDTO } from "./dtos/faq.dto";
 import { FaqCreateDTO } from "./dtos/faq-create.dto";
 import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from "../../libs/dtos";
+import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 
 @ApiTags('faq')
 @ApiExtraModels(PageInfoDTO)
+@UseGuards(JwtAuthGuard)
 @Controller('faq')
 export class FaqController {
     constructor(private readonly faqService: FaqService) { };

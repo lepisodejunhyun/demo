@@ -10,5 +10,4 @@ import { BackButtonComponent } from "../back-button/back-button.component";
 export class DetailViewComponent {
     createdAt = input<string>('');
     updatedAt = input<string>('');
-    backLink = input.required<string>();
 }

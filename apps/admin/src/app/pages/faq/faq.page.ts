@@ -9,7 +9,7 @@ import { ColumnDef, PageInfo } from "../../components/data-table/data-table.type
 @Component({
     selector: 'app-faq',
     templateUrl: './faq.page.html',
-    imports: [CommonModule, PageHeaderComponent, DataTableComponent],
+    imports: [CommonModule, PageHeaderComponent, DataTableComponent, RouterLink],
 })
 export default class FaqPage implements OnInit {
 
