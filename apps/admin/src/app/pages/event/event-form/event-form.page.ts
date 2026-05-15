@@ -4,10 +4,35 @@ import { PageHeaderComponent } from "../../../components/page-header/page-header
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { FormViewComponent } from "../../../components/form-view/form-view.component";
 import { FormFieldComponent } from "../../../components/form-field/form-field.component";
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from "@angular/forms";
 import { Api, eventControllerCreate, eventControllerFindById, eventControllerUpdate } from "@api-client";
 import { Router } from "@angular/router";
 import { SupabaseService } from "../../../services/supabase.service";
+import { formatPhoneNumber } from "../../../shared/utils/format-phone";
+
+function eventDateRangeValidator(control: AbstractControl): ValidationErrors | null {
+    const startDate = control.get('startDate')?.value;
+    const endDate = control.get('endDate')?.value;
+    const preRegStartDate = control.get('preRegStartDate')?.value;
+    const preRegEndDate = control.get('preRegEndDate')?.value;
+
+    const errors: ValidationErrors = {};
+
+    if (startDate && endDate && endDate < startDate) {
+        errors['endDateBeforeStart'] = true;
+    }
+
+    if (preRegEndDate) {
+        if (preRegStartDate && preRegEndDate < preRegStartDate) {
+            errors['preRegEndBeforeStart'] = true;
+        }
+        if (startDate && preRegEndDate > startDate) {
+            errors['preRegEndAfterEventStart'] = true;
+        }
+    }
+
+    return Object.keys(errors).length > 0 ? errors : null;
+}
 
 @Component({
     selector: 'app-event-form',
@@ -37,12 +62,14 @@ export default class EventFormPage implements OnInit {
         title: new FormControl('', {
             validators: [
                 Validators.required,
+                Validators.maxLength(100),
             ],
             nonNullable: true,
         }),
         content: new FormControl('', {
             validators: [
                 Validators.required,
+                Validators.maxLength(2000),
             ],
             nonNullable: true,
         }),
@@ -71,17 +98,32 @@ export default class EventFormPage implements OnInit {
             nonNullable: true,
         }),
         posterImage: new FormControl<string | null>(null),
-        location: new FormControl<string | null>(null),
-        contactNumber: new FormControl<string | null>(null),
+        location: new FormControl<string | null>(null, [Validators.maxLength(200)]),
+        contactNumber: new FormControl<string | null>(null, [Validators.maxLength(13)]),
         preRegStartDate: new FormControl<string | null>(null),
         preRegEndDate: new FormControl<string | null>(null),
-    });
+    }, { validators: eventDateRangeValidator });
 
     onFileSelected(event: Event) {
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0];
         if (!file) return;
 
+        const allowedTypes = ['image/jpeg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+            this.errorMessage = '이미지는 JPG, PNG 형식만 업로드할 수 있습니다.';
+            input.value = '';
+            return;
+        }
+
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+            this.errorMessage = '이미지 파일 크기는 최대 5MB까지 업로드할 수 있습니다.';
+            input.value = '';
+            return;
+        }
+
+        this.errorMessage = '';
         this.selectedFile = file;
         this.imagePreview = URL.createObjectURL(file);
         this.cdr.markForCheck();
@@ -89,16 +131,8 @@ export default class EventFormPage implements OnInit {
 
     onPhoneInput(event: Event) {
         const input = event.target as HTMLInputElement;
-        let value = input.value.replace(/\D/g, '');
-
-        if (value.length > 11) value = value.slice(0, 11);
-
-        if (value.length > 7) {
-            value = `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7)}`;
-        } else if (value.length > 3) {
-            value = `${value.slice(0, 3)}-${value.slice(3)}`;
-        }
-        this.form.patchValue({ contactNumber: value });
+        const formatted = formatPhoneNumber(input.value);
+        this.form.patchValue({ contactNumber: formatted });
     }
 
     async onSubmit() {

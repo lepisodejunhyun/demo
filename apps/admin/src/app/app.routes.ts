@@ -1,23 +1,22 @@
 import { Route } from '@angular/router';
-import { inject } from '@angular/core';
 import DefaultLayout from './layout/default/layout.component';
-import { AuthService } from './services/auth.service';
+import { authGuard, guestGuard } from './guards/auth.guard';
 
 export const appRoutes: Route[] = [
     {
         path: '',
         pathMatch: 'full',
         data: { title: '관리자 로그인' },
-        canMatch: [() => !inject(AuthService).isLoggedIn()],
+        canActivate: [guestGuard],
         loadComponent: () => import('./pages/auth/sign-in/sign-in.page'),
     },
     {
         path: '',
         component: DefaultLayout,
-        canMatch: [() => inject(AuthService).isLoggedIn()],
+        canActivate: [authGuard],
         children: [
             {
-                path: '',
+                path: 'dashboard',
                 data: { title: '관리자 대시보드' },
                 loadComponent: () => import('./pages/dashboard/dashboard.page'),
             },
@@ -92,6 +91,21 @@ export const appRoutes: Route[] = [
                 loadComponent: () => import('./pages/pre-registration/pre-registration.page'),
             },
             {
+                path: 'pre-registration/create',
+                data: { title: '사전 등록' },
+                loadComponent: () => import('./pages/pre-registration/pre-registration-form/pre-registration-form.page'),
+            },
+            {
+                path: 'pre-registration/:id/edit',
+                data: { title: '사전 등록 수정' },
+                loadComponent: () => import('./pages/pre-registration/pre-registration-form/pre-registration-form.page'),
+            },
+            {
+                path: 'pre-registration/:id',
+                data: { title: '사전 등록 상세' },
+                loadComponent: () => import('./pages/pre-registration/pre-registration-detail/pre-registration-detail.page'),
+            },
+            {
                 path: 'gallery',
                 data: { title: '갤러리 관리' },
                 loadComponent: () => import('./pages/gallery/gallery.page'),
@@ -141,6 +155,15 @@ export const appRoutes: Route[] = [
                 data: { title: '1:1 문의' },
                 loadComponent: () => import('./pages/inquiry/inquiry.page'),
             },
+            {
+                path: 'inquiry/:id',
+                data: { title: '1:1 문의 상세' },
+                loadComponent: () => import('./pages/inquiry/inquiry-detail/inquiry-detail.page'),
+            },
         ],
+    },
+    {
+        path: '**',
+        redirectTo: '',
     }
 ];

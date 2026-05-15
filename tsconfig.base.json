@@ -41,6 +41,9 @@
       "@api-client": [
         "libs/api-client/src/lib/index.ts"
       ],
+      "@api-client-shop": [
+        "libs/api-client-shop/src/lib/index.ts"
+      ],
     }
   },
   "exclude": [

@@ -70,7 +70,7 @@
     "@nx/vite": "22.7.0",
     "@nx/vitest": "22.7.0",
     "@nx/web": "22.7.0",
-    "@nx/webpack": "22.7.0",
+    "@nx/webpack": "22.7.1",
     "@nx/workspace": "22.7.0",
     "@oxc-project/runtime": "^0.115.0",
     "@playwright/test": "^1.36.0",

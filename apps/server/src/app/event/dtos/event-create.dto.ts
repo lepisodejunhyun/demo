@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsDate, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 
 export class EventCreateDTO {
     @ApiProperty({
@@ -8,6 +8,7 @@ export class EventCreateDTO {
     })
     @IsNotEmpty({ message: '행사명은 필수 입력 항목입니다.' })
     @IsString({})
+    @MaxLength(100, { message: '행사명은 최대 100자까지 입력할 수 있습니다.' })
     title: string;
 
     @ApiProperty({
@@ -15,6 +16,7 @@ export class EventCreateDTO {
     })
     @IsNotEmpty({ message: '행사 내용은 필수 입력 항목입니다.' })
     @IsString({})
+    @MaxLength(2000, { message: '행사 내용은 최대 2000자까지 입력할 수 있습니다.' })
     content: string;
 
     @ApiProperty({
@@ -63,6 +65,7 @@ export class EventCreateDTO {
     })
     @IsString({})
     @IsOptional({})
+    @MaxLength(200, { message: '장소는 최대 200자까지 입력할 수 있습니다.' })
     location?: string | null;
 
     @ApiProperty({
@@ -72,6 +75,7 @@ export class EventCreateDTO {
     })
     @IsString({})
     @IsOptional({})
+    @MaxLength(13, { message: '연락처는 최대 13자까지 입력할 수 있습니다.' })
     contactNumber?: string | null;
 
     @ApiProperty({

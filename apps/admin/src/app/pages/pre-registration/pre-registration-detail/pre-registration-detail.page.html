@@ -1,0 +1,36 @@
+@if (item) {
+<app-page-header [title]="'사전 등록 상세'">
+    <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
+    <a slot="actions" [routerLink]="'/pre-registration/' + item.id + '/edit'"
+        class="px-4 py-2 text-primary font-semibold text-xs border border-outline-variant rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">edit</span>
+        수정
+    </a>
+    <button slot="actions" (click)="onDelete()"
+        class="px-4 py-2 text-error font-semibold text-xs border border-transparent rounded hover:bg-error-container/20 transition-colors flex items-center gap-1 cursor-pointer">
+        <span class="material-symbols-outlined text-[18px]">delete</span>
+        삭제
+    </button>
+</app-page-header>
+
+<app-detail-view [createdAt]="item.createdAt" [updatedAt]="item.updatedAt">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <p class="text-sm text-on-surface-variant mb-1">행사명</p>
+            <p class="text-base font-medium">{{ item.eventTitle }}</p>
+        </div>
+        <div>
+            <p class="text-sm text-on-surface-variant mb-1">신청자명</p>
+            <p class="text-base font-medium">{{ item.applicantName }}</p>
+        </div>
+        <div>
+            <p class="text-sm text-on-surface-variant mb-1">연락처</p>
+            <p class="text-base font-medium">{{ item.contactNumber }}</p>
+        </div>
+        <div>
+            <p class="text-sm text-on-surface-variant mb-1">회원</p>
+            <p class="text-base font-medium">{{ item.memberName ?? '비회원' }}</p>
+        </div>
+    </div>
+</app-detail-view>
+}

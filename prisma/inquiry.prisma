@@ -1,28 +1,19 @@
 model Inquiry {
     id              String          @id     @default(uuid())
-
-    // 작성자 (Member 외래키)
     memberId        String
     member          Member          @relation(fields: [memberId], references: [id])
-
-    // 문의 내용
-    title           String                                          // 최대 100자 (코드 레벨 검증)
-    content         String                                          // 최대 2000자 (코드 레벨 검증)
-    // 첨부 이미지는 Attachment 테이블 (entityType: 'inquiry')
-
-    // 답변
-    status          InquiryStatus   @default(답변_대기)
-    answer          String?                                         // 최대 2000자
+    title           String                                         
+    content         String                                         
+    status          InquiryStatus   @default(PENDING)
+    answer          String?                                        
     answeredAt      DateTime?
-    answeredBy      String?                                         // 답변한 admin id
-
-    // 시간 / Soft Delete
+    answeredBy      String?                                        
     createdAt       DateTime        @default(now())
     updatedAt       DateTime        @default(now()) @updatedAt
     deletedAt       DateTime?
 }
 
 enum InquiryStatus {
-    답변_대기
-    답변_완료
+    PENDING
+    COMPLETED
 }

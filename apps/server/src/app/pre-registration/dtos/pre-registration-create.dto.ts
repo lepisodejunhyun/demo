@@ -34,13 +34,5 @@ export class PreRegistrationCreateDTO {
     @MaxLength(20, { message: '연락처는 최대 20자까지 입력 가능합니다.' })
     contactNumber: string;
 
-    @ApiProperty({
-        description: '소속 (선택, 최대 50자)',
-        required: false,
-        nullable: true,
-    })
-    @IsOptional()
-    @IsString({})
-    @MaxLength(50, { message: '소속은 최대 50자까지 입력 가능합니다.' })
-    affiliation?: string | null;
+
 }

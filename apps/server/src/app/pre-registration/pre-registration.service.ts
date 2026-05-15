@@ -136,7 +136,7 @@ export class PreRegistrationService {
                 memberId: data.memberId ?? null,
                 applicantName: data.applicantName,
                 contactNumber: data.contactNumber,
-                affiliation: data.affiliation ?? null,
+
             },
         });
     }
@@ -156,7 +156,7 @@ export class PreRegistrationService {
             data: {
                 applicantName: data.applicantName,
                 contactNumber: data.contactNumber,
-                affiliation: data.affiliation ?? null,
+
             },
         });
     }

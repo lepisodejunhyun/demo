@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import { OffsetPaginationDTO } from "../../libs/dtos";
 import { Event } from "@prisma/client";
@@ -95,6 +95,7 @@ export class EventService {
      * @returns {Promise<Event>}
      */
     async create(data: EventCreateDTO): Promise<Event> {
+        this.validateDates(data);
 
         const event = await this.prisma.event.create({
             data
@@ -112,6 +113,7 @@ export class EventService {
      */
     async update(id: string, data: EventCreateDTO): Promise<Event> {
         await this.findById(id);
+        this.validateDates(data);
 
         const event = await this.prisma.event.update({
             where: {
@@ -121,6 +123,21 @@ export class EventService {
         });
 
         return event;
+    }
+
+    private validateDates(data: EventCreateDTO): void {
+        if (data.endDate <= data.startDate) {
+            throw new BadRequestException('종료일은 시작일 이후여야 합니다.');
+        }
+
+        if (data.preRegEndDate) {
+            if (data.preRegStartDate && data.preRegEndDate < data.preRegStartDate) {
+                throw new BadRequestException('사전 등록 종료일은 시작일 이후여야 합니다.');
+            }
+            if (data.preRegEndDate > data.startDate) {
+                throw new BadRequestException('사전 등록 종료일은 행사 시작일 이전이어야 합니다.');
+            }
+        }
     }
 
 }

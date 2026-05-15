@@ -26,7 +26,7 @@ export class SidebarLayout {
 
     logout() {
         this.adminStore.clearUser();
-        this.router.navigate(['/sign-in']);
+        this.router.navigate(['/']);
 
     }
 }

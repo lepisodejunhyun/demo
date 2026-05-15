@@ -1,0 +1,75 @@
+<header class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+    <div class="flex justify-between items-center h-16 px-5 md:px-16 max-w-[1280px] mx-auto">
+        <!-- Logo -->
+        <a routerLink="/" class="text-2xl font-bold text-primary tracking-tight">DEMO</a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center gap-8">
+            @for (item of navItems; track item.path) {
+            <a [routerLink]="item.path" routerLinkActive="text-primary font-bold border-b-2 border-primary"
+                [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+                class="text-on-surface-variant hover:text-primary transition-colors text-sm font-semibold tracking-wider uppercase py-1">
+                {{ item.label }}
+            </a>
+            }
+        </nav>
+
+        <!-- Auth Area -->
+        <div class="hidden md:flex items-center">
+            @if (authService.isLoggedIn) {
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-semibold text-on-surface flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-base text-primary">person</span>
+                    {{ authService.currentUser?.name || '회원' }}
+                </span>
+                <button (click)="onLogout()"
+                    class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant text-xs font-semibold tracking-wider uppercase hover:bg-surface-container transition-all cursor-pointer">
+                    Logout
+                </button>
+            </div>
+            } @else {
+            <a routerLink="/sign-in"
+                class="px-6 py-2 rounded-full border border-primary text-primary text-sm font-semibold tracking-wider uppercase hover:bg-primary/5 transition-all active:opacity-80 active:scale-95">
+                Sign In
+            </a>
+            }
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button (click)="toggleMenu()" class="md:hidden p-2 text-on-surface hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[28px]">
+                {{ menuOpen ? 'close' : 'menu' }}
+            </span>
+        </button>
+    </div>
+
+    <!-- Mobile Nav -->
+    @if (menuOpen) {
+    <div class="md:hidden bg-surface border-t border-outline-variant px-5 py-4 space-y-3">
+        @for (item of navItems; track item.path) {
+        <a [routerLink]="item.path" (click)="toggleMenu()"
+            class="block py-2 text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors tracking-wider uppercase">
+            {{ item.label }}
+        </a>
+        }
+
+        @if (authService.isLoggedIn) {
+        <div class="flex items-center justify-between pt-3 border-t border-outline-variant/30">
+            <span class="text-sm font-semibold text-on-surface flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-base text-primary">person</span>
+                {{ authService.currentUser?.name || '회원' }}
+            </span>
+            <button (click)="onLogout(); toggleMenu()"
+                class="px-4 py-1.5 rounded-full border border-outline-variant text-on-surface-variant text-xs font-semibold tracking-wider uppercase hover:bg-surface-container transition-all cursor-pointer">
+                Logout
+            </button>
+        </div>
+        } @else {
+        <a routerLink="/sign-in" (click)="toggleMenu()"
+            class="block w-full text-center py-2.5 border border-primary text-primary text-sm font-semibold rounded-full mt-3 hover:bg-primary/5">
+            Sign In
+        </a>
+        }
+    </div>
+    }
+</header>

@@ -22,7 +22,7 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 
-  const port = process.env.PORT || 3000;
+  const port = process.env.ADMIN_PORT || 3000;
 
   const document = SwaggerModule.createDocument(
     app,
@@ -49,6 +49,8 @@ async function bootstrap() {
 
   generateApiClient(document).then(() => {
     Logger.log('API Client Generated');
+  }).catch((err) => {
+    Logger.warn(`API Client Generation Failed: ${err.message}. (It might be locked by another process)`);
   });
 
   await app.listen(port);

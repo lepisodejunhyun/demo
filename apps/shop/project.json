@@ -12,7 +12,7 @@
       "options": {
         "outputPath": "dist/apps/shop",
         "browser": "apps/shop/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [],
         "tsConfig": "apps/shop/tsconfig.app.json",
         "assets": [
           {
@@ -52,7 +52,6 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "dependsOn": ["api:serve"],
       "continuous": true,
       "executor": "@angular/build:dev-server",
       "configurations": {
@@ -60,11 +59,13 @@
           "buildTarget": "shop:build:production"
         },
         "development": {
-          "buildTarget": "shop:build:development"
+          "buildTarget": "shop:build:development",
+          "port": 4201
         }
       },
       "defaultConfiguration": "development",
       "options": {
+        "port": 4201,
         "proxyConfig": "apps/shop/proxy.conf.json"
       }
     },

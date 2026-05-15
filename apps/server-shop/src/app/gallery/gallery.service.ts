@@ -1,0 +1,89 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
+import { OffsetPaginationDTO } from '../../libs/dtos';
+import { Gallery } from '@prisma/client';
+
+@Injectable()
+export class GalleryService {
+    constructor(
+        private readonly prisma: PrismaService
+    ) {}
+
+    /**
+     * @name findAll
+     * @description 갤러리 전체 조회 (썸네일 포함)
+     * @param {number} page
+     * @param {number} limit
+     * @returns {Promise<OffsetPaginationDTO<any>>}
+     */
+    async findAll(page: number, limit: number): Promise<OffsetPaginationDTO<any>> {
+        const skip = (page - 1) * limit;
+
+        const [items, totalItems] = await Promise.all([
+            this.prisma.gallery.findMany({
+                where: { deletedAt: null },
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take: limit,
+            }),
+            this.prisma.gallery.count({
+                where: { deletedAt: null },
+            })
+        ]);
+
+        const itemsWithThumbnail = await Promise.all(
+            items.map(async (gallery) => {
+                const firstImage = await this.prisma.attachment.findFirst({
+                    where: {
+                        entityType: 'gallery',
+                        entityId: gallery.id,
+                    },
+                    orderBy: {
+                        sortOrder: 'asc',
+                    },
+                });
+                return {
+                    ...gallery,
+                    thumbnailUrl: firstImage?.url ?? null,
+                };
+            })
+        );
+
+        return {
+            items: itemsWithThumbnail,
+            pageInfo: {
+                page,
+                limit,
+                pageItems: items.length,
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+            }
+        };
+    }
+
+    /**
+     * @name findById
+     * @description 갤러리 상세 조회 (이미지 전체 포함)
+     * @param {string} id
+     * @returns {Promise<any>}
+     */
+    async findById(id: string): Promise<any> {
+        const gallery = await this.prisma.gallery.findUnique({
+            where: { id, deletedAt: null },
+        });
+
+        if (!gallery) throw new NotFoundException('갤러리 정보를 찾을 수 없습니다.');
+
+        const images = await this.prisma.attachment.findMany({
+            where: {
+                entityType: 'gallery',
+                entityId: id,
+            },
+            orderBy: {
+                sortOrder: 'asc',
+            },
+        });
+
+        return { ...gallery, images };
+    }
+}

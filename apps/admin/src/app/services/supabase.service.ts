@@ -13,7 +13,7 @@ export class SupabaseService {
         );
     }
 
-    async uploadImage(file: File, folder = 'events'): Promise<string> {
+    async uploadImage(file: File, folder: string): Promise<string> {
         const fileExt = file.name.split('.').pop();
         const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
 

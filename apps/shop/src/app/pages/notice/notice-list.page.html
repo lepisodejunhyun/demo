@@ -1,0 +1,63 @@
+<div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12">
+  <div class="mb-10 text-center">
+    <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">공지사항</h1>
+    <p class="mt-4 text-lg text-slate-500">Shop의 새로운 소식과 안내를 확인하세요.</p>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-200">
+        <thead class="bg-slate-50">
+          <tr>
+            <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-slate-900">제목</th>
+            <th scope="col" class="px-6 py-4 text-right text-sm font-semibold text-slate-900 w-44">등록일</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 bg-white">
+          <tr *ngFor="let notice of notices" 
+              (click)="goDetail(notice)"
+              class="hover:bg-slate-50 cursor-pointer transition-colors duration-150">
+            <td class="px-6 py-4 text-sm text-slate-900 font-medium">
+              <div class="line-clamp-1">{{ notice.title }}</div>
+            </td>
+            <td class="px-6 py-4 text-sm text-slate-500 text-right whitespace-nowrap">
+              {{ notice.createdAt | date:'yyyy.MM.dd' }}
+            </td>
+          </tr>
+          
+          <tr *ngIf="notices.length === 0">
+            <td colspan="2" class="px-6 py-12 text-center text-slate-500 text-sm">
+              등록된 공지사항이 없습니다.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="pageInfo && pageInfo.totalPages > 1" class="px-6 py-4 border-t border-slate-200 bg-white flex items-center justify-center">
+      <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+        <button 
+          [disabled]="pageInfo.page <= 1"
+          (click)="onPageChange(pageInfo.page - 1)"
+          class="relative inline-flex items-center rounded-l-md px-2 py-2 text-slate-400 ring-1 ring-inset ring-slate-300 hover:bg-slate-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed">
+          <span class="sr-only">Previous</span>
+          <span class="material-symbols-outlined text-sm">chevron_left</span>
+        </button>
+        
+        <!-- 간소화된 페이지 번호 -->
+        <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-slate-900 ring-1 ring-inset ring-slate-300 focus:z-20 focus:outline-offset-0">
+          {{ pageInfo.page }} / {{ pageInfo.totalPages }}
+        </span>
+
+        <button 
+          [disabled]="pageInfo.page >= pageInfo.totalPages"
+          (click)="onPageChange(pageInfo.page + 1)"
+          class="relative inline-flex items-center rounded-r-md px-2 py-2 text-slate-400 ring-1 ring-inset ring-slate-300 hover:bg-slate-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed">
+          <span class="sr-only">Next</span>
+          <span class="material-symbols-outlined text-sm">chevron_right</span>
+        </button>
+      </nav>
+    </div>
+  </div>
+</div>

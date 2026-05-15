@@ -63,7 +63,7 @@ export default class SignInPage {
             this.authService.setStoredUser(result.admin);
             this.adminStore.setUser(result.admin);
 
-            window.location.href = '/';
+            this.router.navigateByUrl('/dashboard');
         } catch (error: any) {
             this.errorMessage = error?.error?.message || '로그인에 실패했습니다.';
         }

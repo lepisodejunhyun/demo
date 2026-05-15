@@ -1,21 +1,12 @@
 model PreRegistration {
     id              String          @id     @default(uuid())
-
-    // 행사 외래키 (필수)
     eventId         String
     event           Event           @relation(fields: [eventId], references: [id])
-
-    // 회원 외래키 (선택 — 비회원도 등록 가능하므로 nullable)
     memberId        String?
     member          Member?         @relation(fields: [memberId], references: [id])
-
-    // 신청자 정보 (직접 입력 — 회원/비회원 모두 동일하게 받음)
-    applicantName   String                                          // 신청자 이름 (최대 20자, 코드 레벨 검증)
-    contactNumber   String                                          // 연락처 (최대 20자)
-    affiliation     String?                                         // 소속 (선택, 최대 50자)
-
-    // 시간 / Soft Delete
-    createdAt       DateTime        @default(now())                 // 신청일시
+    applicantName   String                                          
+    contactNumber   String                                          
+    createdAt       DateTime        @default(now())                 
     updatedAt       DateTime        @default(now()) @updatedAt
     deletedAt       DateTime?
 }

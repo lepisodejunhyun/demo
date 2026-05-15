@@ -1,10 +1,7 @@
 model Terms {
     id              String          @id     @default(uuid())
-
-    title           String                                          // 약관 제목 (최대 100자, 코드 레벨 검증)
-    content         String                                          // 약관 내용 (필수)
-
-    // 시간 / Soft Delete
+    title           String                               
+    content         String                               
     createdAt       DateTime        @default(now())
     updatedAt       DateTime        @default(now()) @updatedAt
     deletedAt       DateTime?

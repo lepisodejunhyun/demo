@@ -49,13 +49,7 @@ export class PreRegistrationDTO {
     @Expose()
     contactNumber: string;
 
-    @ApiProperty({
-        description: '소속',
-        required: false,
-        nullable: true,
-    })
-    @Expose()
-    affiliation: string | null;
+
 
     @ApiProperty({
         description: '신청일시'
