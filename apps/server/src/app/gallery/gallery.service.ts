@@ -106,23 +106,25 @@ export class GalleryService {
     async create(data: GalleryCreateDTO): Promise<any> {
         const { title, content, imageUrls } = data;
 
-        const gallery = await this.prisma.gallery.create({
-            data: {
-                title,
-                content: content ?? null,
-            },
-        });
+        return this.prisma.$transaction(async (tx) => {
+            const gallery = await tx.gallery.create({
+                data: {
+                    title,
+                    content: content ?? null,
+                },
+            });
 
-        await this.prisma.attachment.createMany({
-            data: imageUrls.map((url, i) => ({
-                url,
-                entityType: 'gallery',
-                entityId: gallery.id,
-                sortOrder: i,
-            })),
-        });
+            await tx.attachment.createMany({
+                data: imageUrls.map((url, i) => ({
+                    url,
+                    entityType: 'gallery',
+                    entityId: gallery.id,
+                    sortOrder: i,
+                })),
+            });
 
-        return gallery;
+            return gallery;
+        });
     }
 
     /**
@@ -137,33 +139,35 @@ export class GalleryService {
 
         const { title, content, imageUrls } = data;
 
-        const gallery = await this.prisma.gallery.update({
-            where: {
-                id,
-            },
-            data: {
-                title,
-                content: content ?? null,
-            },
-        });
+        return this.prisma.$transaction(async (tx) => {
+            const gallery = await tx.gallery.update({
+                where: {
+                    id,
+                },
+                data: {
+                    title,
+                    content: content ?? null,
+                },
+            });
 
-        await this.prisma.attachment.deleteMany({
-            where: {
-                entityType: 'gallery',
-                entityId: id,
-            },
-        });
+            await tx.attachment.deleteMany({
+                where: {
+                    entityType: 'gallery',
+                    entityId: id,
+                },
+            });
 
-        await this.prisma.attachment.createMany({
-            data: imageUrls.map((url, i) => ({
-                url,
-                entityType: 'gallery',
-                entityId: id,
-                sortOrder: i,
-            })),
-        });
+            await tx.attachment.createMany({
+                data: imageUrls.map((url, i) => ({
+                    url,
+                    entityType: 'gallery',
+                    entityId: id,
+                    sortOrder: i,
+                })),
+            });
 
-        return gallery;
+            return gallery;
+        });
     }
 
     /**

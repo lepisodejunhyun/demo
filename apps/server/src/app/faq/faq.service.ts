@@ -71,6 +71,12 @@ export class FaqService {
         return faq;
     }
 
+    /**
+     * @name findById
+     * @description FAQ 상세 조회
+     * @param {string} id
+     * @returns {Promise<Faq>}
+     */
     async findById(id: string): Promise<Faq> {
         const faq = await this.prisma.faq.findUnique({
             where: {
@@ -85,6 +91,12 @@ export class FaqService {
 
     }
 
+    /**
+     * @name remove
+     * @description FAQ 삭제 (Soft Delete)
+     * @param {string} id
+     * @returns {Promise<Faq>}
+     */
     async remove(id: string): Promise<Faq> {
         const faq = await this.prisma.faq.update({
             where: { id: id },
@@ -94,6 +106,13 @@ export class FaqService {
         return faq;
     }
 
+    /**
+     * @name update
+     * @description FAQ 수정
+     * @param {string} id
+     * @param {FaqCreateDTO} data
+     * @returns {Promise<Faq>}
+     */
     async update(id: string, data: FaqCreateDTO): Promise<Faq> {
         await this.findById(id);
 

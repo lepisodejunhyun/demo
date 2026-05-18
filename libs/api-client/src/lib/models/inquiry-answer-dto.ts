@@ -7,9 +7,4 @@ export interface InquiryAnswerDto {
    * 답변 내용 (최대 2000자)
    */
   answer: string;
-
-  /**
-   * 답변 저장과 함께 변경할 상태 (선택)
-   */
-  status?: 'PENDING' | 'COMPLETED';
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Api, noticeControllerFindAll, NoticeDto } from "@api-client";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
@@ -9,6 +9,7 @@ import { ColumnDef, PageInfo } from "../../components/data-table/data-table.type
 @Component({
     selector: 'app-notice',
     templateUrl: './notice.page.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, PageHeaderComponent, DataTableComponent, RouterLink],
 })
 export default class NoticePage implements OnInit {

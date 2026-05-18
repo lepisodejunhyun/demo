@@ -12,7 +12,10 @@ export class KakaoAuthService {
     ) {}
 
     /**
-     * 카카오 인가 코드로 Access Token 교환
+     * @name getKakaoToken
+     * @description 카카오 인가 코드로 Access Token 교환
+     * @param {string} code - 카카오 인가 코드
+     * @returns {Promise<KakaoTokenResponse>}
      */
     async getKakaoToken(code: string): Promise<KakaoTokenResponse> {
         const res = await fetch('https://kauth.kakao.com/oauth/token', {
@@ -35,7 +38,10 @@ export class KakaoAuthService {
     }
 
     /**
-     * 카카오 Access Token으로 사용자 정보 조회
+     * @name getKakaoUserInfo
+     * @description 카카오 Access Token으로 사용자 정보 조회
+     * @param {string} accessToken - 카카오 Access Token
+     * @returns {Promise<KakaoUserInfo>}
      */
     async getKakaoUserInfo(accessToken: string): Promise<KakaoUserInfo> {
         const res = await fetch('https://kapi.kakao.com/v2/user/me', {
@@ -50,7 +56,10 @@ export class KakaoAuthService {
     }
 
     /**
-     * 카카오 로그인 처리: 기존 회원이면 로그인, 신규면 가입 후 로그인
+     * @name handleKakaoLogin
+     * @description 카카오 로그인 처리: 기존 회원이면 로그인, 신규면 가입 후 로그인
+     * @param {string} code - 카카오 인가 코드
+     * @returns {Promise<{ accessToken: string; refreshToken: string; member: Member }>}
      */
     async handleKakaoLogin(code: string): Promise<{ accessToken: string; refreshToken: string; member: Member }> {
         // 1. 인가 코드 → 카카오 토큰

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
+import { IsArray, IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
 
 export class PreRegistrationCreateDTO {
     @ApiProperty({
@@ -34,5 +34,13 @@ export class PreRegistrationCreateDTO {
     @MaxLength(20, { message: '연락처는 최대 20자까지 입력 가능합니다.' })
     contactNumber: string;
 
-
+    @ApiProperty({
+        description: '동의한 약관 ID 목록',
+        type: [String],
+        required: false,
+    })
+    @IsOptional()
+    @IsArray()
+    @IsUUID('all', { each: true })
+    agreedTermsIds?: string[];
 }

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Api, memberControllerSignin, memberControllerLogout, memberControllerMe, kakaoAuthControllerKakaoLogin, MemberDto } from '@api-client-shop';
 
 @Injectable({
@@ -6,7 +6,8 @@ import { Api, memberControllerSignin, memberControllerLogout, memberControllerMe
 })
 export class AuthService {
   private readonly api = inject(Api);
-  private _currentUser: MemberDto | null = null;
+  private readonly _currentUser = signal<MemberDto | null>(null);
+  readonly currentUser = this._currentUser.asReadonly();
 
   get isLoggedIn(): boolean {
     if (typeof window === 'undefined') return false;
@@ -18,9 +19,6 @@ export class AuthService {
     return localStorage.getItem('access_token');
   }
 
-  get currentUser(): MemberDto | null {
-    return this._currentUser;
-  }
 
   async signIn(email: string, password: string): Promise<void> {
     const result = await this.api.invoke(memberControllerSignin, {
@@ -28,16 +26,15 @@ export class AuthService {
     });
     localStorage.setItem('access_token', result.accessToken);
     if (result.member) {
-      this._currentUser = result.member;
+      this._currentUser.set(result.member);
     }
   }
 
   async loadCurrentUser(): Promise<void> {
     if (!this.isLoggedIn) return;
     try {
-      this._currentUser = await this.api.invoke(memberControllerMe, {});
+      this._currentUser.set(await this.api.invoke(memberControllerMe, {}));
     } catch {
-      // 토큰이 만료된 경우 등
       this.clearAuth();
     }
   }
@@ -48,7 +45,7 @@ export class AuthService {
     });
     localStorage.setItem('access_token', result.accessToken);
     if (result.member) {
-      this._currentUser = result.member;
+      this._currentUser.set(result.member);
     }
   }
 
@@ -56,7 +53,6 @@ export class AuthService {
     try {
       await this.api.invoke(memberControllerLogout, {});
     } catch {
-      // 서버 에러가 나더라도 클라이언트는 정리
     }
     this.clearAuth();
   }
@@ -65,6 +61,6 @@ export class AuthService {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('access_token');
     }
-    this._currentUser = null;
+    this._currentUser.set(null);
   }
 }

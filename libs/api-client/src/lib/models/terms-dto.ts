@@ -19,6 +19,11 @@ export interface TermsDto {
   id: string;
 
   /**
+   * 필수 약관 여부
+   */
+  isRequired: boolean;
+
+  /**
    * 약관 제목
    */
   title: string;

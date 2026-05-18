@@ -19,8 +19,8 @@ export default class HeaderComponent implements OnInit {
         { label: '홈', path: '/' },
         { label: '행사안내', path: '/event' },
         { label: '갤러리', path: '/gallery' },
-        { label: '1:1 문의', path: '/inquiry' },
-        { label: '공지사항', path: '/notice' },
+        { label: '사전등록', path: '/pre-registration' },
+        { label: '고객센터', path: '/support' },
     ];
 
     ngOnInit(): void {

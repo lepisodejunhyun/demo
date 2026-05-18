@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import {
@@ -17,6 +17,7 @@ import { DetailViewComponent } from "../../../components/detail-view/detail-view
 @Component({
     selector: 'app-inquiry-detail',
     templateUrl: 'inquiry-detail.page.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent],
 })
 export default class InquiryDetailPage implements OnInit {
@@ -41,22 +42,19 @@ export default class InquiryDetailPage implements OnInit {
             ],
             nonNullable: true,
         }),
-        status: new FormControl<'PENDING' | 'COMPLETED'>('PENDING', {
-            nonNullable: true,
-        }),
     });
 
     errorMessage = '';
     successMessage = '';
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         const id = this.id();
         if (!id) return;
 
         await this.loadData(id);
     }
 
-    async loadData(id: string) {
+    async loadData(id: string): Promise<void> {
         try {
             this.inquiry = await this.api.invoke(inquiryControllerFindById, { id });
 
@@ -64,7 +62,6 @@ export default class InquiryDetailPage implements OnInit {
             if (this.inquiry.answer) {
                 this.answerForm.patchValue({
                     answer: this.inquiry.answer,
-                    status: this.inquiry.status,
                 });
             }
 
@@ -75,7 +72,7 @@ export default class InquiryDetailPage implements OnInit {
         }
     }
 
-    async onSubmitAnswer() {
+    async onSubmitAnswer(): Promise<void> {
         if (this.answerForm.invalid) return;
 
         const data = this.answerForm.getRawValue();
@@ -87,7 +84,6 @@ export default class InquiryDetailPage implements OnInit {
                 id: this.inquiry!.id,
                 body: {
                     answer: data.answer,
-                    status: data.status,
                 },
             });
 
@@ -98,7 +94,7 @@ export default class InquiryDetailPage implements OnInit {
         }
     }
 
-    async onDelete() {
+    async onDelete(): Promise<void> {
         if (!confirm('정말 삭제하시겠습니까?')) return;
 
         try {

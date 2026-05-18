@@ -2,14 +2,16 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Api, eventControllerFindAll, EventDto, PageInfoDto } from '@api-client-shop';
+import { PageHeaderComponent } from '../../components/page-header/page-header.component';
+import { PaginationComponent } from '../../components/pagination/pagination.component';
 
 @Component({
-  selector: 'app-event-list',
+  selector: 'app-event',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './event-list.page.html',
+  imports: [CommonModule, PageHeaderComponent, PaginationComponent],
+  templateUrl: './event.page.html',
 })
-export default class EventListPage implements OnInit {
+export default class EventPage implements OnInit {
   private readonly api = inject(Api);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -55,12 +57,18 @@ export default class EventListPage implements OnInit {
     const start = new Date(event.startDate);
     const end = new Date(event.endDate);
 
-    if (now < start) {
-      return { label: '예정', class: 'bg-blue-100 text-blue-700' };
-    } else if (now > end) {
+    if (now > end) {
       return { label: '종료', class: 'bg-slate-100 text-slate-500' };
-    } else {
+    } else if (now >= start) {
       return { label: '진행중', class: 'bg-emerald-100 text-emerald-700' };
+    } else if (event.preRegStartDate && event.preRegEndDate) {
+      const preStart = new Date(event.preRegStartDate);
+      const preDeadline = new Date(event.preRegEndDate);
+      preDeadline.setDate(preDeadline.getDate() + 1);
+      if (now >= preStart && now < preDeadline) {
+        return { label: '사전 등록중', class: 'bg-violet-100 text-violet-700' };
+      }
     }
+    return { label: '예정', class: 'bg-blue-100 text-blue-700' };
   }
 }

@@ -40,13 +40,13 @@ export default class SignInPage {
         }),
     });
 
-    keydownHandler(event: KeyboardEvent) {
+    keydownHandler(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
             this.submit();
         }
     }
 
-    async submit() {
+    async submit(): Promise<void> {
         if (this.form.invalid) return;
 
         const values = this.form.getRawValue();
@@ -60,8 +60,8 @@ export default class SignInPage {
             });
 
             this.authService.setToken(result.accessToken);
-            this.authService.setStoredUser(result.admin);
-            this.adminStore.setUser(result.admin);
+            this.authService.setStoredAdmin(result.admin);
+            this.adminStore.setAdmin(result.admin);
 
             this.router.navigateByUrl('/dashboard');
         } catch (error: any) {

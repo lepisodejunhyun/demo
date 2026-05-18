@@ -7,7 +7,9 @@ export type { StrictHttpResponse } from './strict-http-response';
 export { Api } from './api';
 
 export type { AttachmentDto } from './models/attachment-dto';
+export type { BusinessInfoDto } from './models/business-info-dto';
 export type { EventDto } from './models/event-dto';
+export type { FaqDto } from './models/faq-dto';
 export type { GalleryDto } from './models/gallery-dto';
 export type { InquiryCreateDto } from './models/inquiry-create-dto';
 export type { InquiryDto } from './models/inquiry-dto';
@@ -17,7 +19,10 @@ export type { MemberSignInDto } from './models/member-sign-in-dto';
 export type { MemberSignUpDto } from './models/member-sign-up-dto';
 export type { NoticeDto } from './models/notice-dto';
 export type { PageInfoDto } from './models/page-info-dto';
+export type { PreRegistrationCreateDto } from './models/pre-registration-create-dto';
+export type { PreRegistrationDto } from './models/pre-registration-dto';
 export type { SignInResponseDto } from './models/sign-in-response-dto';
+export type { TermsDto } from './models/terms-dto';
 
 export type { AppControllerGetData$Params as AppControllerGetData$Params } from './fn/app/app-controller-get-data';
 export { appControllerGetData as appControllerGetData } from './fn/app/app-controller-get-data';
@@ -51,3 +56,15 @@ export type { InquiryControllerFindById$Params as InquiryControllerFindById$Para
 export { inquiryControllerFindById as inquiryControllerFindById } from './fn/inquiry/inquiry-controller-find-by-id';
 export type { InquiryControllerCreate$Params as InquiryControllerCreate$Params } from './fn/inquiry/inquiry-controller-create';
 export { inquiryControllerCreate as inquiryControllerCreate } from './fn/inquiry/inquiry-controller-create';
+export type { TermsControllerFindAll$Params as TermsControllerFindAll$Params } from './fn/terms/terms-controller-find-all';
+export { termsControllerFindAll as termsControllerFindAll } from './fn/terms/terms-controller-find-all';
+export type { PreRegistrationControllerFindAvailableEvents$Params as PreRegistrationControllerFindAvailableEvents$Params } from './fn/pre-registration/pre-registration-controller-find-available-events';
+export { preRegistrationControllerFindAvailableEvents as preRegistrationControllerFindAvailableEvents } from './fn/pre-registration/pre-registration-controller-find-available-events';
+export type { PreRegistrationControllerCreate$Params as PreRegistrationControllerCreate$Params } from './fn/pre-registration/pre-registration-controller-create';
+export { preRegistrationControllerCreate as preRegistrationControllerCreate } from './fn/pre-registration/pre-registration-controller-create';
+export type { BusinessInfoControllerFindOne$Params as BusinessInfoControllerFindOne$Params } from './fn/business-info/business-info-controller-find-one';
+export { businessInfoControllerFindOne as businessInfoControllerFindOne } from './fn/business-info/business-info-controller-find-one';
+export type { FaqControllerFindAll$Params as FaqControllerFindAll$Params } from './fn/faq/faq-controller-find-all';
+export { faqControllerFindAll as faqControllerFindAll } from './fn/faq/faq-controller-find-all';
+export type { FaqControllerFindById$Params as FaqControllerFindById$Params } from './fn/faq/faq-controller-find-by-id';
+export { faqControllerFindById as faqControllerFindById } from './fn/faq/faq-controller-find-by-id';

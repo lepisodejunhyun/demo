@@ -5,33 +5,69 @@
     </p>
 </app-page-header>
 
-<app-form-view [formGroup]="form" [submitText]="isEditMode ? '수정하기' : '등록하기'" (cancel)="goBack()"
-    (submit)="onSubmit()">
+<app-form-view [formGroup]="form" [submitText]="isEditMode ? '수정하기' : '등록하기'" (cancel)="goBack()" (submit)="onSubmit()">
 
     <app-form-field label="행사" for="pre-reg-event" [required]="true">
+        @if (isEditMode) {
+        <p class="w-full px-4 py-3 border border-outline-variant rounded bg-surface-container-low text-on-surface-variant text-base">
+            {{ eventTitle }}
+        </p>
+        <p class="text-xs text-on-surface-variant mt-1">행사는 변경할 수 없습니다.</p>
+        } @else {
         <select formControlName="eventId" id="pre-reg-event"
-            class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all bg-white disabled:bg-surface-container-low disabled:text-on-surface-variant">
+            class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all bg-white">
             <option value="" disabled>행사를 선택하세요</option>
             @for (event of availableEvents; track event.id) {
             <option [value]="event.id">{{ event.title }}</option>
             }
         </select>
-        @if (isEditMode) {
-        <p class="text-xs text-on-surface-variant mt-1">행사는 변경할 수 없습니다.</p>
         }
     </app-form-field>
 
     <app-form-field label="신청자 이름" for="pre-reg-name" [required]="true">
-        <input formControlName="applicantName" id="pre-reg-name" type="text" maxlength="20"
-            placeholder="신청자 이름을 입력하세요"
+        <input formControlName="applicantName" id="pre-reg-name" type="text" maxlength="20" placeholder="신청자 이름을 입력하세요"
             class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
     </app-form-field>
 
     <app-form-field label="연락처" for="pre-reg-contact" [required]="true">
-        <input formControlName="contactNumber" id="pre-reg-contact" type="text" maxlength="13"
-            placeholder="연락처를 입력하세요" (input)="onPhoneInput($event)"
+        <input formControlName="contactNumber" id="pre-reg-contact" type="text" maxlength="13" placeholder="연락처를 입력하세요"
+            (input)="onPhoneInput($event)"
             class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
     </app-form-field>
+
+    @if (!isEditMode && termsList.length > 0) {
+    <app-form-field label="약관 동의" [required]="true">
+        <div class="space-y-3">
+            @for (terms of termsList; track terms.id) {
+            <div class="flex items-start gap-3 p-4 border border-outline-variant rounded hover:border-primary/30 transition-colors"
+                [class.border-primary/50]="terms.agreed" [class.bg-primary/5]="terms.agreed">
+                <input type="checkbox" [id]="'terms-' + terms.id" [(ngModel)]="terms.agreed"
+                    [ngModelOptions]="{standalone: true}"
+                    class="mt-0.5 w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary/20 cursor-pointer" />
+                <label [for]="'terms-' + terms.id" class="flex-1 cursor-pointer">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-medium">{{ terms.title }}</span>
+                        @if (terms.isRequired) {
+                        <span class="text-[10px] font-bold text-error bg-error/10 px-1.5 py-0.5 rounded">필수</span>
+                        } @else {
+                        <span
+                            class="text-[10px] font-bold text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">선택</span>
+                        }
+                    </div>
+                    <details class="mt-2">
+                        <summary
+                            class="text-xs text-on-surface-variant cursor-pointer hover:text-primary transition-colors">
+                            내용 보기</summary>
+                        <div
+                            class="mt-2 p-3 bg-surface-container-low rounded text-xs text-on-surface-variant leading-relaxed whitespace-pre-wrap max-h-40 overflow-y-auto">
+                            {{ terms.content }}</div>
+                    </details>
+                </label>
+            </div>
+            }
+        </div>
+    </app-form-field>
+    }
 
     @if (errorMessage) {
     <p class="text-error text-sm">{{ errorMessage }}</p>

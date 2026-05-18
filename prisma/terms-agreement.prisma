@@ -1,0 +1,10 @@
+model TermsAgreement {
+    id                  String          @id     @default(uuid())
+    preRegistrationId   String
+    preRegistration     PreRegistration @relation(fields: [preRegistrationId], references: [id])
+    termsId             String
+    terms               Terms           @relation(fields: [termsId], references: [id])
+    agreedAt            DateTime        @default(now())
+
+    @@unique([preRegistrationId, termsId])
+}

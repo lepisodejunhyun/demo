@@ -1,0 +1,31 @@
+<!-- Page Header -->
+<section class="bg-surface-container-low/50 py-16 mt-16">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-16">
+        <h1 class="text-4xl font-extrabold text-on-surface tracking-tight">고객센터</h1>
+        <p class="text-lg text-on-surface-variant mt-3">공지사항 확인 및 문의를 남겨주세요.</p>
+    </div>
+</section>
+
+<!-- Tabs -->
+<div class="max-w-[1280px] mx-auto px-5 md:px-16 pt-8">
+    <div class="flex gap-2 border-b border-outline-variant pb-1">
+        <a routerLink="/support/notice" routerLinkActive="text-primary border-primary"
+            [routerLinkActiveOptions]="{ exact: false }"
+            class="px-4 py-2 text-sm font-semibold border-b-2 border-transparent transition-colors hover:text-primary -mb-[5px]">
+            공지사항
+        </a>
+        <a routerLink="/support/faq" routerLinkActive="text-primary border-primary"
+            [routerLinkActiveOptions]="{ exact: false }"
+            class="px-4 py-2 text-sm font-semibold border-b-2 border-transparent transition-colors hover:text-primary -mb-[5px]">
+            자주 묻는 질문
+        </a>
+        <a routerLink="/support/inquiry" routerLinkActive="text-primary border-primary"
+            [routerLinkActiveOptions]="{ exact: false }"
+            class="px-4 py-2 text-sm font-semibold border-b-2 border-transparent transition-colors hover:text-primary -mb-[5px]">
+            1:1 문의
+        </a>
+    </div>
+</div>
+
+<!-- Child Content -->
+<router-outlet />

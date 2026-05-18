@@ -99,9 +99,9 @@ export class InquiryService {
 
     /**
      * @name updateAnswer
-     * @description 1:1 문의 답변 작성/수정 (옵션으로 상태 함께 변경)
+     * @description 1:1 문의 답변 작성/수정. 답변 저장 시 자동으로 상태를 COMPLETED로 변경.
      * @param {string} id
-     * @param {InquiryAnswerDTO} data - { answer, status? }
+     * @param {InquiryAnswerDTO} data - { answer }
      * @returns {Promise<any>} 갱신된 문의 상세 (작성자 + 이미지 포함)
      */
     async updateAnswer(id: string, data: InquiryAnswerDTO): Promise<any> {
@@ -111,8 +111,8 @@ export class InquiryService {
             where: { id },
             data: {
                 answer: data.answer,
+                status: 'COMPLETED',
                 answeredAt: new Date(),
-                ...(data.status && { status: data.status }),
             },
         });
 

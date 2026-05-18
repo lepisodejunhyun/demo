@@ -5,19 +5,19 @@ import { AuthService } from "../services/auth.service";
 @Injectable({ providedIn: 'root' })
 export class AdminStore {
   private readonly authService = inject(AuthService);
-  private readonly state = signal<{ user: AdminDto | null}>({
-    user: this.authService.getStoredUser(),
+  private readonly state = signal<{ admin: AdminDto | null}>({
+    admin: this.authService.getStoredAdmin(),
   });
 
-  readonly user = computed(() => this.state().user);
+  readonly admin = computed(() => this.state().admin);
 
-  setUser(user: AdminDto): void {
-    this.state.update(s => ({ ...s, user}));
-    this.authService.setStoredUser(user);
+  setAdmin(admin: AdminDto): void {
+    this.state.update(s => ({ ...s, admin}));
+    this.authService.setStoredAdmin(admin);
   }
 
-  clearUser(): void {
-    this.state.update(s => ({ ...s, user: null }));
+  clearAdmin(): void {
+    this.state.update(s => ({ ...s, admin: null }));
     this.authService.clear();
   }
 

@@ -18,7 +18,7 @@ export default class NoticeDetailPage implements OnInit {
 
   notice: NoticeDto | null = null;
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     const id = this.id();
 
     if (!id) return;
@@ -30,11 +30,11 @@ export default class NoticeDetailPage implements OnInit {
       this.cdr.markForCheck();
     } catch (error) {
       console.error('공지사항 조회 실패', error);
-      this.router.navigate(['/notice']);
+      this.router.navigate(['/support/notice']);
     }
   }
 
   goBack(): void {
-    this.router.navigate(['/notice']);
+    this.router.navigate(['/support/notice']);
   }
 }

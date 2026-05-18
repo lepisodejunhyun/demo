@@ -13,12 +13,6 @@ import { Request, Response } from "express";
 export class AdminController {
   constructor(private readonly adminService: AdminService) { };
 
-  @Get('hello')
-  @ApiOperation({ summary: '인사말' })
-  gethello() {
-    return this.adminService.getHello();
-  }
-
   @Get()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({
@@ -46,17 +40,14 @@ export class AdminController {
     description: '로그인 성공',
     type: SignInResponseDTO,
   })
-  async signin(
-    @Body() data: AdminSignInDTO,
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<SignInResponseDTO> {
+  async signin(@Body() data: AdminSignInDTO, @Res({ passthrough: true }) res: Response,): Promise<SignInResponseDTO> {
     const { accessToken, refreshToken, admin } = await this.adminService.signIn(data);
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/',
     });
 
@@ -71,7 +62,7 @@ export class AdminController {
   async refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<{ accessToken: string } | void> {
     const refreshToken = req.cookies?.refreshToken;
 
     if (!refreshToken) {
@@ -89,7 +80,7 @@ export class AdminController {
     summary: '로그아웃',
     description: 'Refresh Token 쿠키를 삭제합니다.',
   })
-  async logout(@Res({ passthrough: true }) res: Response) {
+  async logout(@Res({ passthrough: true }) res: Response): Promise<{ message: string }> {
     res.clearCookie('refreshToken', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

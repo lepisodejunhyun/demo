@@ -9,4 +9,6 @@ model PreRegistration {
     createdAt       DateTime        @default(now())                 
     updatedAt       DateTime        @default(now()) @updatedAt
     deletedAt       DateTime?
+
+    agreements      TermsAgreement[]
 }

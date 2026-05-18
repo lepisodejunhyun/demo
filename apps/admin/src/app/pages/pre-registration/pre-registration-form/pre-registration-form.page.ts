@@ -1,6 +1,6 @@
 import { CommonModule, Location } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import {
     Api,
@@ -9,6 +9,7 @@ import {
     preRegistrationControllerFindAvailableEvents,
     preRegistrationControllerFindById,
     preRegistrationControllerUpdate,
+    termsControllerFindAll,
 } from "@api-client";
 import { formatPhoneNumber } from "../../../shared/utils/format-phone";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
@@ -19,7 +20,8 @@ import { FormFieldComponent } from "../../../components/form-field/form-field.co
 @Component({
     selector: 'app-pre-registration-form',
     templateUrl: './pre-registration-form.page.html',
-    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, ReactiveFormsModule, FormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent],
 })
 export default class PreRegistrationFormPage implements OnInit {
     private readonly api = inject(Api);
@@ -29,11 +31,13 @@ export default class PreRegistrationFormPage implements OnInit {
 
     id = input<string>();
 
-    get isEditMode() { return !!this.id(); }
+    get isEditMode(): boolean { return !!this.id(); }
 
     breadcrumbs: Breadcrumb[] = [];
 
     availableEvents: AvailableEventDto[] = [];
+    eventTitle = '';
+    termsList: { id: string; title: string; isRequired: boolean; content: string; agreed: boolean }[] = [];
 
     form = new FormGroup({
         eventId: new FormControl('', {
@@ -58,13 +62,13 @@ export default class PreRegistrationFormPage implements OnInit {
 
     errorMessage = '';
 
-    onPhoneInput(event: Event) {
+    onPhoneInput(event: Event): void {
         const input = event.target as HTMLInputElement;
         const formatted = formatPhoneNumber(input.value);
         this.form.patchValue({ contactNumber: formatted });
     }
 
-    async onSubmit() {
+    async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
         const data = this.form.getRawValue();
         try {
@@ -78,11 +82,13 @@ export default class PreRegistrationFormPage implements OnInit {
                 });
                 this.router.navigate(['/pre-registration', this.id()]);
             } else {
+                const agreedTermsIds = this.termsList.filter(t => t.agreed).map(t => t.id);
                 const item = await this.api.invoke(preRegistrationControllerCreate, {
                     body: {
                         eventId: data.eventId,
                         applicantName: data.applicantName,
                         contactNumber: data.contactNumber,
+                        agreedTermsIds,
                     },
                 });
                 this.router.navigate(['/pre-registration', item.id]);
@@ -92,7 +98,7 @@ export default class PreRegistrationFormPage implements OnInit {
         }
     }
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         const id = this.id();
 
         this.breadcrumbs = [
@@ -100,12 +106,20 @@ export default class PreRegistrationFormPage implements OnInit {
             { label: this.isEditMode ? '수정' : '등록' },
         ];
 
-        // 등록 모드일 때만 행사 목록 로드
         if (!this.isEditMode) {
             try {
                 this.availableEvents = await this.api.invoke(preRegistrationControllerFindAvailableEvents, {});
+                const termsResult = await this.api.invoke(termsControllerFindAll, { page: 1, limit: 100 });
+                this.termsList = (termsResult.items ?? []).map((t: any) => ({
+                    id: t.id,
+                    title: t.title,
+                    isRequired: t.isRequired ?? true,
+                    content: t.content ?? '',
+                    agreed: false,
+                }));
+                this.cdr.markForCheck();
             } catch (error) {
-                console.error('행사 목록 조회 실패', error);
+                console.error('초기 데이터 조회 실패', error);
             }
         }
 
@@ -114,13 +128,13 @@ export default class PreRegistrationFormPage implements OnInit {
                 const item = await this.api.invoke(preRegistrationControllerFindById, {
                     id: id,
                 });
+                this.eventTitle = item.eventTitle;
                 this.form.patchValue({
                     eventId: item.eventId,
                     applicantName: item.applicantName,
                     contactNumber: item.contactNumber,
                 });
-                // 수정 모드에서는 행사 변경 불가
-                this.form.get('eventId')?.disable();
+                // this.form.get('eventId')?.disable();
                 this.cdr.markForCheck();
             } catch (error) {
                 console.error('사전 등록 조회 실패', error);

@@ -21,6 +21,14 @@
                     [class.text-on-surface-variant]="col.type === 'date'">
                     @if (col.type === 'date') {
                     {{ getValue(item, col.field) | date: (col.dateFormat || 'yyyy.MM.dd') }}
+                    } @else if (col.type === 'boolean') {
+                    <span class="text-[11px] font-bold px-2 py-0.5 rounded"
+                        [class.text-error]="getValue(item, col.field)" [class.bg-error/10]="getValue(item, col.field)"
+                        [class.text-on-surface-variant]="!getValue(item, col.field)"
+                        [class.bg-surface-container-low]="!getValue(item, col.field)">
+                        {{ getValue(item, col.field) ? (col.booleanLabels?.true || 'Y') : (col.booleanLabels?.false ||
+                        'N') }}
+                    </span>
                     } @else {
                     {{ getValue(item, col.field) }}
                     }

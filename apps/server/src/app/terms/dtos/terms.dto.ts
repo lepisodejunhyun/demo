@@ -22,6 +22,12 @@ export class TermsDTO {
     content: string;
 
     @ApiProperty({
+        description: '필수 약관 여부'
+    })
+    @Expose()
+    isRequired: boolean;
+
+    @ApiProperty({
         description: '등록일'
     })
     @Expose()

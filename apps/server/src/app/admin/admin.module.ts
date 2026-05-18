@@ -29,7 +29,7 @@ export class AdminModule implements OnModuleInit {
 
   constructor(private readonly prisma: PrismaService) { }
 
-  async onModuleInit() {
+  async onModuleInit(): Promise<void> {
     try {
 
       if (!this.defaultAdminEmail || !this.defaultAdminPassword) {

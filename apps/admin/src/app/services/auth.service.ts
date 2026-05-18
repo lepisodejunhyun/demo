@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 const ACCESS_TOKEN_KEY = 'accessToken';
-const USER_KEY = 'adminUser';
+const ADMIN_KEY = 'adminUser';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -18,17 +18,17 @@ export class AuthService {
         localStorage.removeItem(ACCESS_TOKEN_KEY);
     }
 
-    getStoredUser(): any | null {
-        const raw = localStorage.getItem(USER_KEY);
+    getStoredAdmin(): any | null {
+        const raw = localStorage.getItem(ADMIN_KEY);
         return raw ? JSON.parse(raw) : null;
     }
 
-    setStoredUser(user: any): void {
-        localStorage.setItem(USER_KEY, JSON.stringify(user));
+    setStoredAdmin(admin: any): void {
+        localStorage.setItem(ADMIN_KEY, JSON.stringify(admin));
     }
 
-    removeStoredUser(): void {
-        localStorage.removeItem(USER_KEY);
+    removeStoredAdmin(): void {
+        localStorage.removeItem(ADMIN_KEY);
     }
 
     isLoggedIn(): boolean {
@@ -37,7 +37,7 @@ export class AuthService {
 
     clear(): void {
         this.removeToken();
-        this.removeStoredUser();
+        this.removeStoredAdmin();
     }
 
 }

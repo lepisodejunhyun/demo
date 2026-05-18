@@ -69,6 +69,12 @@ export class NoticeService {
         return notice;
     }
 
+    /**
+     * @name findById
+     * @description 공지사항 상세 조회
+     * @param {string} id
+     * @returns {Promise<Notice>}
+     */
     async findById(id: string): Promise<Notice> {
         const notice = await this.prisma.notice.findFirst({
             where: {
@@ -82,6 +88,12 @@ export class NoticeService {
         return notice;
     }
 
+    /**
+     * @name remove
+     * @description 공지사항 삭제 (Soft Delete)
+     * @param {string} id
+     * @returns {Promise<Notice>}
+     */
     async remove(id: string): Promise<Notice> {
         const notice = await this.prisma.notice.update({
             where: { id: id },
@@ -91,6 +103,13 @@ export class NoticeService {
         return notice;
     }
 
+    /**
+     * @name update
+     * @description 공지사항 수정
+     * @param {string} id
+     * @param {NoticeCreateDTO} data
+     * @returns {Promise<Notice>}
+     */
     async update(id: string, data: NoticeCreateDTO): Promise<Notice> {
         await this.findById(id);
 

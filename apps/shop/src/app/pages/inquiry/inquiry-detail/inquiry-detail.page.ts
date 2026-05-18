@@ -22,7 +22,7 @@ export default class InquiryDetailPage implements OnInit {
         'COMPLETED': '답변 완료',
     };
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         const id = this.id();
         if (!id) return;
 
@@ -31,12 +31,12 @@ export default class InquiryDetailPage implements OnInit {
             this.cdr.markForCheck();
         } catch (error) {
             console.error('문의 조회 실패', error);
-            this.router.navigate(['/inquiry']);
+            this.router.navigate(['/support/inquiry']);
         }
     }
 
     goBack(): void {
-        this.router.navigate(['/inquiry']);
+        this.router.navigate(['/support/inquiry']);
     }
 
     getStatusStyle(status: string): string {

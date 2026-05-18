@@ -24,8 +24,8 @@ export class SidebarLayout {
         { label: '1:1 문의', icon: 'chat', path: '/inquiry' },
     ]
 
-    logout() {
-        this.adminStore.clearUser();
+    logout(): void {
+        this.adminStore.clearAdmin();
         this.router.navigate(['/']);
 
     }

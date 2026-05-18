@@ -13,7 +13,7 @@ export default class KakaoCallbackPage implements OnInit {
     private readonly authService = inject(AuthService);
     private readonly platformId = inject(PLATFORM_ID);
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         if (!isPlatformBrowser(this.platformId)) return;
 
         const code = this.route.snapshot.queryParams['code'];

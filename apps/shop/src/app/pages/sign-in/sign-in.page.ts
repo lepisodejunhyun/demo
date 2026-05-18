@@ -27,7 +27,7 @@ export default class SignInPage {
     private readonly route = inject(ActivatedRoute);
     private readonly authService = inject(AuthService);
 
-    async onSubmit() {
+    async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
 
         try {
@@ -43,7 +43,7 @@ export default class SignInPage {
         }
     }
 
-    onKakaoLogin() {
+    onKakaoLogin(): void {
         const clientId = '8a75f87171244712630be6c959f9ae83';
         const redirectUri = encodeURIComponent('http://localhost:4201/auth/kakao/callback');
         const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;

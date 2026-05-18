@@ -4,6 +4,11 @@
 export interface PreRegistrationCreateDto {
 
   /**
+   * 동의한 약관 ID 목록
+   */
+  agreedTermsIds?: Array<string>;
+
+  /**
    * 신청자 이름 (최대 20자)
    */
   applicantName: string;

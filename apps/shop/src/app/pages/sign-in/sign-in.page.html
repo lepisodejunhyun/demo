@@ -18,14 +18,16 @@
                 <!-- Email -->
                 <div class="mb-5">
                     <label for="sign-in-email" class="block text-sm font-semibold text-on-surface mb-2">이메일</label>
-                    <input formControlName="email" id="sign-in-email" type="email" placeholder="example&#64;email.com"
+                    <input formControlName="email" id="sign-in-email" type="email" maxlength="40"
+                        placeholder="example&#64;email.com"
                         class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline" />
                 </div>
 
                 <!-- Password -->
                 <div class="mb-6">
                     <label for="sign-in-password" class="block text-sm font-semibold text-on-surface mb-2">비밀번호</label>
-                    <input formControlName="password" id="sign-in-password" type="password" placeholder="비밀번호를 입력하세요"
+                    <input formControlName="password" id="sign-in-password" type="password" maxlength="40"
+                        placeholder="비밀번호를 입력하세요"
                         class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline" />
                 </div>
 
@@ -51,7 +53,9 @@
             <button (click)="onKakaoLogin()"
                 class="w-full py-3.5 bg-[#FEE500] text-[#3C1E1E] font-bold text-sm rounded-xl hover:bg-[#FDD835] transition-colors flex items-center justify-center gap-2 cursor-pointer">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <path d="M9 1C4.58 1 1 3.79 1 7.21c0 2.17 1.44 4.08 3.62 5.18l-.93 3.44c-.08.3.26.54.52.37l4.09-2.69c.23.02.46.03.7.03 4.42 0 8-2.79 8-6.23S13.42 1 9 1z" fill="#3C1E1E"/>
+                    <path
+                        d="M9 1C4.58 1 1 3.79 1 7.21c0 2.17 1.44 4.08 3.62 5.18l-.93 3.44c-.08.3.26.54.52.37l4.09-2.69c.23.02.46.03.7.03 4.42 0 8-2.79 8-6.23S13.42 1 9 1z"
+                        fill="#3C1E1E" />
                 </svg>
                 카카오로 시작하기
             </button>

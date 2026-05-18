@@ -19,9 +19,16 @@
           {{ getStatus()!.label }}
         </span>
       </div>
-      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
-        {{ event.title }}
-      </h1>
+      <div class="flex items-start justify-between gap-4 mb-6">
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+          {{ event.title }}
+        </h1>
+        <a *ngIf="isPreRegistrationOpen()" [routerLink]="['/pre-registration', event.id]"
+           class="shrink-0 inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#8127cf] to-[#4648d4] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all shadow-lg shadow-primary/20 cursor-pointer">
+          <span class="material-symbols-outlined text-lg">how_to_reg</span>
+          사전 등록
+        </a>
+      </div>
 
       <!-- 행사 메타 정보 -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-slate-600">
@@ -58,6 +65,7 @@
         {{ event.content }}
       </div>
     </div>
+
   </article>
 
   <!-- Loading State -->

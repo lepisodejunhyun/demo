@@ -13,7 +13,7 @@ export class PreRegistrationService {
 
     /**
      * @name findAll
-     * @description 사전 등록 페이지네이션 조회 (행사명/회원명 평탄화)
+     * @description 사전 등록 페이지네이션 조회 (행사명, 회원명 평탄화)
      * @param {number} page - 페이지 번호 (기본값: 1)
      * @param {number} limit - 페이지당 항목 수 (기본값: 10)
      * @returns {Promise<OffsetPaginationDTO<any>>}
@@ -43,7 +43,6 @@ export class PreRegistrationService {
             }),
         ]);
 
-        // 행사명/회원명을 평탄화하여 응답
         const flattenedItems = items.map((item) => ({
             ...item,
             eventTitle: item.event.title,
@@ -77,6 +76,10 @@ export class PreRegistrationService {
             include: {
                 event: { select: { title: true } },
                 member: { select: { name: true } },
+                agreements: {
+                    include: { terms: { select: { title: true, isRequired: true } } },
+                    orderBy: { agreedAt: 'asc' },
+                },
             },
         });
 
@@ -86,6 +89,12 @@ export class PreRegistrationService {
             ...item,
             eventTitle: item.event.title,
             memberName: item.member?.name ?? null,
+            agreements: item.agreements.map(a => ({
+                termsId: a.termsId,
+                termsTitle: a.terms.title,
+                isRequired: a.terms.isRequired,
+                agreedAt: a.agreedAt,
+            })),
         };
     }
 
@@ -93,7 +102,7 @@ export class PreRegistrationService {
      * @name findAvailableEvents
      * @description 사전 등록 가능한 행사 목록 조회.
      *              조건: preRegStartDate/preRegEndDate가 설정되어 있고,
-     *                    현재 시각이 그 기간 내인 행사.
+     *                    현재 시각이 해당 기간 내인 행사.
      * @returns {Promise<Event[]>}
      */
     async findAvailableEvents(): Promise<Event[]> {
@@ -114,20 +123,30 @@ export class PreRegistrationService {
     /**
      * @name create
      * @description 사전 등록 신규 생성.
-     *              행사 검증: 존재 + 사전 등록 기간 설정 + 기간 내.
+     *              행사 검증: 존재 + 사전 등록 기간 설정 + 기간 내
      * @param {PreRegistrationCreateDTO} data
      * @returns {Promise<PreRegistration>}
      */
     async create(data: PreRegistrationCreateDTO): Promise<PreRegistration> {
-        // 행사 존재 + 사전 등록 가용 여부 검증
         await this.assertEventAvailable(data.eventId);
 
-        // 회원 id가 들어왔다면 존재 확인
         if (data.memberId) {
             const member = await this.prisma.member.findFirst({
                 where: { id: data.memberId, deletedAt: null },
             });
             if (!member) throw new NotFoundException('회원을 찾을 수 없습니다.');
+        }
+
+        const agreedTermsIds = data.agreedTermsIds ?? [];
+        const requiredTerms = await this.prisma.terms.findMany({
+            where: { isRequired: true, deletedAt: null },
+            select: { id: true, title: true },
+        });
+
+        const missingTerms = requiredTerms.filter(t => !agreedTermsIds.includes(t.id));
+        if (missingTerms.length > 0) {
+            const names = missingTerms.map(t => t.title).join(', ');
+            throw new BadRequestException(`필수 약관에 동의해주세요: ${names}`);
         }
 
         return this.prisma.preRegistration.create({
@@ -136,7 +155,9 @@ export class PreRegistrationService {
                 memberId: data.memberId ?? null,
                 applicantName: data.applicantName,
                 contactNumber: data.contactNumber,
-
+                agreements: agreedTermsIds.length > 0 ? {
+                    create: agreedTermsIds.map(termsId => ({ termsId })),
+                } : undefined,
             },
         });
     }
@@ -179,8 +200,10 @@ export class PreRegistrationService {
     }
 
     /**
-     * 행사가 존재하고 사전 등록 가능한 상태인지 검증.
-     * 실패 시 NotFoundException 또는 BadRequestException 던짐.
+     * @name assertEventAvailable
+     * @description 행사가 존재하고 사전 등록 가능한 상태인지 검증.
+     *              실패 시 NotFoundException 또는 BadRequestException 던짐.
+     * @param {string} eventId
      */
     private async assertEventAvailable(eventId: string): Promise<void> {
         const event = await this.prisma.event.findFirst({
@@ -196,7 +219,10 @@ export class PreRegistrationService {
         }
 
         const now = new Date();
-        if (now < event.preRegStartDate || now > event.preRegEndDate) {
+        const preRegDeadline = new Date(event.preRegEndDate);
+        preRegDeadline.setDate(preRegDeadline.getDate() + 1);
+
+        if (now < event.preRegStartDate || now >= preRegDeadline) {
             throw new BadRequestException('사전 등록 가능 기간이 아닙니다.');
         }
     }

@@ -61,11 +61,11 @@ export default class BusinessInfoPage implements OnInit {
         { label: '이메일', key: 'email' as keyof BusinessInfoDto },
     ];
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         await this.loadData();
     }
 
-    private async loadData() {
+    private async loadData(): Promise<void> {
         try {
             this.businessInfo = await this.api.invoke(businessInfoControllerFindOne, {});
         } catch (error) {
@@ -106,7 +106,7 @@ export default class BusinessInfoPage implements OnInit {
     }
 
     /** 저장 — PATCH API 호출 후 조회 모드로 전환 */
-    async onSubmit() {
+    async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
         this.errorMessage = '';
         this.successMessage = '';
@@ -125,7 +125,7 @@ export default class BusinessInfoPage implements OnInit {
         }
     }
 
-    onPhoneInput(event: Event, controlName: 'contactNumber') {
+    onPhoneInput(event: Event, controlName: 'contactNumber'): void {
         const input = event.target as HTMLInputElement;
         const formatted = formatPhoneNumber(input.value);
         this.form.patchValue({ [controlName]: formatted });

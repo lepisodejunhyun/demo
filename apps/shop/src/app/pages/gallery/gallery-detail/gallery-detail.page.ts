@@ -18,7 +18,7 @@ export default class GalleryDetailPage implements OnInit {
 
   gallery: GalleryDto | null = null;
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     const id = this.id();
 
     if (!id) return;

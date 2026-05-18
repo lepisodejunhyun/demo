@@ -24,6 +24,7 @@ export default class TermsPage implements OnInit {
     columns: ColumnDef[] = [
         { field: 'title', name: '제목', truncate: true },
         { field: 'content', name: '내용', truncate: true },
+        { field: 'isRequired', name: '구분', type: 'boolean', booleanLabels: { true: '필수 약관', false: '선택 약관' }, width: 'w-30' },
         { field: 'createdAt', name: '등록일', type: 'date', width: 'w-44' },
     ];
 

@@ -13,6 +13,12 @@ export class MemberService {
     private readonly jwtService: JwtService,
   ) { }
 
+  /**
+   * @name signUp
+   * @description 회원 가입 (이메일 중복 검증 포함)
+   * @param {MemberSignUpDTO} data
+   * @returns {Promise<Member>}
+   */
   async signUp(data: MemberSignUpDTO): Promise<Member> {
     const existing = await this.prisma.member.findFirst({
       where: { email: data.email, deletedAt: null },
@@ -33,6 +39,12 @@ export class MemberService {
     return member;
   }
 
+  /**
+   * @name signIn
+   * @description 회원 로그인 — Access Token + Refresh Token 발급
+   * @param {MemberSignInDTO} data
+   * @returns {Promise<{ accessToken: string; refreshToken: string; member: Member }>}
+   */
   async signIn(data: MemberSignInDTO): Promise<{ accessToken: string; refreshToken: string; member: Member }> {
     const { email, password } = data;
 
@@ -62,6 +74,12 @@ export class MemberService {
     return { accessToken, refreshToken, member };
   }
 
+  /**
+   * @name refreshAccessToken
+   * @description Refresh Token으로 새 Access Token 발급
+   * @param {string} refreshToken
+   * @returns {Promise<{ accessToken: string }>}
+   */
   async refreshAccessToken(refreshToken: string): Promise<{ accessToken: string }> {
     try {
       const payload = this.jwtService.verify(refreshToken);

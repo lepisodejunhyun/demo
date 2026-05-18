@@ -32,5 +32,27 @@
             <p class="text-base font-medium">{{ item.memberName ?? '비회원' }}</p>
         </div>
     </div>
+
+    @if (item.agreements && item.agreements.length > 0) {
+    <div class="mt-8 pt-8 border-t border-outline-variant">
+        <h3 class="text-sm font-semibold text-on-surface-variant mb-4">약관 동의 이력</h3>
+        <div class="space-y-2">
+            @for (agreement of item.agreements; track agreement.termsId) {
+            <div class="flex items-center justify-between px-4 py-3 rounded border border-outline-variant">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-base">check_circle</span>
+                    <span class="text-sm font-medium">{{ agreement.termsTitle }}</span>
+                    @if (agreement.isRequired) {
+                    <span class="text-[10px] font-bold text-error bg-error/10 px-1.5 py-0.5 rounded">필수</span>
+                    } @else {
+                    <span class="text-[10px] font-bold text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">선택</span>
+                    }
+                </div>
+                <span class="text-xs text-on-surface-variant">{{ agreement.agreedAt | date:'yyyy.MM.dd HH:mm' }}</span>
+            </div>
+            }
+        </div>
+    </div>
+    }
 </app-detail-view>
 }

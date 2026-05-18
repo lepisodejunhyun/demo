@@ -1,0 +1,9 @@
+<section class="bg-surface-container-low/50 py-16 mt-16">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-16">
+        <h1 class="text-4xl font-extrabold text-on-surface tracking-tight">{{ title() }}</h1>
+        @if (description()) {
+        <p class="text-lg text-on-surface-variant mt-3">{{ description() }}</p>
+        }
+        <ng-content select="[slot=description]" />
+    </div>
+</section>

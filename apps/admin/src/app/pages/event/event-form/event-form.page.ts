@@ -48,7 +48,7 @@ export default class EventFormPage implements OnInit {
 
     id = input<string>();
 
-    get isEditMode() { return !!this.id(); }
+    get isEditMode(): boolean { return !!this.id(); }
 
     breadcrumbs: Breadcrumb[] = [];
 
@@ -104,7 +104,7 @@ export default class EventFormPage implements OnInit {
         preRegEndDate: new FormControl<string | null>(null),
     }, { validators: eventDateRangeValidator });
 
-    onFileSelected(event: Event) {
+    onFileSelected(event: Event): void {
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0];
         if (!file) return;
@@ -129,13 +129,13 @@ export default class EventFormPage implements OnInit {
         this.cdr.markForCheck();
     }
 
-    onPhoneInput(event: Event) {
+    onPhoneInput(event: Event): void {
         const input = event.target as HTMLInputElement;
         const formatted = formatPhoneNumber(input.value);
         this.form.patchValue({ contactNumber: formatted });
     }
 
-    async onSubmit() {
+    async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
 
         try {
@@ -168,7 +168,7 @@ export default class EventFormPage implements OnInit {
         }
     }
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         const id = this.id();
 
         this.breadcrumbs = [

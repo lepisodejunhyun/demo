@@ -15,7 +15,7 @@ export default class HomePage implements OnInit {
 
     events: EventDto[] = [];
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         try {
             const result = await this.api.invoke(eventControllerFindAll, {
                 page: 1,
@@ -37,12 +37,18 @@ export default class HomePage implements OnInit {
         const start = new Date(event.startDate);
         const end = new Date(event.endDate);
 
-        if (now < start) {
-            return { label: '예정', class: 'bg-blue-100 text-blue-700' };
-        } else if (now > end) {
+        if (now > end) {
             return { label: '종료', class: 'bg-slate-100 text-slate-500' };
-        } else {
+        } else if (now >= start) {
             return { label: '진행중', class: 'bg-emerald-100 text-emerald-700' };
+        } else if (event.preRegStartDate && event.preRegEndDate) {
+            const preStart = new Date(event.preRegStartDate);
+            const preDeadline = new Date(event.preRegEndDate);
+            preDeadline.setDate(preDeadline.getDate() + 1);
+            if (now >= preStart && now < preDeadline) {
+                return { label: '사전 등록중', class: 'bg-violet-100 text-violet-700' };
+            }
         }
+        return { label: '예정', class: 'bg-blue-100 text-blue-700' };
     }
 }

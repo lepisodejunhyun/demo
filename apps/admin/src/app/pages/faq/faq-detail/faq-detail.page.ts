@@ -25,7 +25,7 @@ export default class FaqDetailPage implements OnInit {
         { label: '상세 보기' },
     ];
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         const id = this.id();
 
         if (!id) return;
@@ -43,7 +43,7 @@ export default class FaqDetailPage implements OnInit {
 
     }
 
-    async onDelete() {
+    async onDelete(): Promise<void> {
         if (!confirm('정말 삭제하시겠습니까?')) return;
 
         try {

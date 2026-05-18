@@ -3,8 +3,6 @@
 
 export type { AppControllerGetData$Params as AppControllerGetData$Params } from './fn/app/app-controller-get-data';
 export { appControllerGetData as appControllerGetData } from './fn/app/app-controller-get-data';
-export type { AdminControllerGethello$Params as AdminControllerGethello$Params } from './fn/admin/admin-controller-gethello';
-export { adminControllerGethello as adminControllerGethello } from './fn/admin/admin-controller-gethello';
 export type { AdminControllerFindAll$Params as AdminControllerFindAll$Params } from './fn/admin/admin-controller-find-all';
 export { adminControllerFindAll as adminControllerFindAll } from './fn/admin/admin-controller-find-all';
 export type { AdminControllerSignin$Params as AdminControllerSignin$Params } from './fn/admin/admin-controller-signin';

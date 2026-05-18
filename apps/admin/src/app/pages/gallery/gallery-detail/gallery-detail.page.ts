@@ -43,7 +43,7 @@ export default class GalleryDetailPage implements OnInit {
 
     }
 
-    async onDelete() {
+    async onDelete(): Promise<void> {
         if (!confirm('정말 삭제하시겠습니까?')) return;
 
         try {

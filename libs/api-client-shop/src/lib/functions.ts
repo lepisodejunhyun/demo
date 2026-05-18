@@ -33,3 +33,15 @@ export type { InquiryControllerFindById$Params as InquiryControllerFindById$Para
 export { inquiryControllerFindById as inquiryControllerFindById } from './fn/inquiry/inquiry-controller-find-by-id';
 export type { InquiryControllerCreate$Params as InquiryControllerCreate$Params } from './fn/inquiry/inquiry-controller-create';
 export { inquiryControllerCreate as inquiryControllerCreate } from './fn/inquiry/inquiry-controller-create';
+export type { TermsControllerFindAll$Params as TermsControllerFindAll$Params } from './fn/terms/terms-controller-find-all';
+export { termsControllerFindAll as termsControllerFindAll } from './fn/terms/terms-controller-find-all';
+export type { PreRegistrationControllerFindAvailableEvents$Params as PreRegistrationControllerFindAvailableEvents$Params } from './fn/pre-registration/pre-registration-controller-find-available-events';
+export { preRegistrationControllerFindAvailableEvents as preRegistrationControllerFindAvailableEvents } from './fn/pre-registration/pre-registration-controller-find-available-events';
+export type { PreRegistrationControllerCreate$Params as PreRegistrationControllerCreate$Params } from './fn/pre-registration/pre-registration-controller-create';
+export { preRegistrationControllerCreate as preRegistrationControllerCreate } from './fn/pre-registration/pre-registration-controller-create';
+export type { BusinessInfoControllerFindOne$Params as BusinessInfoControllerFindOne$Params } from './fn/business-info/business-info-controller-find-one';
+export { businessInfoControllerFindOne as businessInfoControllerFindOne } from './fn/business-info/business-info-controller-find-one';
+export type { FaqControllerFindAll$Params as FaqControllerFindAll$Params } from './fn/faq/faq-controller-find-all';
+export { faqControllerFindAll as faqControllerFindAll } from './fn/faq/faq-controller-find-all';
+export type { FaqControllerFindById$Params as FaqControllerFindById$Params } from './fn/faq/faq-controller-find-by-id';
+export { faqControllerFindById as faqControllerFindById } from './fn/faq/faq-controller-find-by-id';

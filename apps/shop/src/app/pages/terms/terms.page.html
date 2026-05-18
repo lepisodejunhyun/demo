@@ -1,0 +1,30 @@
+<app-page-header title="약관 및 정책" description="서비스 이용에 관한 약관과 정책을 확인하세요." />
+
+<!-- Content -->
+<div class="max-w-[1280px] mx-auto px-5 md:px-16 py-10">
+    <!-- Tabs -->
+    <div class="flex flex-wrap gap-2 border-b border-outline-variant pb-1">
+        @for (terms of termsList; track terms.id) {
+        <button (click)="selectTab(terms.id)" [class.text-primary]="selectedId === terms.id"
+            [class.border-primary]="selectedId === terms.id"
+            [class.border-transparent]="selectedId !== terms.id"
+            class="px-4 py-2 text-sm font-semibold border-b-2 transition-colors cursor-pointer hover:text-primary -mb-[5px]">
+            {{ terms.title }}
+        </button>
+        }
+    </div>
+
+    <!-- Selected Terms Content -->
+    @if (selectedTerms) {
+    <div class="mt-8">
+        <h2 class="text-2xl font-bold text-on-surface mb-6">{{ selectedTerms.title }}</h2>
+        <div class="prose prose-slate max-w-none text-on-surface-variant text-sm leading-relaxed whitespace-pre-wrap">
+            {{ selectedTerms.content }}
+        </div>
+    </div>
+    } @else {
+    <div class="mt-8 text-center text-on-surface-variant py-12">
+        약관을 선택해주세요.
+    </div>
+    }
+</div>

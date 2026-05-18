@@ -21,7 +21,7 @@ export default class TermsFormPage implements OnInit {
 
     id = input<string>();
 
-    get isEditMode() { return !!this.id(); }
+    get isEditMode(): boolean { return !!this.id(); }
 
     breadcrumbs: Breadcrumb[] = [];
 
@@ -37,12 +37,15 @@ export default class TermsFormPage implements OnInit {
                 Validators.required,
             ],
             nonNullable: true,
-        })
+        }),
+        isRequired: new FormControl(true, {
+            nonNullable: true,
+        }),
     });
 
     errorMessage = '';
 
-    async onSubmit() {
+    async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
         const data = this.form.getRawValue();
         try {
@@ -51,7 +54,8 @@ export default class TermsFormPage implements OnInit {
                     id: this.id()!,
                     body: {
                         title: data.title,
-                        content: data.content
+                        content: data.content,
+                        isRequired: data.isRequired,
                     },
                 });
                 this.router.navigate(['/terms', this.id()]);
@@ -59,7 +63,8 @@ export default class TermsFormPage implements OnInit {
                 const terms = await this.api.invoke(termsControllerCreate, {
                     body: {
                         title: data.title,
-                        content: data.content
+                        content: data.content,
+                        isRequired: data.isRequired,
                     },
                 });
                 this.router.navigate(['/terms', terms.id]);
@@ -69,7 +74,7 @@ export default class TermsFormPage implements OnInit {
         }
     }
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         const id = this.id();
 
         this.breadcrumbs = [
@@ -84,6 +89,7 @@ export default class TermsFormPage implements OnInit {
             this.form.patchValue({
                 title: terms.title,
                 content: terms.content,
+                isRequired: terms.isRequired,
             });
             this.cdr.markForCheck();
         }

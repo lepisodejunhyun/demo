@@ -2,10 +2,11 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Api, inquiryControllerFindAll, InquiryDto, PageInfoDto } from "@api-client-shop";
+import { PaginationComponent } from '../../components/pagination/pagination.component';
 
 @Component({
     selector: 'app-inquiry',
-    imports: [CommonModule, RouterLink],
+    imports: [CommonModule, RouterLink, PaginationComponent],
     templateUrl: './inquiry.page.html',
 })
 export default class InquiryPage implements OnInit {

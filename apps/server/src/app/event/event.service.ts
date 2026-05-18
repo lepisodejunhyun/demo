@@ -12,7 +12,7 @@ export class EventService {
 
     /**
      * @name findAll
-     * @description FAQ 페이지네이션 조회
+     * @description 행사 페이지네이션 조회
      * @param {number} page - 페이지 번호 (기본값: 1)
      * @param {number} limit - 페이지당 항목 수 (기본값: 10)
      * @returns {Promise<OffsetPaginationDTO<Event>>}
@@ -125,6 +125,11 @@ export class EventService {
         return event;
     }
 
+    /**
+     * @name validateDates
+     * @description 행사 날짜 유효성 검증 (시작일/종료일, 사전 등록 기간)
+     * @param {EventCreateDTO} data
+     */
     private validateDates(data: EventCreateDTO): void {
         if (data.endDate <= data.startDate) {
             throw new BadRequestException('종료일은 시작일 이후여야 합니다.');

@@ -16,10 +16,11 @@ export class AdminService {
     private readonly jwtService: JwtService,
   ) { }
 
-  getHello(): string {
-    return 'Hello World!';
-  }
-
+  /**
+   * @name findAll
+   * @description 관리자 전체 목록 조회
+   * @returns {Promise<Admin[]>}
+   */
   async findAll(): Promise<Admin[]> {
     const admins = await this.prisma.admin.findMany({});
 

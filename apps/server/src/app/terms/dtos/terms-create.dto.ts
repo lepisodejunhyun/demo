@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, MaxLength } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 
 export class TermsCreateDTO {
     @ApiProperty({
@@ -16,4 +16,13 @@ export class TermsCreateDTO {
     @IsNotEmpty({ message: '약관 내용은 필수 입력 항목입니다.' })
     @IsString({})
     content: string;
+
+    @ApiProperty({
+        description: '필수 약관 여부 (기본값: true)',
+        required: false,
+        default: true,
+    })
+    @IsOptional()
+    @IsBoolean()
+    isRequired?: boolean;
 }

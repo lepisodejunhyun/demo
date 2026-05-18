@@ -27,7 +27,7 @@ export default class InquiryFormPage {
 
     errorMessage = '';
 
-    async onSubmit() {
+    async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
 
         try {
@@ -38,7 +38,7 @@ export default class InquiryFormPage {
                     content: data.content,
                 },
             });
-            this.router.navigate(['/inquiry']);
+            this.router.navigate(['/support/inquiry']);
         } catch (error: any) {
             this.errorMessage = error?.error?.message || '문의 작성에 실패했습니다.';
         }

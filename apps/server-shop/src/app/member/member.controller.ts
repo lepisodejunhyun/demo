@@ -37,10 +37,7 @@ export class MemberController {
     description: '로그인 성공',
     type: SignInResponseDTO,
   })
-  async signin(
-    @Body() data: MemberSignInDTO,
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<SignInResponseDTO> {
+  async signin(@Body() data: MemberSignInDTO, @Res({ passthrough: true }) res: Response,): Promise<SignInResponseDTO> {
     const { accessToken, refreshToken, member } = await this.memberService.signIn(data);
 
     res.cookie('refreshToken', refreshToken, {
@@ -62,7 +59,7 @@ export class MemberController {
   async refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<{ accessToken: string } | void> {
     const refreshToken = req.cookies?.refreshToken;
 
     if (!refreshToken) {
@@ -80,7 +77,7 @@ export class MemberController {
     summary: '로그아웃',
     description: 'Refresh Token 쿠키를 삭제합니다.',
   })
-  async logout(@Res({ passthrough: true }) res: Response) {
+  async logout(@Res({ passthrough: true }) res: Response): Promise<{ message: string }> {
     res.clearCookie('refreshToken', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

@@ -10,4 +10,4 @@
 </app-page-header>
 
 <app-data-table [columns]="columns" [items]="faqs" [pageInfo]="pageInfo" emptyMessage="등록된 FAQ가 없습니다."
-    (rowClick)="goDetail($event)" (pageChange)="loadData($event)" />
+    (rowClick)="goDetail($event)" (pageChange)="onPageChange($event)" />

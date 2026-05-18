@@ -1,7 +1,8 @@
 export interface ColumnDef {
     field: string;
     name?: string;
-    type?: 'text' | 'date' | 'number';
+    type?: 'text' | 'date' | 'number' | 'boolean';
+    booleanLabels?: { true: string; false: string };
     dateFormat?: string;
     truncate?: boolean;
     width?: string;

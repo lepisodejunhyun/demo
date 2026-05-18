@@ -19,7 +19,7 @@
         <!-- 포스터 이미지 (왼쪽) -->
         @if (event.posterImage) {
         <div class="shrink-0">
-            <img [src]="event.posterImage" [alt]="event.title" class="w-130 border border-outline-variant shadow-sm"
+            <img [src]="event.posterImage" [alt]="event.title" class="w-130 max-h-[480px] object-contain border border-outline-variant shadow-sm rounded"
                 (error)="$any($event.target).style.display='none'" />
         </div>
         }

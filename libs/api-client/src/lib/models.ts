@@ -22,5 +22,6 @@ export type { PreRegistrationCreateDto } from './models/pre-registration-create-
 export type { PreRegistrationDto } from './models/pre-registration-dto';
 export type { PreRegistrationUpdateDto } from './models/pre-registration-update-dto';
 export type { SignInResponseDto } from './models/sign-in-response-dto';
+export type { TermsAgreementItemDto } from './models/terms-agreement-item-dto';
 export type { TermsCreateDto } from './models/terms-create-dto';
 export type { TermsDto } from './models/terms-dto';

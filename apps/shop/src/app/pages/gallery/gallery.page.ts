@@ -1,23 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Api, noticeControllerFindAll, NoticeDto, PageInfoDto } from '@api-client-shop';
+import { Api, galleryControllerFindAll, GalleryDto, PageInfoDto } from '@api-client-shop';
+import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 
 @Component({
-  selector: 'app-notice-list',
+  selector: 'app-gallery',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './notice-list.page.html',
+  imports: [CommonModule, PageHeaderComponent],
+  templateUrl: './gallery.page.html',
 })
-export default class NoticeListPage implements OnInit {
+export default class GalleryPage implements OnInit {
   private readonly api = inject(Api);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly route = inject(ActivatedRoute);
 
-  notices: NoticeDto[] = [];
+  galleries: GalleryDto[] = [];
   pageInfo: PageInfoDto | null = null;
-  Math = Math; // 템플릿에서 Math.max 등을 사용하기 위함
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -28,15 +28,15 @@ export default class NoticeListPage implements OnInit {
 
   async loadData(page: number): Promise<void> {
     try {
-      const result = await this.api.invoke(noticeControllerFindAll, {
+      const result = await this.api.invoke(galleryControllerFindAll, {
         page: page,
-        limit: 10,
+        limit: 8,
       });
-      this.notices = result.items ?? [];
+      this.galleries = result.items ?? [];
       this.pageInfo = result.pageInfo ?? null;
       this.cdr.markForCheck();
     } catch (error) {
-      console.error('공지사항 목록 조회 실패', error);
+      console.error('갤러리 목록 조회 실패', error);
     }
   }
 
@@ -48,7 +48,7 @@ export default class NoticeListPage implements OnInit {
     });
   }
 
-  goDetail(notice: NoticeDto): void {
-    this.router.navigate(['/notice', notice.id]);
+  goDetail(gallery: GalleryDto): void {
+    this.router.navigate(['/gallery', gallery.id]);
   }
 }

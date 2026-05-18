@@ -9,6 +9,11 @@ export interface TermsCreateDto {
   content: string;
 
   /**
+   * 필수 약관 여부 (기본값: true)
+   */
+  isRequired?: boolean;
+
+  /**
    * 약관 제목 (최대 100자)
    */
   title: string;

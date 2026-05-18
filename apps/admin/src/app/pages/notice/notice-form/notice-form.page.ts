@@ -21,7 +21,7 @@ export default class NoticeFormPage implements OnInit {
 
     id = input<string>();
 
-    get isEditMode() { return !!this.id(); }
+    get isEditMode(): boolean { return !!this.id(); }
 
     breadcrumbs: Breadcrumb[] = [];
 
@@ -42,7 +42,7 @@ export default class NoticeFormPage implements OnInit {
 
     errorMessage = '';
 
-    async onSubmit() {
+    async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
         const data = this.form.getRawValue();
         try {
@@ -69,7 +69,7 @@ export default class NoticeFormPage implements OnInit {
         }
     }
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         const id = this.id();
 
         this.breadcrumbs = [

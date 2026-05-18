@@ -1,17 +1,25 @@
 <footer class="w-full py-8 bg-surface-container-low border-t border-outline-variant">
-    <div class="flex flex-col md:flex-row justify-between items-center px-5 md:px-16 max-w-[1280px] mx-auto gap-4">
-        <div class="flex flex-col items-center md:items-start gap-2">
-            <span class="text-xl font-bold text-on-surface">DEMO</span>
-            <p class="text-on-surface-variant text-base text-center md:text-left">© 2024 DEMO Management System. All
-                rights reserved.</p>
-        </div>
-        <nav class="flex flex-wrap justify-center gap-4">
-            <a routerLink="/terms" class="text-on-surface-variant hover:text-primary transition-colors text-base">Terms
-                of Service</a>
-            <a routerLink="/privacy"
-                class="text-on-surface-variant hover:text-primary transition-colors text-base">Privacy Policy</a>
-            <a routerLink="/inquiry"
-                class="text-on-surface-variant hover:text-primary transition-colors text-base">Contact Support</a>
+    <div class="flex flex-col items-center px-5 md:px-16 max-w-[1280px] mx-auto gap-4">
+        <nav class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            @for (terms of termsList; track terms.id) {
+            <a routerLink="/terms" [queryParams]="{ tab: terms.id }"
+                class="text-on-surface-variant hover:text-primary transition-colors text-sm">{{ terms.title }}</a>
+            }
         </nav>
+        @if (businessInfo) {
+        <div class="flex flex-wrap justify-center gap-x-2 gap-y-1 text-xs text-on-surface-variant/70">
+            <span>{{ businessInfo.name }}</span><span>|</span>
+            <span>대표 {{ businessInfo.representativeName }}</span><span>|</span>
+            <span>사업자등록번호 {{ businessInfo.registrationNumber }}</span><span>|</span>
+            <span>{{ businessInfo.address }}</span>
+        </div>
+        <div class="flex flex-wrap justify-center gap-x-2 text-xs text-on-surface-variant/70">
+            <span>연락처 {{ businessInfo.contactNumber }}</span><span>|</span>
+            <span>이메일 {{ businessInfo.email }}</span>
+        </div>
+        }
+
+        <p class="text-on-surface-variant/50 text-xs">© 2024 {{ businessInfo?.name || 'DEMO' }}. All rights reserved.
+        </p>
     </div>
 </footer>

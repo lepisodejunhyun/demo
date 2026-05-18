@@ -23,7 +23,7 @@ export default class GalleryFormPage implements OnInit {
 
     id = input<string>();
 
-    get isEditMode() { return !!this.id(); }
+    get isEditMode(): boolean { return !!this.id(); }
 
     breadcrumbs: Breadcrumb[] = [];
 
@@ -44,7 +44,7 @@ export default class GalleryFormPage implements OnInit {
 
     readonly maxImages = 10;
 
-    onFilesSelected(event: Event) {
+    onFilesSelected(event: Event): void {
         const input = event.target as HTMLInputElement;
         const files = input.files;
         if (!files || files.length === 0) return;
@@ -73,12 +73,12 @@ export default class GalleryFormPage implements OnInit {
         this.cdr.markForCheck();
     }
 
-    removeImage(index: number) {
+    removeImage(index: number): void {
         this.imageItems.splice(index, 1);
         this.cdr.markForCheck();
     }
 
-    async onSubmit() {
+    async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
 
         try {
@@ -120,7 +120,7 @@ export default class GalleryFormPage implements OnInit {
         }
     }
 
-    async ngOnInit() {
+    async ngOnInit(): Promise<void> {
         const id = this.id();
 
         this.breadcrumbs = [
