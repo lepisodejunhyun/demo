@@ -25,14 +25,11 @@
     </app-form-field>
 
     <app-form-field label="신청자 이름" for="pre-reg-name" [required]="true">
-        <input formControlName="applicantName" id="pre-reg-name" type="text" maxlength="20" placeholder="신청자 이름을 입력하세요"
-            class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
+        <app-form-input formControlName="applicantName" id="pre-reg-name" [maxlength]="20" placeholder="신청자 이름을 입력하세요" />
     </app-form-field>
 
     <app-form-field label="연락처" for="pre-reg-contact" [required]="true">
-        <input formControlName="contactNumber" id="pre-reg-contact" type="text" maxlength="13" placeholder="연락처를 입력하세요"
-            (input)="onPhoneInput($event)"
-            class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
+        <app-form-input formControlName="contactNumber" id="pre-reg-contact" type="tel" [maxlength]="13" placeholder="연락처를 입력하세요" />
     </app-form-field>
 
     @if (!isEditMode && termsList.length > 0) {

@@ -15,6 +15,7 @@ export class TermsCreateDTO {
     })
     @IsNotEmpty({ message: '약관 내용은 필수 입력 항목입니다.' })
     @IsString({})
+    @MaxLength(10000, { message: '약관 내용은 최대 10000자까지 입력 가능합니다.' })
     content: string;
 
     @ApiProperty({

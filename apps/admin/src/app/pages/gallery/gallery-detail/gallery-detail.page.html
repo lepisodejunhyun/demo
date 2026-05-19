@@ -1,8 +1,8 @@
-@if (gallery) {
-<app-page-header [title]="gallery.title">
+@if (gallery()) {
+<app-page-header [title]="gallery()!.title">
     <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
-    <a slot="actions" [routerLink]="'/gallery/' + gallery.id + '/edit'"
-        class="px-4 py-2 text-primary font-semibold text-xs border border-outline-variant rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
+    <a slot="actions" [routerLink]="'/gallery/' + gallery()!.id + '/edit'"
+        class="px-4 py-2 text-primary font-semibold text-xs rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
         <span class="material-symbols-outlined text-[18px]">edit</span>
         수정
     </a>
@@ -13,14 +13,14 @@
     </button>
 </app-page-header>
 
-<app-detail-view [createdAt]="gallery.createdAt" [updatedAt]="gallery.updatedAt">
+<app-detail-view [createdAt]="gallery()!.createdAt" [updatedAt]="gallery()!.updatedAt">
 
     <!-- 이미지 그리드 -->
-    @if (gallery.images && gallery.images.length > 0) {
+    @if (gallery()!.images && gallery()!.images.length > 0) {
     <div class="grid grid-cols-4 gap-4">
-        @for (img of gallery.images; track img.id) {
+        @for (img of gallery()!.images; track img.id) {
         <div (click)="openImage(img.url)" class="aspect-[4/3] overflow-hidden bg-surface-container cursor-pointer">
-            <img [src]="img.url" [alt]="gallery.title"
+            <img [src]="img.url" [alt]="gallery()!.title"
                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
         </div>
         }
@@ -33,10 +33,10 @@
     }
 
     <!-- 본문 내용 -->
-    @if (gallery.content) {
+    @if (gallery()!.content) {
     <div class="mt-10 pt-10 border-t border-outline-variant">
         <h3 class="text-sm font-semibold text-on-surface-variant mb-4">상세 내용</h3>
-        <div class="whitespace-pre-wrap text-base leading-relaxed">{{ gallery.content }}</div>
+        <div class="whitespace-pre-wrap text-base leading-relaxed">{{ gallery()!.content }}</div>
     </div>
     }
 

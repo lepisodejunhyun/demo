@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import {
@@ -12,22 +12,22 @@ import {
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
+import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
 
 
 @Component({
     selector: 'app-inquiry-detail',
     templateUrl: 'inquiry-detail.page.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent],
+    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, FormTextareaComponent],
 })
 export default class InquiryDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
 
     id = input<string>();
 
-    inquiry: InquiryDto | null = null;
+    inquiry = signal<InquiryDto | null>(null);
 
     breadcrumbs: Breadcrumb[] = [
         { label: '1:1 문의', link: '/inquiry' },
@@ -44,8 +44,8 @@ export default class InquiryDetailPage implements OnInit {
         }),
     });
 
-    errorMessage = '';
-    successMessage = '';
+    errorMessage = signal('');
+    successMessage = signal('');
 
     async ngOnInit(): Promise<void> {
         const id = this.id();
@@ -56,16 +56,16 @@ export default class InquiryDetailPage implements OnInit {
 
     async loadData(id: string): Promise<void> {
         try {
-            this.inquiry = await this.api.invoke(inquiryControllerFindById, { id });
+            this.inquiry.set(await this.api.invoke(inquiryControllerFindById, { id }));
 
             // 기존 답변이 있으면 폼에 채우기
-            if (this.inquiry.answer) {
+
+            const data = this.inquiry();
+            if (data?.answer) {
                 this.answerForm.patchValue({
-                    answer: this.inquiry.answer,
+                    answer: data.answer,
                 });
             }
-
-            this.cdr.markForCheck();
         } catch (error) {
             console.error('1:1 문의 조회 실패', error);
             this.router.navigate(['/inquiry']);
@@ -76,21 +76,20 @@ export default class InquiryDetailPage implements OnInit {
         if (this.answerForm.invalid) return;
 
         const data = this.answerForm.getRawValue();
-        this.errorMessage = '';
-        this.successMessage = '';
+        this.errorMessage.set('');
+        this.successMessage.set('');
 
         try {
-            this.inquiry = await this.api.invoke(inquiryControllerUpdateAnswer, {
-                id: this.inquiry!.id,
+            this.inquiry.set(await this.api.invoke(inquiryControllerUpdateAnswer, {
+                id: this.inquiry()!.id,
                 body: {
                     answer: data.answer,
                 },
-            });
+            }));
 
-            this.successMessage = '답변이 저장되었습니다.';
-            this.cdr.markForCheck();
+            this.successMessage.set('답변이 저장되었습니다.');
         } catch (error: any) {
-            this.errorMessage = error?.error?.message || '답변 저장에 실패했습니다.';
+            this.errorMessage.set(error?.error?.message || '답변 저장에 실패했습니다.');
         }
     }
 
@@ -99,7 +98,7 @@ export default class InquiryDetailPage implements OnInit {
 
         try {
             await this.api.invoke(inquiryControllerRemove, {
-                id: this.inquiry!.id,
+                id: this.inquiry()!.id,
             });
             this.router.navigate(['/inquiry']);
         } catch (error) {

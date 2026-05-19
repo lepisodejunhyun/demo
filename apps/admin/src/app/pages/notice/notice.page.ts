@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from "@angular/core";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Api, noticeControllerFindAll, NoticeDto } from "@api-client";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
@@ -16,11 +16,10 @@ export default class NoticePage implements OnInit {
 
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly route = inject(ActivatedRoute);
 
-    notices: NoticeDto[] = [];
-    pageInfo: PageInfo | null = null;
+    notices = signal<NoticeDto[]>([]);
+    pageInfo = signal<PageInfo | null>(null);
 
     columns: ColumnDef[] = [
         { field: 'title', name: '제목', truncate: true },
@@ -38,12 +37,11 @@ export default class NoticePage implements OnInit {
     async loadData(page: number): Promise<void> {
         try {
             const result = await this.api.invoke(noticeControllerFindAll, {
-                page: page,
+                page,
                 limit: 10,
             });
-            this.notices = result.items ?? [];
-            this.pageInfo = result.pageInfo ?? null;
-            this.cdr.markForCheck();
+            this.notices.set(result.items ?? []);
+            this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
             console.error('공지사항 목록 조회 실패', error);
         }

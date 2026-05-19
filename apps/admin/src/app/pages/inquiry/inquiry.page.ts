@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Api, inquiryControllerFindAll, InquiryDto } from "@api-client";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
@@ -15,12 +15,10 @@ export default class InquiryPage implements OnInit {
 
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly route = inject(ActivatedRoute);
 
-    // 타입을 느슨하게 쓸 경우: inquiries: any[] = [];
-    inquiries: (InquiryDto & { statusLabel: string })[] = [];
-    pageInfo: PageInfo | null = null;
+    inquiries = signal<(InquiryDto & { statusLabel: string })[]>([]);
+    pageInfo = signal<PageInfo | null>(null);
 
     readonly statusLabels: Record<string, string> = {
         'PENDING': '답변 대기',
@@ -44,15 +42,14 @@ export default class InquiryPage implements OnInit {
     async loadData(page: number): Promise<void> {
         try {
             const result = await this.api.invoke(inquiryControllerFindAll, {
-                page: page,
+                page,
                 limit: 10,
             });
-            this.inquiries = (result.items ?? []).map((item: InquiryDto) => ({
+            this.inquiries.set((result.items ?? []).map((item: InquiryDto) => ({
                 ...item,
                 statusLabel: this.statusLabels[item.status] ?? item.status,
-            }));
-            this.pageInfo = result.pageInfo ?? null;
-            this.cdr.markForCheck();
+            })));
+            this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
             console.error('1:1 문의 목록 조회 실패', error);
         }

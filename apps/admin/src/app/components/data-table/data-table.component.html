@@ -1,6 +1,5 @@
 <div class="rounded overflow-hidden">
     <table class="w-full text-left border-collapse">
-        <!-- Table Header -->
         <thead
             class="bg-white border-b border-outline-variant text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
             <tr>
@@ -10,8 +9,6 @@
                 }
             </tr>
         </thead>
-
-        <!-- Table Body -->
         <tbody class="divide-y divide-outline-variant text-sm text-on-surface">
             @for (item of items(); track $index; let i = $index) {
             <tr (click)="onRowClick(item)" class="hover:bg-surface-container-low transition-colors cursor-pointer">
@@ -49,8 +46,6 @@
         </tbody>
     </table>
 </div>
-
-<!-- Pagination -->
 @if (pageInfo() && pageInfo()!.totalPages > 1) {
 <div class="flex justify-center items-center gap-2 mt-10">
     <button (click)="onPageChange(pageInfo()!.page - 1)" [disabled]="pageInfo()!.page === 1"

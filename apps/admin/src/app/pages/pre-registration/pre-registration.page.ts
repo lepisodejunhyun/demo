@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Api, preRegistrationControllerFindAll, PreRegistrationDto } from "@api-client";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
@@ -15,17 +15,16 @@ export default class PreRegistrationPage implements OnInit {
 
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly route = inject(ActivatedRoute);
 
-    preRegistrations: PreRegistrationDto[] = [];
-    pageInfo: PageInfo | null = null;
+    preRegistrations = signal<PreRegistrationDto[]>([]);
+    pageInfo = signal<PageInfo | null>(null);
 
     columns: ColumnDef[] = [
         { field: 'eventTitle', name: '행사명', truncate: true },
         { field: 'applicantName', name: '신청자명', width: 'w-32' },
         { field: 'contactNumber', name: '연락처', width: 'w-40' },
-        { field: 'createdAt', name: '신청일시', type: 'date', width: 'w-44' },
+        { field: 'createdAt', name: '신청일', type: 'date', width: 'w-44' },
     ];
 
     ngOnInit(): void {
@@ -38,12 +37,11 @@ export default class PreRegistrationPage implements OnInit {
     async loadData(page: number): Promise<void> {
         try {
             const result = await this.api.invoke(preRegistrationControllerFindAll, {
-                page: page,
+                page,
                 limit: 10,
             });
-            this.preRegistrations = result.items ?? [];
-            this.pageInfo = result.pageInfo ?? null;
-            this.cdr.markForCheck();
+            this.preRegistrations.set(result.items ?? []);
+            this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
             console.error('사전 등록 목록 조회 실패', error);
         }

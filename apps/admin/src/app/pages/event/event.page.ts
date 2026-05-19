@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
 import { Api, eventControllerFindAll, EventDto } from "@api-client";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
@@ -14,11 +14,10 @@ import { DataTableComponent } from "../../components/data-table/data-table.compo
 export default class EventPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly route = inject(ActivatedRoute);
 
-    events: EventDto[] = [];
-    pageInfo: PageInfo | null = null;
+    events = signal<EventDto[]>([]);
+    pageInfo = signal<PageInfo | null>(null);
 
     columns: ColumnDef[] = [
         { field: 'title', name: '행사명', truncate: true },
@@ -38,12 +37,11 @@ export default class EventPage implements OnInit {
     async loadData(page: number): Promise<void> {
         try {
             const result = await this.api.invoke(eventControllerFindAll, {
-                page: page,
+                page,
                 limit: 10,
             });
-            this.events = result.items ?? [];
-            this.pageInfo = result.pageInfo ?? null;
-            this.cdr.markForCheck();
+            this.events.set(result.items ?? []);
+            this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
             console.error('행사 목록 조회 실패', error);
         }

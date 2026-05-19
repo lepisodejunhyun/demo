@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
 import { CardGridComponent } from "../../components/card-grid/card-grid.component";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
@@ -15,11 +15,10 @@ import { CardGridConfig } from "../../components/card-grid/card-grid.types";
 export default class GalleryPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly route = inject(ActivatedRoute);
 
-    galleries: GalleryDto[] = [];
-    pageInfo: PageInfo | null = null;
+    galleries = signal<GalleryDto[]>([]);
+    pageInfo = signal<PageInfo | null>(null);
 
     config: CardGridConfig = {
         imageField: 'thumbnailUrl',
@@ -40,9 +39,8 @@ export default class GalleryPage implements OnInit {
                 page,
                 limit: 8,
             });
-            this.galleries = result.items ?? [];
-            this.pageInfo = result.pageInfo ?? null;
-            this.cdr.markForCheck();
+            this.galleries.set(result.items ?? []);
+            this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
             console.error('갤러리 목록 조회 실패', error);
         }

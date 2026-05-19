@@ -9,7 +9,7 @@ export interface BusinessInfoUpdateDto {
   address: string;
 
   /**
-   * 연락처 (최대 20자)
+   * 연락처 (최대 13자)
    */
   contactNumber: string;
 

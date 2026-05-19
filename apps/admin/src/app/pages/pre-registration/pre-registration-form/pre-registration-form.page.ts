@@ -16,12 +16,13 @@ import { PageHeaderComponent } from "../../../components/page-header/page-header
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { FormViewComponent } from "../../../components/form-view/form-view.component";
 import { FormFieldComponent } from "../../../components/form-field/form-field.component";
+import { FormInputComponent } from "../../../components/form-input/form-input.component";
 
 @Component({
     selector: 'app-pre-registration-form',
     templateUrl: './pre-registration-form.page.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, ReactiveFormsModule, FormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent],
+    imports: [CommonModule, ReactiveFormsModule, FormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormInputComponent],
 })
 export default class PreRegistrationFormPage implements OnInit {
     private readonly api = inject(Api);

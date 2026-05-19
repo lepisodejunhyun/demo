@@ -1,5 +1,5 @@
 import { CommonModule, Location } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Api, faqControllerCreate, faqControllerFindById, faqControllerUpdate } from "@api-client";
@@ -7,11 +7,13 @@ import { PageHeaderComponent } from "../../../components/page-header/page-header
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { FormViewComponent } from "../../../components/form-view/form-view.component";
 import { FormFieldComponent } from "../../../components/form-field/form-field.component";
+import { FormInputComponent } from "../../../components/form-input/form-input.component";
+import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
 
 @Component({
     selector: 'app-faq-form',
     templateUrl: './faq-form.page.html',
-    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent],
+    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormInputComponent, FormTextareaComponent],
 })
 export default class FaqFormPage implements OnInit {
     private readonly api = inject(Api);
@@ -40,27 +42,25 @@ export default class FaqFormPage implements OnInit {
         })
     });
 
-    errorMessage = '';
+    errorMessage = signal<string>('');
 
     async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
-        const data = this.form.getRawValue();
+        const body = this.form.getRawValue();
 
         try {
             if (this.isEditMode) {
                 await this.api.invoke(faqControllerUpdate, {
                     id: this.id()!,
-                    body: data,
+                    body,
                 });
                 this.router.navigate(['/faq', this.id()]);
             } else {
-                const faq = await this.api.invoke(faqControllerCreate, {
-                    body: data,
-                });
+                const faq = await this.api.invoke(faqControllerCreate, { body });
                 this.router.navigate(['/faq', faq.id]);
             }
         } catch (error: any) {
-            this.errorMessage = error?.error?.message || '요청이 실패했습니다.'
+            this.errorMessage.set(error?.error?.message || '요청이 실패했습니다.');
         }
     }
 
@@ -73,11 +73,8 @@ export default class FaqFormPage implements OnInit {
         ];
 
         if (id) {
-            const faq = await this.api.invoke(faqControllerFindById, {
-                id,
-            });
+            const faq = await this.api.invoke(faqControllerFindById, { id });
             this.form.patchValue(faq);
-            this.cdr.markForCheck();
         }
     }
 

@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { Api, preRegistrationControllerFindById, preRegistrationControllerRemove, PreRegistrationDto } from "@api-client";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
@@ -14,11 +14,10 @@ import { DetailViewComponent } from "../../../components/detail-view/detail-view
 export default class PreRegistrationDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
 
     id = input<string>();
 
-    item: PreRegistrationDto | null = null;
+    preRegistration = signal<PreRegistrationDto | null>(null);
 
     breadcrumbs: Breadcrumb[] = [
         { label: '사전 등록 관리', link: '/pre-registration' },
@@ -31,10 +30,7 @@ export default class PreRegistrationDetailPage implements OnInit {
         if (!id) return;
 
         try {
-            this.item = await this.api.invoke(preRegistrationControllerFindById, {
-                id: id,
-            });
-            this.cdr.markForCheck();
+            this.preRegistration.set(await this.api.invoke(preRegistrationControllerFindById, { id }));
         } catch (error) {
             console.error('사전 등록 조회 실패', error);
 
@@ -47,7 +43,7 @@ export default class PreRegistrationDetailPage implements OnInit {
 
         try {
             await this.api.invoke(preRegistrationControllerRemove, {
-                id: this.item!.id
+                id: this.preRegistration()!.id
             });
             this.router.navigate(['/pre-registration']);
         } catch (error) {

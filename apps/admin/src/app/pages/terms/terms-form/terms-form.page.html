@@ -5,16 +5,14 @@
     </p>
 </app-page-header>
 
-<app-form-view [formGroup]="form" [submitText]="isEditMode ? '수정하기' : '등록하기'" (cancel)="goBack()"
-    (submit)="onSubmit()">
+<app-form-view [formGroup]="form" [submitText]="isEditMode ? '수정하기' : '등록하기'" (cancel)="goBack()" (submit)="onSubmit()">
     <app-form-field label="제목" for="terms-title" [required]="true">
-        <input formControlName="title" id="terms-title" type="text" maxlength="100" placeholder="제목을 입력하세요"
-            class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all placeholder:text-outline" />
+        <app-form-input formControlName="title" id="terms-title" [maxlength]="100" placeholder="제목을 입력하세요" />
     </app-form-field>
 
     <app-form-field label="내용" for="terms-content" [required]="true">
-        <textarea formControlName="content" id="terms-content" rows="16" placeholder="내용을 입력하세요"
-            class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm transition-all placeholder:text-outline resize-none"></textarea>
+        <app-form-textarea formControlName="content" id="terms-content" [rows]="16" [maxlength]="10000"
+            placeholder="내용을 입력하세요" />
     </app-form-field>
 
     <app-form-field label="필수 여부" for="terms-isRequired">
@@ -26,13 +24,14 @@
                             after:bg-white after:rounded-full after:h-5 after:w-5
                             after:transition-all peer-checked:after:translate-x-full"></div>
             </label>
-            <span class="text-sm" [class.text-primary]="form.get('isRequired')?.value" [class.text-on-surface-variant]="!form.get('isRequired')?.value">
+            <span class="text-sm" [class.text-primary]="form.get('isRequired')?.value"
+                [class.text-on-surface-variant]="!form.get('isRequired')?.value">
                 {{ form.get('isRequired')?.value ? '필수 약관' : '선택 약관' }}
             </span>
         </div>
     </app-form-field>
 
-    @if (errorMessage) {
-    <p class="text-error text-sm">{{ errorMessage }}</p>
+    @if (errorMessage() ) {
+    <p class="text-error text-sm">{{ errorMessage() }}</p>
     }
 </app-form-view>

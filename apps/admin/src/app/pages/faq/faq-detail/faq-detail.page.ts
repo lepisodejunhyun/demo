@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { Api, faqControllerFindById, faqControllerRemove, FaqDto } from "@api-client";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
@@ -14,11 +14,10 @@ import { DetailViewComponent } from "../../../components/detail-view/detail-view
 export default class FaqDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
 
     id = input<string>();
 
-    faq: FaqDto | null = null;
+    faq = signal<FaqDto | null>(null);
 
     breadcrumbs: Breadcrumb[] = [
         { label: 'FAQ 관리', link: '/faq' },
@@ -31,10 +30,9 @@ export default class FaqDetailPage implements OnInit {
         if (!id) return;
 
         try {
-            this.faq = await this.api.invoke(faqControllerFindById, {
-                id: id,
-            });
-            this.cdr.markForCheck();
+            this.faq.set(await this.api.invoke(faqControllerFindById, {
+                id,
+            }));
         } catch (error) {
             console.error('FAQ 조회 실패', error);
 
@@ -48,7 +46,7 @@ export default class FaqDetailPage implements OnInit {
 
         try {
             await this.api.invoke(faqControllerRemove, {
-                id: this.faq!.id,
+                id: this.faq()!.id,
             });
             this.router.navigate(['/faq']);
         } catch (error) {

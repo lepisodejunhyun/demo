@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, input, OnInit, signal } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
@@ -18,7 +18,7 @@ export default class GalleryDetailPage implements OnInit {
 
     id = input<string>();
 
-    gallery: GalleryDto | null = null;
+    gallery = signal<GalleryDto | null>(null);
 
     breadcrumbs: Breadcrumb[] = [
         { label: '갤러리 관리', link: '/gallery' },
@@ -31,10 +31,7 @@ export default class GalleryDetailPage implements OnInit {
         if (!id) return;
 
         try {
-            this.gallery = await this.api.invoke(galleryControllerFindById, {
-                id,
-            });
-            this.cdr.markForCheck();
+            this.gallery.set(await this.api.invoke(galleryControllerFindById, { id }));
         } catch (error) {
             console.error('갤러리 조회 실패', error);
 
@@ -48,7 +45,7 @@ export default class GalleryDetailPage implements OnInit {
 
         try {
             await this.api.invoke(galleryControllerRemove, {
-                id: this.gallery!.id,
+                id: this.gallery()!.id,
             });
             this.router.navigate(['/gallery']);
         } catch (error) {

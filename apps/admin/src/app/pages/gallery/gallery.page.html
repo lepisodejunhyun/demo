@@ -9,5 +9,5 @@
     </a>
 </app-page-header>
 
-<app-card-grid [items]="galleries" [config]="config" [pageInfo]="pageInfo" emptyMessage="등록된 갤러리가 없습니다."
+<app-card-grid [items]="galleries()" [config]="config" [pageInfo]="pageInfo()" emptyMessage="등록된 갤러리가 없습니다."
     (rowClick)="goDetail($event)" (pageChange)="onPageChange($event)" />

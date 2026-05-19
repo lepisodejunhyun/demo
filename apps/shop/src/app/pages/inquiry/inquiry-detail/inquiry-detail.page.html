@@ -15,7 +15,7 @@
                     {{ statusLabels[inquiry.status] }}
                 </span>
             </div>
-            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4 break-all">
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4 break-words">
                 {{ inquiry.title }}
             </h1>
             <div class="flex items-center text-sm text-slate-500">
@@ -28,7 +28,7 @@
 
         <!-- 문의 내용 -->
         <div class="px-8 py-10">
-            <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap break-all">
+            <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap break-words">
                 {{ inquiry.content }}
             </div>
         </div>
@@ -43,7 +43,7 @@
                     {{ inquiry.answeredAt | date:'yyyy.MM.dd HH:mm' }}
                 </span>
             </div>
-            <div class="px-6 py-5 text-slate-700 leading-relaxed whitespace-pre-wrap text-sm break-all">
+            <div class="px-6 py-5 text-slate-700 leading-relaxed whitespace-pre-wrap text-sm break-words">
                 {{ inquiry.answer }}
             </div>
         </div>

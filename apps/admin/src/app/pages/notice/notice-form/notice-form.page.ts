@@ -1,5 +1,5 @@
 import { CommonModule, Location } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Api, noticeControllerCreate, noticeControllerFindById, noticeControllerUpdate } from "@api-client";
@@ -7,16 +7,17 @@ import { PageHeaderComponent } from "../../../components/page-header/page-header
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { FormViewComponent } from "../../../components/form-view/form-view.component";
 import { FormFieldComponent } from "../../../components/form-field/form-field.component";
+import { FormInputComponent } from "../../../components/form-input/form-input.component";
+import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
 
 @Component({
     selector: 'app-notice-form',
     templateUrl: './notice-form.page.html',
-    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent],
+    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormInputComponent, FormTextareaComponent],
 })
 export default class NoticeFormPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly location = inject(Location);
 
     id = input<string>();
@@ -40,32 +41,24 @@ export default class NoticeFormPage implements OnInit {
         })
     });
 
-    errorMessage = '';
+    errorMessage = signal<string>('');
 
     async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
-        const data = this.form.getRawValue();
+        const body = this.form.getRawValue();
         try {
             if (this.isEditMode) {
                 await this.api.invoke(noticeControllerUpdate, {
                     id: this.id()!,
-                    body: {
-                        title: data.title,
-                        content: data.content
-                    },
+                    body
                 });
                 this.router.navigate(['/notice', this.id()]);
             } else {
-                const notice = await this.api.invoke(noticeControllerCreate, {
-                    body: {
-                        title: data.title,
-                        content: data.content
-                    },
-                });
+                const notice = await this.api.invoke(noticeControllerCreate, { body });
                 this.router.navigate(['/notice', notice.id]);
             }
         } catch (error: any) {
-            this.errorMessage = error?.error?.message || '요청이 실패했습니다.';
+            this.errorMessage.set(error?.error?.message || '요청이 실패했습니다.');
         }
     }
 
@@ -78,14 +71,8 @@ export default class NoticeFormPage implements OnInit {
         ];
 
         if (id) {
-            const notice = await this.api.invoke(noticeControllerFindById, {
-                id: id,
-            });
-            this.form.patchValue({
-                title: notice.title,
-                content: notice.content,
-            });
-            this.cdr.markForCheck();
+            const notice = await this.api.invoke(noticeControllerFindById, { id });
+            this.form.patchValue(notice);
         }
     }
 

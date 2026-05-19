@@ -4,5 +4,5 @@
     </p>
 </app-page-header>
 
-<app-data-table [columns]="columns" [items]="inquiries" [pageInfo]="pageInfo" emptyMessage="등록된 1:1 문의가 없습니다."
+<app-data-table [columns]="columns" [items]="inquiries()" [pageInfo]="pageInfo()" emptyMessage="등록된 1:1 문의가 없습니다."
     (rowClick)="goDetail($event)" (pageChange)="onPageChange($event)" />

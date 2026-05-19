@@ -1,8 +1,8 @@
-@if (item) {
+@if (preRegistration()) {
 <app-page-header [title]="'사전 등록 상세'">
     <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
-    <a slot="actions" [routerLink]="'/pre-registration/' + item.id + '/edit'"
-        class="px-4 py-2 text-primary font-semibold text-xs border border-outline-variant rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
+    <a slot="actions" [routerLink]="'/pre-registration/' + preRegistration()!.id + '/edit'"
+        class="px-4 py-2 text-primary font-semibold text-xs rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
         <span class="material-symbols-outlined text-[18px]">edit</span>
         수정
     </a>
@@ -13,31 +13,31 @@
     </button>
 </app-page-header>
 
-<app-detail-view [createdAt]="item.createdAt" [updatedAt]="item.updatedAt">
+<app-detail-view [createdAt]="preRegistration()!.createdAt" [updatedAt]="preRegistration()!.updatedAt">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
             <p class="text-sm text-on-surface-variant mb-1">행사명</p>
-            <p class="text-base font-medium">{{ item.eventTitle }}</p>
+            <p class="text-base font-medium">{{ preRegistration()!.eventTitle }}</p>
         </div>
         <div>
             <p class="text-sm text-on-surface-variant mb-1">신청자명</p>
-            <p class="text-base font-medium">{{ item.applicantName }}</p>
+            <p class="text-base font-medium">{{ preRegistration()!.applicantName }}</p>
         </div>
         <div>
             <p class="text-sm text-on-surface-variant mb-1">연락처</p>
-            <p class="text-base font-medium">{{ item.contactNumber }}</p>
+            <p class="text-base font-medium">{{ preRegistration()!.contactNumber }}</p>
         </div>
         <div>
             <p class="text-sm text-on-surface-variant mb-1">회원</p>
-            <p class="text-base font-medium">{{ item.memberName ?? '비회원' }}</p>
+            <p class="text-base font-medium">{{ preRegistration()!.memberName ?? '비회원' }}</p>
         </div>
     </div>
 
-    @if (item.agreements && item.agreements.length > 0) {
+    @if (preRegistration()!.agreements?.length) {
     <div class="mt-8 pt-8 border-t border-outline-variant">
         <h3 class="text-sm font-semibold text-on-surface-variant mb-4">약관 동의 이력</h3>
         <div class="space-y-2">
-            @for (agreement of item.agreements; track agreement.termsId) {
+            @for (agreement of preRegistration()!.agreements!; track agreement.termsId) {
             <div class="flex items-center justify-between px-4 py-3 rounded border border-outline-variant">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-primary text-base">check_circle</span>
@@ -45,7 +45,8 @@
                     @if (agreement.isRequired) {
                     <span class="text-[10px] font-bold text-error bg-error/10 px-1.5 py-0.5 rounded">필수</span>
                     } @else {
-                    <span class="text-[10px] font-bold text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">선택</span>
+                    <span
+                        class="text-[10px] font-bold text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded">선택</span>
                     }
                 </div>
                 <span class="text-xs text-on-surface-variant">{{ agreement.agreedAt | date:'yyyy.MM.dd HH:mm' }}</span>

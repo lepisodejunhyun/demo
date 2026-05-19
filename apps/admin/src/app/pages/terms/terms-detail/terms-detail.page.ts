@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { Api, termsControllerFindById, termsControllerRemove, TermsDto } from "@api-client";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
@@ -14,11 +14,10 @@ import { DetailViewComponent } from "../../../components/detail-view/detail-view
 export default class TermsDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
 
     id = input<string>();
 
-    terms: TermsDto | null = null;
+    terms = signal<TermsDto | null>(null);
 
     breadcrumbs: Breadcrumb[] = [
         { label: '약관 관리', link: '/terms' },
@@ -31,10 +30,9 @@ export default class TermsDetailPage implements OnInit {
         if (!id) return;
 
         try {
-            this.terms = await this.api.invoke(termsControllerFindById, {
-                id: id,
-            });
-            this.cdr.markForCheck();
+            this.terms.set(await this.api.invoke(termsControllerFindById, {
+                id,
+            }));
         } catch (error) {
             console.error('약관 조회 실패', error);
 
@@ -47,7 +45,7 @@ export default class TermsDetailPage implements OnInit {
 
         try {
             await this.api.invoke(termsControllerRemove, {
-                id: this.terms!.id
+                id: this.terms()!.id
             });
             this.router.navigate(['/terms']);
         } catch (error) {

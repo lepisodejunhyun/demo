@@ -1,5 +1,5 @@
 import { CommonModule, Location } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { FormViewComponent } from "../../../components/form-view/form-view.component";
@@ -9,6 +9,8 @@ import { Api, eventControllerCreate, eventControllerFindById, eventControllerUpd
 import { Router } from "@angular/router";
 import { SupabaseService } from "../../../services/supabase.service";
 import { formatPhoneNumber } from "../../../shared/utils/format-phone";
+import { FormInputComponent } from "../../../components/form-input/form-input.component";
+import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
 
 function eventDateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const startDate = control.get('startDate')?.value;
@@ -37,12 +39,11 @@ function eventDateRangeValidator(control: AbstractControl): ValidationErrors | n
 @Component({
     selector: 'app-event-form',
     templateUrl: 'event-form.page.html',
-    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormsModule, ReactiveFormsModule]
+    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormsModule, ReactiveFormsModule, FormInputComponent, FormTextareaComponent]
 })
 export default class EventFormPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly location = inject(Location);
     private readonly supabaseService = inject(SupabaseService);
 
@@ -52,11 +53,11 @@ export default class EventFormPage implements OnInit {
 
     breadcrumbs: Breadcrumb[] = [];
 
-    errorMessage = '';
+    errorMessage = signal<string>('');
 
-    imagePreview: string | null = null;
+    imagePreview = signal<string | null>(null);
     selectedFile: File | null = null;
-    uploading = false;
+    uploading = signal<boolean>(false);
 
     form = new FormGroup({
         title: new FormControl('', {
@@ -111,22 +112,21 @@ export default class EventFormPage implements OnInit {
 
         const allowedTypes = ['image/jpeg', 'image/png'];
         if (!allowedTypes.includes(file.type)) {
-            this.errorMessage = '이미지는 JPG, PNG 형식만 업로드할 수 있습니다.';
+            this.errorMessage.set('이미지는 JPG, PNG 형식만 업로드할 수 있습니다.');
             input.value = '';
             return;
         }
 
         const maxSize = 5 * 1024 * 1024;
         if (file.size > maxSize) {
-            this.errorMessage = '이미지 파일 크기는 최대 5MB까지 업로드할 수 있습니다.';
+            this.errorMessage.set('이미지 파일 크기는 최대 5MB까지 업로드할 수 있습니다.');
             input.value = '';
             return;
         }
 
-        this.errorMessage = '';
+        this.errorMessage.set('');
         this.selectedFile = file;
-        this.imagePreview = URL.createObjectURL(file);
-        this.cdr.markForCheck();
+        this.imagePreview.set(URL.createObjectURL(file));
     }
 
     onPhoneInput(event: Event): void {
@@ -141,7 +141,7 @@ export default class EventFormPage implements OnInit {
         try {
             // 새 이미지가 선택된 경우에만 업로드
             if (this.selectedFile) {
-                this.uploading = true;
+                this.uploading.set(true);
                 const url = await this.supabaseService.uploadImage(this.selectedFile, 'events');
                 this.form.patchValue({ posterImage: url });
             }
@@ -161,10 +161,9 @@ export default class EventFormPage implements OnInit {
                 this.router.navigate(['/event', event.id]);
             }
         } catch (error: any) {
-            this.errorMessage = error?.error?.message || '요청이 실패했습니다.'
+            this.errorMessage.set(error?.error?.message || '요청이 실패했습니다.');
         } finally {
-            this.uploading = false;
-            this.cdr.markForCheck();
+            this.uploading.set(false);
         }
     }
 
@@ -182,9 +181,8 @@ export default class EventFormPage implements OnInit {
             });
             this.form.patchValue(event);
             if (event.posterImage) {
-                this.imagePreview = event.posterImage;
+                this.imagePreview.set(event.posterImage);
             }
-            this.cdr.markForCheck();
         }
 
 

@@ -1,15 +1,13 @@
-<!-- Breadcrumb slot (있을 때만 자동 표시) -->
 <ng-content select="[slot=breadcrumb]" />
 
-<!-- Title block + 우측 액션 슬롯 -->
-<div class="flex justify-between items-end mb-10">
-    <div>
-        <h2 class="text-[30px] leading-[38px] tracking-[-0.02em] font-bold text-on-surface">
+<div class="flex justify-between items-start mb-10 gap-4">
+    <div class="flex-1 min-w-0">
+        <h2 class="text-[30px] leading-[38px] tracking-[-0.02em] font-bold text-on-surface break-words">
             {{ title() }}
         </h2>
         <ng-content select="[slot=description]" />
     </div>
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 shrink-0">
         <ng-content select="[slot=actions]" />
     </div>
 </div>

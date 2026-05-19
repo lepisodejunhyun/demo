@@ -5,6 +5,7 @@ export class AdminSignInDTO {
   @ApiProperty({ description: '관리자 이메일' })
   @IsNotEmpty({ message: '이메일은 필수 입력 항목입니다.' })
   @IsEmail({}, { message: '올바른 이메일 형식이 아닙니다.' })
+  @MaxLength(40, { message: '이메일은 최대 40자까지 입력 가능합니다.' })
   email: string;
 
   @ApiProperty({ description: '관리자 비밀번호' })

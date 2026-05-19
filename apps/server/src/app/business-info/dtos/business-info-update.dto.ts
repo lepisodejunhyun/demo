@@ -35,11 +35,11 @@ export class BusinessInfoUpdateDTO {
     address: string;
 
     @ApiProperty({
-        description: '연락처 (최대 20자)',
+        description: '연락처 (최대 13자)',
     })
     @IsNotEmpty({ message: '연락처는 필수 입력 항목입니다.' })
     @IsString({})
-    @MaxLength(20, { message: '연락처는 최대 20자까지 입력 가능합니다.' })
+    @MaxLength(13, { message: '연락처는 최대 13자까지 입력 가능합니다.' })
     contactNumber: string;
 
     @ApiProperty({

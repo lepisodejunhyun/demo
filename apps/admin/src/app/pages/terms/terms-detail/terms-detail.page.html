@@ -1,8 +1,8 @@
-@if (terms) {
-<app-page-header [title]="terms.title">
+@if (terms()) {
+<app-page-header [title]="terms()!.title">
     <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
-    <a slot="actions" [routerLink]="'/terms/' + terms.id + '/edit'"
-        class="px-4 py-2 text-primary font-semibold text-xs border border-outline-variant rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
+    <a slot="actions" [routerLink]="'/terms/' + terms()!.id + '/edit'"
+        class="px-4 py-2 text-primary font-semibold text-xs rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
         <span class="material-symbols-outlined text-[18px]">edit</span>
         수정
     </a>
@@ -13,20 +13,21 @@
     </button>
 </app-page-header>
 
-<app-detail-view [createdAt]="terms.createdAt" [updatedAt]="terms.updatedAt">
+<app-detail-view [createdAt]="terms()!.createdAt" [updatedAt]="terms()!.updatedAt">
     <div class="mb-6">
-        @if (terms.isRequired) {
+        @if (terms()!.isRequired) {
         <span class="inline-flex items-center gap-1 text-xs font-bold text-error bg-error/10 px-2.5 py-1 rounded">
             <span class="material-symbols-outlined text-sm">lock</span>
             필수 약관
         </span>
         } @else {
-        <span class="inline-flex items-center gap-1 text-xs font-bold text-on-surface-variant bg-surface-container-low px-2.5 py-1 rounded">
+        <span
+            class="inline-flex items-center gap-1 text-xs font-bold text-on-surface-variant bg-surface-container-low px-2.5 py-1 rounded">
             <span class="material-symbols-outlined text-sm">lock_open</span>
             선택 약관
         </span>
         }
     </div>
-    <div class="whitespace-pre-wrap">{{ terms.content }}</div>
+    <div class="whitespace-pre-wrap">{{ terms()!.content }}</div>
 </app-detail-view>
 }

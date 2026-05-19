@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
@@ -14,11 +14,10 @@ import { Api, eventControllerFindById, eventControllerRemove, EventDto } from "@
 export default class EventDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
 
     id = input<string>();
 
-    event: EventDto | null = null;
+    event = signal<EventDto | null>(null);
 
     breadcrumbs: Breadcrumb[] = [
         { label: '행사 관리', link: '/event' },
@@ -31,10 +30,7 @@ export default class EventDetailPage implements OnInit {
         if (!id) return;
 
         try {
-            this.event = await this.api.invoke(eventControllerFindById, {
-                id,
-            });
-            this.cdr.markForCheck();
+            this.event.set(await this.api.invoke(eventControllerFindById, { id }));
         } catch (error) {
             console.error('행사 정보 조회 실패', error);
 
@@ -48,7 +44,7 @@ export default class EventDetailPage implements OnInit {
 
         try {
             await this.api.invoke(eventControllerRemove, {
-                id: this.event!.id,
+                id: this.event()!.id,
             });
             this.router.navigate(['/event']);
         } catch (error) {

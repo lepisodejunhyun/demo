@@ -1,5 +1,5 @@
 import { CommonModule, Location } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { FormViewComponent } from "../../../components/form-view/form-view.component";
@@ -8,16 +8,17 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Api, galleryControllerCreate, galleryControllerFindById, galleryControllerUpdate } from "@api-client";
 import { Router } from "@angular/router";
 import { SupabaseService } from "../../../services/supabase.service";
+import { FormInputComponent } from "../../../components/form-input/form-input.component";
+import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
 
 @Component({
     selector: 'app-gallery-form',
     templateUrl: 'gallery-form.page.html',
-    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormsModule, ReactiveFormsModule]
+    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormsModule, ReactiveFormsModule, FormInputComponent, FormTextareaComponent]
 })
 export default class GalleryFormPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly location = inject(Location);
     private readonly supabaseService = inject(SupabaseService);
 
@@ -27,10 +28,10 @@ export default class GalleryFormPage implements OnInit {
 
     breadcrumbs: Breadcrumb[] = [];
 
-    errorMessage = '';
+    errorMessage = signal<string>('');
 
-    imageItems: { type: 'existing' | 'new'; url: string; file?: File }[] = [];
-    uploading = false;
+    imageItems = signal<{ type: 'existing' | 'new'; url: string; file?: File }[]>([]);
+    uploading = signal<boolean>(false);
 
     form = new FormGroup({
         title: new FormControl('', {
@@ -49,7 +50,7 @@ export default class GalleryFormPage implements OnInit {
         const files = input.files;
         if (!files || files.length === 0) return;
 
-        const remaining = this.maxImages - this.imageItems.length;
+        const remaining = this.maxImages - this.imageItems().length;
 
         if (remaining <= 0) {
             alert(`이미지는 최대 ${this.maxImages}장까지 등록할 수 있습니다.`);
@@ -62,31 +63,30 @@ export default class GalleryFormPage implements OnInit {
         }
 
         const count = Math.min(files.length, remaining);
-        for (let i = 0; i < count; i++) {
-            this.imageItems.push({
-                type: 'new',
+        this.imageItems.update(items => [
+            ...items,
+            ...Array.from({ length: count }, (_, i) => ({
+                type: 'new' as const,
                 url: URL.createObjectURL(files[i]),
                 file: files[i],
-            });
-        }
+            })),
+        ])
         input.value = '';
-        this.cdr.markForCheck();
     }
 
     removeImage(index: number): void {
-        this.imageItems.splice(index, 1);
-        this.cdr.markForCheck();
+        this.imageItems.update(items => items.filter((_, i) => i !== index));
     }
 
     async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
 
         try {
-            this.uploading = true;
+            this.uploading.set(true);
 
             const imageUrls: string[] = [];
 
-            for (const item of this.imageItems) {
+            for (const item of this.imageItems()) {
                 if (item.type === 'existing') {
                     imageUrls.push(item.url);
                 } else if (item.file) {
@@ -113,10 +113,9 @@ export default class GalleryFormPage implements OnInit {
                 this.router.navigate(['/gallery', gallery.id]);
             }
         } catch (error: any) {
-            this.errorMessage = error?.error?.message || '요청이 실패했습니다.'
+            this.errorMessage.set(error?.error?.message || '요청이 실패했습니다.');
         } finally {
-            this.uploading = false;
-            this.cdr.markForCheck();
+            this.uploading.set(false);
         }
     }
 
@@ -129,17 +128,14 @@ export default class GalleryFormPage implements OnInit {
         ];
 
         if (id) {
-            const gallery = await this.api.invoke(galleryControllerFindById, {
-                id,
-            });
+            const gallery = await this.api.invoke(galleryControllerFindById, { id });
             this.form.patchValue(gallery);
-            if (gallery.images && gallery.images.length > 0) {
-                this.imageItems = gallery.images.map((img: any) => ({
+            if (gallery.images?.length) {
+                this.imageItems.set(gallery.images.map((img: any) => ({
                     type: 'existing' as const,
                     url: img.url,
-                }));
+                })));
             }
-            this.cdr.markForCheck();
         }
 
     }

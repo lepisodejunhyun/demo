@@ -1,0 +1,3 @@
+<input class="form-input" [class.form-input--picker]="isPicker()" [type]="type()" [value]="value()"
+    [attr.maxlength]="maxlength()" [placeholder]="placeholder()" [disabled]="disabled()" (input)="onInput($event)"
+    (blur)="onBlur()" (click)="onClick($event)" />

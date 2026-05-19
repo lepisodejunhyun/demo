@@ -9,5 +9,5 @@
     </a>
 </app-page-header>
 
-<app-data-table [columns]="columns" [items]="terms" [pageInfo]="pageInfo" emptyMessage="등록된 약관이 없습니다."
+<app-data-table [columns]="columns" [items]="terms()" [pageInfo]="pageInfo()" emptyMessage="등록된 약관이 없습니다."
     (rowClick)="goDetail($event)" (pageChange)="onPageChange($event)" />

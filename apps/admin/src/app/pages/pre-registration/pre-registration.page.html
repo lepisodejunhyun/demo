@@ -9,5 +9,5 @@
     </a>
 </app-page-header>
 
-<app-data-table [columns]="columns" [items]="preRegistrations" [pageInfo]="pageInfo" emptyMessage="등록된 사전 등록 내역이 없습니다."
-    (rowClick)="goDetail($event)" (pageChange)="onPageChange($event)" />
+<app-data-table [columns]="columns" [items]="preRegistrations()" [pageInfo]="pageInfo()"
+    emptyMessage="등록된 사전 등록 내역이 없습니다." (rowClick)="goDetail($event)" (pageChange)="onPageChange($event)" />
