@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import { Notice } from "@prisma/client";
-import { NoticeCreateDTO } from "./dtos/notice-create.dto";
-import { OffsetPaginationDTO } from "../../libs/dtos";
+import { CreateNoticeDto } from "./dtos/create-notice.dto";
+import { OffsetPaginationDto } from "../../libs/dtos";
 
 @Injectable()
 export class NoticeService {
@@ -15,9 +15,9 @@ export class NoticeService {
      * @description 공지사항 페이지네이션 조회
      * @param {number} page - 페이지 번호 (기본값: 1)
      * @param {number} limit - 페이지당 항목 수 (기본값: 10)
-     * @return {Promise<OffsetPaginationDTO<Notice>>}
+     * @return {Promise<OffsetPaginationDto<Notice>>}
      */
-    async findAll(page: number = 1, limit: number = 10): Promise<OffsetPaginationDTO<Notice>> {
+    async findAll(page: number = 1, limit: number = 10): Promise<OffsetPaginationDto<Notice>> {
         const skip = (page - 1) * limit;
 
         const [items, totalItems] = await Promise.all([
@@ -53,10 +53,10 @@ export class NoticeService {
     /**
      * @name create
      * @description 공지사항 신규 등록
-     * @param {NoticeCreateDTO} data
+     * @param {CreateNoticeDto} data
      * @returns {Promise<Notice>}
      */
-    async create(data: NoticeCreateDTO): Promise<Notice> {
+    async create(data: CreateNoticeDto): Promise<Notice> {
         const { title, content } = data;
 
         const notice = await this.prisma.notice.create({
@@ -107,10 +107,10 @@ export class NoticeService {
      * @name update
      * @description 공지사항 수정
      * @param {string} id
-     * @param {NoticeCreateDTO} data
+     * @param {CreateNoticeDto} data
      * @returns {Promise<Notice>}
      */
-    async update(id: string, data: NoticeCreateDTO): Promise<Notice> {
+    async update(id: string, data: CreateNoticeDto): Promise<Notice> {
         await this.findById(id);
 
         const { title, content } = data;

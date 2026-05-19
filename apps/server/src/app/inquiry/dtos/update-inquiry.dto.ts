@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString, MaxLength } from "class-validator";
 
-export class InquiryAnswerDTO {
+export class UpdateInquiryDto {
     @ApiProperty({
         description: '답변 내용 (최대 2000자)',
     })

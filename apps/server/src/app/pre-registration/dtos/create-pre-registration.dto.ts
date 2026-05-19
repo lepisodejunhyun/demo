@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsNotEmpty, IsOptional, IsString, IsUUID, MaxLength } from "class-validator";
 
-export class PreRegistrationCreateDTO {
+export class CreatePreRegistrationDto {
     @ApiProperty({
         description: '연결할 행사 id (사전 등록 가능 기간 내인지 서버에서 검증)',
     })

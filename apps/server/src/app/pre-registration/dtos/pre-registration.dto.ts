@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
 
 @Exclude()
-export class TermsAgreementItemDTO {
+export class TermsAgreementItemDto {
     @ApiProperty({ description: '약관 ID' })
     @Expose()
     termsId: string;
@@ -21,7 +21,7 @@ export class TermsAgreementItemDTO {
 }
 
 @Exclude()
-export class PreRegistrationDTO {
+export class PreRegistrationDto {
     @ApiProperty({ description: '사전 등록 고유 식별자' })
     @Expose()
     id: string;
@@ -50,10 +50,10 @@ export class PreRegistrationDTO {
     @Expose()
     contactNumber: string;
 
-    @ApiProperty({ description: '약관 동의 이력', type: [TermsAgreementItemDTO], required: false })
+    @ApiProperty({ description: '약관 동의 이력', type: [TermsAgreementItemDto], required: false })
     @Expose()
-    @Type(() => TermsAgreementItemDTO)
-    agreements: TermsAgreementItemDTO[];
+    @Type(() => TermsAgreementItemDto)
+    agreements: TermsAgreementItemDto[];
 
     @ApiProperty({ description: '신청일시' })
     @Expose()

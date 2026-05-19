@@ -1,5 +1,5 @@
 import { CommonModule, Location } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, input, OnInit, signal } from "@angular/core";
+import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Api, faqControllerCreate, faqControllerFindById, faqControllerUpdate } from "@api-client";
@@ -18,7 +18,6 @@ import { FormTextareaComponent } from "../../../components/form-textarea/form-te
 export default class FaqFormPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly location = inject(Location);
 
     id = input<string>();

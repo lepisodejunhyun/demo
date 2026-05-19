@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class PageInfoDTO {
+export class PageInfoDto {
     @ApiProperty({
         description: '현재 페이지 번호'
     })

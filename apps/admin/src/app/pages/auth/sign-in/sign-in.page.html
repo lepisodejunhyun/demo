@@ -40,8 +40,8 @@
                     </div>
                 </div>
 
-                @if (errorMessage) {
-                <p class="text-sm text-error">{{ errorMessage }}</p>
+                @if (errorMessage()) {
+                <p class="text-sm text-error">{{ errorMessage() }}</p>
                 }
 
                 <button type="button" [disabled]="form.invalid" (click)="submit()"

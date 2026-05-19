@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { OffsetPaginationDTO } from "../../libs/dtos";
+import { OffsetPaginationDto } from "../../libs/dtos";
 import { Event, PreRegistration } from "@prisma/client";
-import { PreRegistrationCreateDTO } from "./dtos/pre-registration-create.dto";
-import { PreRegistrationUpdateDTO } from "./dtos/pre-registration-update.dto";
+import { CreatePreRegistrationDto } from "./dtos/create-pre-registration.dto";
+import { UpdatePreRegistrationDto } from "./dtos/update-pre-registration.dto";
 
 @Injectable()
 export class PreRegistrationService {
@@ -16,9 +16,9 @@ export class PreRegistrationService {
      * @description 사전 등록 페이지네이션 조회 (행사명, 회원명 평탄화)
      * @param {number} page - 페이지 번호 (기본값: 1)
      * @param {number} limit - 페이지당 항목 수 (기본값: 10)
-     * @returns {Promise<OffsetPaginationDTO<any>>}
+     * @returns {Promise<OffsetPaginationDto<any>>}
      */
-    async findAll(page: number = 1, limit: number = 10): Promise<OffsetPaginationDTO<any>> {
+    async findAll(page: number = 1, limit: number = 10): Promise<OffsetPaginationDto<any>> {
         const skip = (page - 1) * limit;
 
         const [items, totalItems] = await Promise.all([
@@ -124,10 +124,10 @@ export class PreRegistrationService {
      * @name create
      * @description 사전 등록 신규 생성.
      *              행사 검증: 존재 + 사전 등록 기간 설정 + 기간 내
-     * @param {PreRegistrationCreateDTO} data
+     * @param {CreatePreRegistrationDto} data
      * @returns {Promise<PreRegistration>}
      */
-    async create(data: PreRegistrationCreateDTO): Promise<PreRegistration> {
+    async create(data: CreatePreRegistrationDto): Promise<PreRegistration> {
         await this.assertEventAvailable(data.eventId);
 
         if (data.memberId) {
@@ -166,10 +166,10 @@ export class PreRegistrationService {
      * @name update
      * @description 사전 등록 수정. 신청자 정보만 변경 가능 (행사/회원 변경 불가).
      * @param {string} id
-     * @param {PreRegistrationUpdateDTO} data
+     * @param {UpdatePreRegistrationDto} data
      * @returns {Promise<PreRegistration>}
      */
-    async update(id: string, data: PreRegistrationUpdateDTO): Promise<PreRegistration> {
+    async update(id: string, data: UpdatePreRegistrationDto): Promise<PreRegistration> {
         await this.findById(id);
 
         return this.prisma.preRegistration.update({

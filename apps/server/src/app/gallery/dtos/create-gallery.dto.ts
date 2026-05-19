@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 
-export class GalleryCreateDTO {
+export class CreateGalleryDto {
     @ApiProperty({
         description: '갤러리 제목'
     })

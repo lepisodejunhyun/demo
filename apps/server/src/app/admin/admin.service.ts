@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { Admin } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
-import { AdminSignInDTO } from "./dtos/admin-sign-in.dto";
+import { SignInAdminDto } from "./dtos/sign-in-admin.dto";
 import { compareSync } from "bcryptjs";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { AdminEvents } from "./admin.const";
@@ -30,10 +30,10 @@ export class AdminService {
   /**
   * @name signIn
   * @description 관리자 로그인 — Access Token + Refresh Token 발급
-  * @param {AdminSignInDTO} data
+  * @param {SignInAdminDto} data
   * @returns {Promise<{ accessToken: string; refreshToken: string; admin: Admin }>}
   */
-  async signIn(data: AdminSignInDTO): Promise<{ accessToken: string; refreshToken: string; admin: Admin }> {
+  async signIn(data: SignInAdminDto): Promise<{ accessToken: string; refreshToken: string; admin: Admin }> {
     const { email, password } = data;
 
     const admin = await this.prisma.admin.findFirst({

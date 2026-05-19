@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 
-export class TermsCreateDTO {
+export class CreateTermsDto {
     @ApiProperty({
         description: '약관 제목 (최대 100자)',
     })

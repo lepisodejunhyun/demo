@@ -2,17 +2,32 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } f
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { FaqService } from "./faq.service";
 import { plainToInstance } from "class-transformer";
-import { FaqDTO } from "./dtos/faq.dto";
-import { FaqCreateDTO } from "./dtos/faq-create.dto";
-import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from "../../libs/dtos";
+import { FaqDto } from "./dtos/faq.dto";
+import { CreateFaqDto } from "./dtos/create-faq.dto";
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "../../libs/dtos";
 import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 
 @ApiTags('faq')
-@ApiExtraModels(PageInfoDTO)
+@ApiExtraModels(PageInfoDto)
 @UseGuards(JwtAuthGuard)
 @Controller('faq')
 export class FaqController {
     constructor(private readonly faqService: FaqService) { };
+
+    @Post('create')
+    @ApiOperation({
+        summary: 'FAQ 신규 등록',
+        description: 'FAQ를 신규 등록 합니다.',
+    })
+    @ApiOkResponse({
+        description: 'FAQ 신규 등록 성공',
+        type: FaqDto,
+    })
+    async create(@Body() data: CreateFaqDto): Promise<FaqDto> {
+        const faq = await this.faqService.create(data);
+
+        return plainToInstance(FaqDto, faq);
+    }
 
     @Get()
     @ApiOperation({
@@ -25,36 +40,21 @@ export class FaqController {
             properties: {
                 items: {
                     type: 'array',
-                    items: { $ref: '#/components/schemas/FaqDTO' },
+                    items: { $ref: '#/components/schemas/FaqDto' },
                 },
                 pageInfo: {
-                    $ref: '#/components/schemas/PageInfoDTO',
+                    $ref: '#/components/schemas/PageInfoDto',
                 },
             },
         },
     })
-    async findAll(@Query() query: PaginationQueryDTO): Promise<OffsetPaginationDTO<FaqDTO>> {
+    async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<FaqDto>> {
         const result = await this.faqService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(FaqDTO, result.items),
+            items: plainToInstance(FaqDto, result.items),
             pageInfo: result.pageInfo,
         };
-    }
-
-    @Post('create')
-    @ApiOperation({
-        summary: 'FAQ 신규 등록',
-        description: 'FAQ를 신규 등록 합니다.',
-    })
-    @ApiOkResponse({
-        description: 'FAQ 신규 등록 성공',
-        type: FaqDTO,
-    })
-    async create(@Body() data: FaqCreateDTO): Promise<FaqDTO> {
-        const faq = await this.faqService.create(data);
-
-        return plainToInstance(FaqDTO, faq);
     }
 
     @Get(':id')
@@ -68,31 +68,12 @@ export class FaqController {
     })
     @ApiOkResponse({
         description: 'FAQ 상세 조회 성공',
-        type: FaqDTO,
+        type: FaqDto,
     })
-    async findById(@Param('id') id: string): Promise<FaqDTO> {
+    async findById(@Param('id') id: string): Promise<FaqDto> {
         const faq = await this.faqService.findById(id);
 
-        return plainToInstance(FaqDTO, faq);
-    }
-
-    @Delete(':id')
-    @ApiParam({
-        name: 'id',
-        type: String,
-    })
-    @ApiOperation({
-        summary: 'FAQ 삭제',
-        description: 'FAQ를 삭제합니다. (소프트 딜리트)',
-    })
-    @ApiOkResponse({
-        description: 'FAQ 삭제 성공',
-        type: FaqDTO,
-    })
-    async remove(@Param('id') id: string): Promise<FaqDTO> {
-        const faq = await this.faqService.remove(id);
-
-        return plainToInstance(FaqDTO, faq);
+        return plainToInstance(FaqDto, faq);
     }
 
     @Patch(':id')
@@ -106,12 +87,30 @@ export class FaqController {
     })
     @ApiOkResponse({
         description: 'FAQ 수정 성공',
-        type: FaqDTO,
+        type: FaqDto,
     })
-    async update(@Param('id') id: string, @Body() data: FaqCreateDTO): Promise<FaqDTO> {
+    async update(@Param('id') id: string, @Body() data: CreateFaqDto): Promise<FaqDto> {
         const faq = await this.faqService.update(id, data);
 
-        return plainToInstance(FaqDTO, faq);
+        return plainToInstance(FaqDto, faq);
     }
 
+    @Delete(':id')
+    @ApiParam({
+        name: 'id',
+        type: String,
+    })
+    @ApiOperation({
+        summary: 'FAQ 삭제',
+        description: 'FAQ를 삭제합니다. (소프트 딜리트)',
+    })
+    @ApiOkResponse({
+        description: 'FAQ 삭제 성공',
+        type: FaqDto,
+    })
+    async remove(@Param('id') id: string): Promise<FaqDto> {
+        const faq = await this.faqService.remove(id);
+
+        return plainToInstance(FaqDto, faq);
+    }
 }

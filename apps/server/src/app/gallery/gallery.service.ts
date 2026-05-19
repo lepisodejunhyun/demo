@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { OffsetPaginationDTO } from "../../libs/dtos";
+import { OffsetPaginationDto } from "../../libs/dtos";
 import { Gallery } from "@prisma/client";
-import { GalleryCreateDTO } from "./dtos/gallery-create.dto";
+import { CreateGalleryDto } from "./dtos/create-gallery.dto";
 
 @Injectable()
 export class GalleryService {
@@ -15,9 +15,9 @@ export class GalleryService {
      * @description 갤러리 페이지네이션 조회 (썸네일 포함)
      * @param {number} page - 페이지 번호 (기본값: 1)
      * @param {number} limit - 페이지당 항목 수 (기본값: 16)
-     * @returns {Promise<OffsetPaginationDTO<any>>}
+     * @returns {Promise<OffsetPaginationDto<any>>}
      */
-    async findAll(page: number = 1, limit: number = 16): Promise<OffsetPaginationDTO<any>> {
+    async findAll(page: number = 1, limit: number = 16): Promise<OffsetPaginationDto<any>> {
         const skip = (page - 1) * limit;
 
         const [items, totalItems] = await Promise.all([
@@ -100,10 +100,10 @@ export class GalleryService {
     /**
      * @name create
      * @description 갤러리 생성 (이미지 첨부 포함)
-     * @param {GalleryCreateDTO} data
+     * @param {CreateGalleryDto} data
      * @returns {Promise<any>}
      */
-    async create(data: GalleryCreateDTO): Promise<any> {
+    async create(data: CreateGalleryDto): Promise<any> {
         const { title, content, imageUrls } = data;
 
         return this.prisma.$transaction(async (tx) => {
@@ -131,10 +131,10 @@ export class GalleryService {
      * @name update
      * @description 갤러리 수정 (기존 이미지 교체)
      * @param {string} id
-     * @param {GalleryCreateDTO} data
+     * @param {CreateGalleryDto} data
      * @returns {Promise<any>}
      */
-    async update(id: string, data: GalleryCreateDTO): Promise<any> {
+    async update(id: string, data: CreateGalleryDto): Promise<any> {
         await this.findById(id);
 
         const { title, content, imageUrls } = data;

@@ -1,5 +1,5 @@
 import { CommonModule, Location } from "@angular/common";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import {
@@ -27,18 +27,18 @@ import { FormInputComponent } from "../../../components/form-input/form-input.co
 export default class PreRegistrationFormPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly location = inject(Location);
 
     id = input<string>();
 
+
     get isEditMode(): boolean { return !!this.id(); }
 
-    breadcrumbs: Breadcrumb[] = [];
+    breadcrumbs = signal<Breadcrumb[]>([]);
 
-    availableEvents: AvailableEventDto[] = [];
-    eventTitle = '';
-    termsList: { id: string; title: string; isRequired: boolean; content: string; agreed: boolean }[] = [];
+    availableEvents = signal<AvailableEventDto[]>([]);
+    eventTitle = signal<string>('');
+    termsList = signal<{ id: string; title: string; isRequired: boolean; content: string; agreed: boolean }[]>([]);
 
     form = new FormGroup({
         eventId: new FormControl('', {
@@ -61,7 +61,7 @@ export default class PreRegistrationFormPage implements OnInit {
         }),
     });
 
-    errorMessage = '';
+    errorMessage = signal<string>('');
 
     onPhoneInput(event: Event): void {
         const input = event.target as HTMLInputElement;
@@ -83,7 +83,7 @@ export default class PreRegistrationFormPage implements OnInit {
                 });
                 this.router.navigate(['/pre-registration', this.id()]);
             } else {
-                const agreedTermsIds = this.termsList.filter(t => t.agreed).map(t => t.id);
+                const agreedTermsIds = this.termsList().filter(t => t.agreed).map(t => t.id);
                 const item = await this.api.invoke(preRegistrationControllerCreate, {
                     body: {
                         eventId: data.eventId,
@@ -95,30 +95,29 @@ export default class PreRegistrationFormPage implements OnInit {
                 this.router.navigate(['/pre-registration', item.id]);
             }
         } catch (error: any) {
-            this.errorMessage = error?.error?.message || '요청이 실패했습니다.';
+            this.errorMessage.set(error?.error?.message || '요청이 실패했습니다.');
         }
     }
 
     async ngOnInit(): Promise<void> {
         const id = this.id();
 
-        this.breadcrumbs = [
+        this.breadcrumbs.set([
             { label: '사전 등록 관리', link: '/pre-registration' },
             { label: this.isEditMode ? '수정' : '등록' },
-        ];
+        ]);
 
         if (!this.isEditMode) {
             try {
-                this.availableEvents = await this.api.invoke(preRegistrationControllerFindAvailableEvents, {});
+                this.availableEvents.set(await this.api.invoke(preRegistrationControllerFindAvailableEvents, {}));
                 const termsResult = await this.api.invoke(termsControllerFindAll, { page: 1, limit: 100 });
-                this.termsList = (termsResult.items ?? []).map((t: any) => ({
+                this.termsList.set((termsResult.items ?? []).map((t: any) => ({
                     id: t.id,
                     title: t.title,
                     isRequired: t.isRequired ?? true,
                     content: t.content ?? '',
                     agreed: false,
-                }));
-                this.cdr.markForCheck();
+                })));
             } catch (error) {
                 console.error('초기 데이터 조회 실패', error);
             }
@@ -127,16 +126,10 @@ export default class PreRegistrationFormPage implements OnInit {
         if (id) {
             try {
                 const item = await this.api.invoke(preRegistrationControllerFindById, {
-                    id: id,
+                    id,
                 });
-                this.eventTitle = item.eventTitle;
-                this.form.patchValue({
-                    eventId: item.eventId,
-                    applicantName: item.applicantName,
-                    contactNumber: item.contactNumber,
-                });
-                // this.form.get('eventId')?.disable();
-                this.cdr.markForCheck();
+                this.eventTitle.set(item.eventTitle);
+                this.form.patchValue(item);
             } catch (error) {
                 console.error('사전 등록 조회 실패', error);
                 this.router.navigate(['/pre-registration']);

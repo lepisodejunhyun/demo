@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
-export class AttachmentDTO {
+export class AttachmentDto {
     @ApiProperty({
         description: '첨부파일 고유 식별자'
     })

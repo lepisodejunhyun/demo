@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
-export class FaqDTO {
+export class FaqDto {
     @ApiProperty({
         description: 'FAQ 고유 식별자'
     })

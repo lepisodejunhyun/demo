@@ -6,7 +6,7 @@ import {
     Api,
     inquiryControllerFindById,
     inquiryControllerRemove,
-    inquiryControllerUpdateAnswer,
+    inquiryControllerUpdate,
     InquiryDto,
 } from "@api-client";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
@@ -80,7 +80,7 @@ export default class InquiryDetailPage implements OnInit {
         this.successMessage.set('');
 
         try {
-            this.inquiry.set(await this.api.invoke(inquiryControllerUpdateAnswer, {
+            this.inquiry.set(await this.api.invoke(inquiryControllerUpdate, {
                 id: this.inquiry()!.id,
                 body: {
                     answer: data.answer,

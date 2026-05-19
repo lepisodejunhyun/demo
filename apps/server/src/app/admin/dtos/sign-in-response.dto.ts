@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
-import { AdminDTO } from "./admin.dto";
+import { AdminDto } from "./admin.dto";
 
 @Exclude()
-export class SignInResponseDTO {
+export class SignInResponseDto {
     @ApiProperty({
         description: 'Access Token (짧은 수명)',
     })
@@ -12,9 +12,9 @@ export class SignInResponseDTO {
 
     @ApiProperty({
         description: '관리자 정보',
-        type: AdminDTO,
+        type: AdminDto,
     })
     @Expose()
-    @Type(() => AdminDTO)
-    admin: AdminDTO;
+    @Type(() => AdminDto)
+    admin: AdminDto;
 }

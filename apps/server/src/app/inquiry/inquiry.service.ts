@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { OffsetPaginationDTO } from "../../libs/dtos";
+import { OffsetPaginationDto } from "../../libs/dtos";
 import { Inquiry } from "@prisma/client";
-import { InquiryAnswerDTO } from "./dtos/inquiry-answer.dto";
+import { UpdateInquiryDto } from "./dtos/update-inquiry.dto";
 
 @Injectable()
 export class InquiryService {
@@ -15,9 +15,9 @@ export class InquiryService {
      * @description 1:1 문의 페이지네이션 조회 (작성자 정보 포함)
      * @param {number} page - 페이지 번호 (기본값: 1)
      * @param {number} limit - 페이지당 항목 수 (기본값: 10)
-     * @returns {Promise<OffsetPaginationDTO<any>>}
+     * @returns {Promise<OffsetPaginationDto<any>>}
      */
-    async findAll(page: number = 1, limit: number = 10): Promise<OffsetPaginationDTO<any>> {
+    async findAll(page: number = 1, limit: number = 10): Promise<OffsetPaginationDto<any>> {
         const skip = (page - 1) * limit;
 
         const [items, totalItems] = await Promise.all([
@@ -41,7 +41,6 @@ export class InquiryService {
             }),
         ]);
 
-        // 작성자 정보를 평탄화 (member 객체 → authorName/authorEmail)
         const flattenedItems = items.map((inquiry) => ({
             ...inquiry,
             authorName: inquiry.member.name,
@@ -98,16 +97,16 @@ export class InquiryService {
     }
 
     /**
-     * @name updateAnswer
+     * @name update
      * @description 1:1 문의 답변 작성/수정. 답변 저장 시 자동으로 상태를 COMPLETED로 변경.
      * @param {string} id
-     * @param {InquiryAnswerDTO} data - { answer }
+     * @param {UpdateInquiryDto} data - { answer }
      * @returns {Promise<any>} 갱신된 문의 상세 (작성자 + 이미지 포함)
      */
-    async updateAnswer(id: string, data: InquiryAnswerDTO): Promise<any> {
+    async update(id: string, data: UpdateInquiryDto): Promise<any> {
         await this.findById(id);
 
-        await this.prisma.inquiry.update({
+        const inquiry = await this.prisma.inquiry.update({
             where: { id },
             data: {
                 answer: data.answer,
@@ -116,8 +115,7 @@ export class InquiryService {
             },
         });
 
-        // 응답 일관성을 위해 갱신된 데이터(작성자 + 이미지 포함) 다시 조회
-        return this.findById(id);
+        return inquiry;
     }
 
     /**

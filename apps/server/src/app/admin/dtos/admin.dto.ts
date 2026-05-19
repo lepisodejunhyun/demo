@@ -3,7 +3,7 @@ import { AdminRole } from "@prisma/client";
 import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
-export class AdminDTO {
+export class AdminDto {
   @ApiProperty({
     description: '관리자 고유 식별자',
   })

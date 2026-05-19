@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
-export class TermsDTO {
+export class TermsDto {
     @ApiProperty({
         description: '약관 고유 식별자'
     })

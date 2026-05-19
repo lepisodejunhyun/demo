@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsOptional, Min } from "class-validator";
 
-export class PaginationQueryDTO {
+export class PaginationQueryDto {
     @ApiProperty({
         description: '페이지 번호',
         required: false,

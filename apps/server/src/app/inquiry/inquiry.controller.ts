@@ -1,14 +1,14 @@
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from "../../libs/dtos";
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "../../libs/dtos";
 import { Body, Controller, Delete, Get, Param, Patch, Query, UseGuards } from "@nestjs/common";
 import { InquiryService } from "./inquiry.service";
-import { InquiryDTO } from "./dtos/inquiry.dto";
+import { InquiryDto } from "./dtos/inquiry.dto";
 import { plainToInstance } from "class-transformer";
-import { InquiryAnswerDTO } from "./dtos/inquiry-answer.dto";
+import { UpdateInquiryDto } from "./dtos/update-inquiry.dto";
 import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 
 @ApiTags('inquiry')
-@ApiExtraModels(PageInfoDTO)
+@ApiExtraModels(PageInfoDto)
 @UseGuards(JwtAuthGuard)
 @Controller('inquiry')
 export class InquiryController {
@@ -27,19 +27,19 @@ export class InquiryController {
             properties: {
                 items: {
                     type: 'array',
-                    items: { $ref: '#/components/schemas/InquiryDTO' },
+                    items: { $ref: '#/components/schemas/InquiryDto' },
                 },
                 pageInfo: {
-                    $ref: '#/components/schemas/PageInfoDTO',
+                    $ref: '#/components/schemas/PageInfoDto',
                 },
             },
         },
     })
-    async findAll(@Query() query: PaginationQueryDTO): Promise<OffsetPaginationDTO<InquiryDTO>> {
+    async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<InquiryDto>> {
         const result = await this.inquiryService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(InquiryDTO, result.items),
+            items: plainToInstance(InquiryDto, result.items),
             pageInfo: result.pageInfo,
         };
     }
@@ -55,12 +55,12 @@ export class InquiryController {
     })
     @ApiOkResponse({
         description: '1:1 문의 상세 조회 성공',
-        type: InquiryDTO,
+        type: InquiryDto,
     })
-    async findById(@Param('id') id: string): Promise<InquiryDTO> {
+    async findById(@Param('id') id: string): Promise<InquiryDto> {
         const inquiry = await this.inquiryService.findById(id);
 
-        return plainToInstance(InquiryDTO, inquiry);
+        return plainToInstance(InquiryDto, inquiry);
     }
 
     @Patch(':id')
@@ -74,12 +74,12 @@ export class InquiryController {
     })
     @ApiOkResponse({
         description: '답변 저장 성공',
-        type: InquiryDTO,
+        type: InquiryDto,
     })
-    async updateAnswer(@Param('id') id: string, @Body() data: InquiryAnswerDTO): Promise<InquiryDTO> {
-        const inquiry = await this.inquiryService.updateAnswer(id, data);
+    async update(@Param('id') id: string, @Body() data: UpdateInquiryDto): Promise<InquiryDto> {
+        const inquiry = await this.inquiryService.update(id, data);
 
-        return plainToInstance(InquiryDTO, inquiry);
+        return plainToInstance(InquiryDto, inquiry);
     }
 
     @Delete(':id')
@@ -93,11 +93,11 @@ export class InquiryController {
     })
     @ApiOkResponse({
         description: '1:1 문의 삭제 성공',
-        type: InquiryDTO,
+        type: InquiryDto,
     })
-    async remove(@Param('id') id: string): Promise<InquiryDTO> {
+    async remove(@Param('id') id: string): Promise<InquiryDto> {
         const inquiry = await this.inquiryService.remove(id);
 
-        return plainToInstance(InquiryDTO, inquiry);
+        return plainToInstance(InquiryDto, inquiry);
     }
 }

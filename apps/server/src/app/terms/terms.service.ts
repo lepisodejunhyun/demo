@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { OffsetPaginationDTO } from "../../libs/dtos";
+import { OffsetPaginationDto } from "../../libs/dtos";
 import { Terms } from "@prisma/client";
-import { TermsCreateDTO } from "./dtos/terms-create.dto";
+import { CreateTermsDto } from "./dtos/create-terms.dto";
 
 @Injectable()
 export class TermsService {
@@ -15,9 +15,9 @@ export class TermsService {
      * @description 약관 페이지네이션 조회
      * @param {number} page - 페이지 번호 (기본값: 1)
      * @param {number} limit - 페이지당 항목 수 (기본값: 10)
-     * @returns {Promise<OffsetPaginationDTO<Terms>>}
+     * @returns {Promise<OffsetPaginationDto<Terms>>}
      */
-    async findAll(page: number = 1, limit: number = 10): Promise<OffsetPaginationDTO<Terms>> {
+    async findAll(page: number = 1, limit: number = 10): Promise<OffsetPaginationDto<Terms>> {
         const skip = (page - 1) * limit;
 
         const [items, totalItems] = await Promise.all([
@@ -72,10 +72,10 @@ export class TermsService {
     /**
      * @name create
      * @description 약관 신규 등록
-     * @param {TermsCreateDTO} data
+     * @param {CreateTermsDto} data
      * @returns {Promise<Terms>}
      */
-    async create(data: TermsCreateDTO): Promise<Terms> {
+    async create(data: CreateTermsDto): Promise<Terms> {
         return this.prisma.terms.create({
             data: {
                 title: data.title,
@@ -88,10 +88,10 @@ export class TermsService {
      * @name update
      * @description 약관 수정
      * @param {string} id
-     * @param {TermsCreateDTO} data
+     * @param {CreateTermsDto} data
      * @returns {Promise<Terms>}
      */
-    async update(id: string, data: TermsCreateDTO): Promise<Terms> {
+    async update(id: string, data: CreateTermsDto): Promise<Terms> {
         await this.findById(id);
 
         return this.prisma.terms.update({

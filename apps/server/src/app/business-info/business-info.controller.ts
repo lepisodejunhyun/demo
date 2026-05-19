@@ -2,8 +2,8 @@ import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import { BusinessInfoService } from "./business-info.service";
-import { BusinessInfoDTO } from "./dtos/business-info.dto";
-import { BusinessInfoUpdateDTO } from "./dtos/business-info-update.dto";
+import { BusinessInfoDto } from "./dtos/business-info.dto";
+import { UpdateBusinessInfoDto } from "./dtos/update-business-info.dto";
 import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 
 @ApiTags('business-info')
@@ -21,12 +21,12 @@ export class BusinessInfoController {
     })
     @ApiOkResponse({
         description: '사업자 정보 조회 성공',
-        type: BusinessInfoDTO,
+        type: BusinessInfoDto,
     })
-    async findOne(): Promise<BusinessInfoDTO | null> {
+    async findOne(): Promise<BusinessInfoDto | null> {
         const info = await this.businessInfoService.findOne();
 
-        return info ? plainToInstance(BusinessInfoDTO, info) : null;
+        return info ? plainToInstance(BusinessInfoDto, info) : null;
     }
 
     @Patch()
@@ -36,11 +36,11 @@ export class BusinessInfoController {
     })
     @ApiOkResponse({
         description: '사업자 정보 저장 성공',
-        type: BusinessInfoDTO,
+        type: BusinessInfoDto,
     })
-    async upsert(@Body() data: BusinessInfoUpdateDTO): Promise<BusinessInfoDTO> {
+    async upsert(@Body() data: UpdateBusinessInfoDto): Promise<BusinessInfoDto> {
         const info = await this.businessInfoService.upsert(data);
 
-        return plainToInstance(BusinessInfoDTO, info);
+        return plainToInstance(BusinessInfoDto, info);
     }
 }

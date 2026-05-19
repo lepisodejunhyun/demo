@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { adminControllerSignin, Api } from "@api-client";
 import { AdminStore } from "../../../stores/admin.store";
@@ -17,7 +17,7 @@ export default class SignInPage {
     private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
 
-    errorMessage = '';
+    errorMessage = signal<string>('');
 
     form = new FormGroup({
         email: new FormControl('', {
@@ -65,7 +65,7 @@ export default class SignInPage {
 
             this.router.navigateByUrl('/dashboard');
         } catch (error: any) {
-            this.errorMessage = error?.error?.message || '로그인에 실패했습니다.';
+            this.errorMessage.set(error?.error?.message || '로그인에 실패했습니다.');
         }
     }
 }

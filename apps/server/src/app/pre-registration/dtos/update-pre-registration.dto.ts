@@ -2,10 +2,10 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 
 /**
- * 사전 등록 수정 DTO
+ * 사전 등록 수정 Dto
  * 정책: 행사 변경 불가, 신청자 정보(이름/연락처)만 수정 가능
  */
-export class PreRegistrationUpdateDTO {
+export class UpdatePreRegistrationDto {
     @ApiProperty({
         description: '신청자 이름 (최대 20자)',
     })

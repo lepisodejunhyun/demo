@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
-import { AttachmentDTO } from "../../common/dtos/attachment.dto";
+import { AttachmentDto } from "../../common/dtos/attachment.dto";
 
 @Exclude()
-export class GalleryDTO {
+export class GalleryDto {
     @ApiProperty({
         description: '갤러리 고유 식별자'
     })
@@ -46,9 +46,9 @@ export class GalleryDTO {
 
     @ApiProperty({
         description: '첨부 이미지 목록',
-        type: [AttachmentDTO]
+        type: [AttachmentDto]
     })
     @Expose()
-    @Type(() => AttachmentDTO)
-    images: AttachmentDTO[];
+    @Type(() => AttachmentDto)
+    images: AttachmentDto[];
 }

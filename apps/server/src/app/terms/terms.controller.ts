@@ -1,20 +1,35 @@
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from "../../libs/dtos";
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "../../libs/dtos";
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { TermsService } from "./terms.service";
-import { TermsDTO } from "./dtos/terms.dto";
+import { TermsDto } from "./dtos/terms.dto";
 import { plainToInstance } from "class-transformer";
-import { TermsCreateDTO } from "./dtos/terms-create.dto";
+import { CreateTermsDto } from "./dtos/create-terms.dto";
 import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 
 @ApiTags('terms')
-@ApiExtraModels(PageInfoDTO)
+@ApiExtraModels(PageInfoDto)
 @UseGuards(JwtAuthGuard)
 @Controller('terms')
 export class TermsController {
     constructor(
         private readonly termsService: TermsService
     ) { }
+
+    @Post('create')
+    @ApiOperation({
+        summary: '약관 신규 등록',
+        description: '제목과 내용을 입력하여 약관을 등록합니다.',
+    })
+    @ApiOkResponse({
+        description: '약관 신규 등록 성공',
+        type: TermsDto,
+    })
+    async create(@Body() data: CreateTermsDto): Promise<TermsDto> {
+        const terms = await this.termsService.create(data);
+
+        return plainToInstance(TermsDto, terms);
+    }
 
     @Get()
     @ApiOperation({
@@ -27,19 +42,19 @@ export class TermsController {
             properties: {
                 items: {
                     type: 'array',
-                    items: { $ref: '#/components/schemas/TermsDTO' },
+                    items: { $ref: '#/components/schemas/TermsDto' },
                 },
                 pageInfo: {
-                    $ref: '#/components/schemas/PageInfoDTO',
+                    $ref: '#/components/schemas/PageInfoDto',
                 },
             },
         },
     })
-    async findAll(@Query() query: PaginationQueryDTO): Promise<OffsetPaginationDTO<TermsDTO>> {
+    async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<TermsDto>> {
         const result = await this.termsService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(TermsDTO, result.items),
+            items: plainToInstance(TermsDto, result.items),
             pageInfo: result.pageInfo,
         };
     }
@@ -55,28 +70,13 @@ export class TermsController {
     })
     @ApiOkResponse({
         description: '약관 상세 조회 성공',
-        type: TermsDTO,
+        type: TermsDto,
     })
-    async findById(@Param('id') id: string): Promise<TermsDTO> {
+    async findById(@Param('id') id: string): Promise<TermsDto> {
         const terms = await this.termsService.findById(id);
 
-        return plainToInstance(TermsDTO, terms);
-    }
-
-    @Post('create')
-    @ApiOperation({
-        summary: '약관 신규 등록',
-        description: '제목과 내용을 입력하여 약관을 등록합니다.',
-    })
-    @ApiOkResponse({
-        description: '약관 신규 등록 성공',
-        type: TermsDTO,
-    })
-    async create(@Body() data: TermsCreateDTO): Promise<TermsDTO> {
-        const terms = await this.termsService.create(data);
-
-        return plainToInstance(TermsDTO, terms);
-    }
+        return plainToInstance(TermsDto, terms);
+    }    
 
     @Patch(':id')
     @ApiParam({
@@ -89,12 +89,12 @@ export class TermsController {
     })
     @ApiOkResponse({
         description: '약관 수정 성공',
-        type: TermsDTO,
+        type: TermsDto,
     })
-    async update(@Param('id') id: string, @Body() data: TermsCreateDTO): Promise<TermsDTO> {
+    async update(@Param('id') id: string, @Body() data: CreateTermsDto): Promise<TermsDto> {
         const terms = await this.termsService.update(id, data);
 
-        return plainToInstance(TermsDTO, terms);
+        return plainToInstance(TermsDto, terms);
     }
 
     @Delete(':id')
@@ -108,11 +108,11 @@ export class TermsController {
     })
     @ApiOkResponse({
         description: '약관 삭제 성공',
-        type: TermsDTO,
+        type: TermsDto,
     })
-    async remove(@Param('id') id: string): Promise<TermsDTO> {
+    async remove(@Param('id') id: string): Promise<TermsDto> {
         const terms = await this.termsService.remove(id);
 
-        return plainToInstance(TermsDTO, terms);
+        return plainToInstance(TermsDto, terms);
     }
 }

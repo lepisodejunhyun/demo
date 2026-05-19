@@ -1,22 +1,37 @@
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from "../../libs/dtos";
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "../../libs/dtos";
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { PreRegistrationService } from "./pre-registration.service";
-import { PreRegistrationDTO } from "./dtos/pre-registration.dto";
+import { PreRegistrationDto } from "./dtos/pre-registration.dto";
 import { plainToInstance } from "class-transformer";
-import { PreRegistrationCreateDTO } from "./dtos/pre-registration-create.dto";
-import { PreRegistrationUpdateDTO } from "./dtos/pre-registration-update.dto";
-import { AvailableEventDTO } from "./dtos/available-event.dto";
+import { CreatePreRegistrationDto } from "./dtos/create-pre-registration.dto";
+import { UpdatePreRegistrationDto } from "./dtos/update-pre-registration.dto";
+import { AvailableEventDto } from "./dtos/available-event.dto";
 import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 
 @ApiTags('pre-registration')
-@ApiExtraModels(PageInfoDTO)
+@ApiExtraModels(PageInfoDto)
 @UseGuards(JwtAuthGuard)
 @Controller('pre-registration')
 export class PreRegistrationController {
     constructor(
         private readonly preRegistrationService: PreRegistrationService
     ) { }
+
+    @Post('create')
+    @ApiOperation({
+        summary: '사전 등록 신규 생성',
+        description: '행사를 선택하고 신청자 정보를 입력하여 사전 등록합니다. 행사가 사전 등록 가능한 상태인지 서버에서 검증합니다.',
+    })
+    @ApiOkResponse({
+        description: '사전 등록 성공',
+        type: PreRegistrationDto,
+    })
+    async create(@Body() data: CreatePreRegistrationDto): Promise<PreRegistrationDto> {
+        const item = await this.preRegistrationService.create(data);
+
+        return plainToInstance(PreRegistrationDto, item);
+    }
 
     @Get()
     @ApiOperation({
@@ -29,19 +44,19 @@ export class PreRegistrationController {
             properties: {
                 items: {
                     type: 'array',
-                    items: { $ref: '#/components/schemas/PreRegistrationDTO' },
+                    items: { $ref: '#/components/schemas/PreRegistrationDto' },
                 },
                 pageInfo: {
-                    $ref: '#/components/schemas/PageInfoDTO',
+                    $ref: '#/components/schemas/PageInfoDto',
                 },
             },
         },
     })
-    async findAll(@Query() query: PaginationQueryDTO): Promise<OffsetPaginationDTO<PreRegistrationDTO>> {
+    async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<PreRegistrationDto>> {
         const result = await this.preRegistrationService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(PreRegistrationDTO, result.items),
+            items: plainToInstance(PreRegistrationDto, result.items),
             pageInfo: result.pageInfo,
         };
     }
@@ -53,13 +68,13 @@ export class PreRegistrationController {
     })
     @ApiOkResponse({
         description: '가능한 행사 목록 조회 성공',
-        type: AvailableEventDTO,
+        type: AvailableEventDto,
         isArray: true,
     })
-    async findAvailableEvents(): Promise<AvailableEventDTO[]> {
+    async findAvailableEvents(): Promise<AvailableEventDto[]> {
         const events = await this.preRegistrationService.findAvailableEvents();
 
-        return plainToInstance(AvailableEventDTO, events);
+        return plainToInstance(AvailableEventDto, events);
     }
 
     @Get(':id')
@@ -73,28 +88,15 @@ export class PreRegistrationController {
     })
     @ApiOkResponse({
         description: '사전 등록 상세 조회 성공',
-        type: PreRegistrationDTO,
+        type: PreRegistrationDto,
     })
-    async findById(@Param('id') id: string): Promise<PreRegistrationDTO> {
+    async findById(@Param('id') id: string): Promise<PreRegistrationDto> {
         const item = await this.preRegistrationService.findById(id);
 
-        return plainToInstance(PreRegistrationDTO, item);
+        return plainToInstance(PreRegistrationDto, item);
     }
 
-    @Post('create')
-    @ApiOperation({
-        summary: '사전 등록 신규 생성',
-        description: '행사를 선택하고 신청자 정보를 입력하여 사전 등록합니다. 행사가 사전 등록 가능한 상태인지 서버에서 검증합니다.',
-    })
-    @ApiOkResponse({
-        description: '사전 등록 성공',
-        type: PreRegistrationDTO,
-    })
-    async create(@Body() data: PreRegistrationCreateDTO): Promise<PreRegistrationDTO> {
-        const item = await this.preRegistrationService.create(data);
-
-        return plainToInstance(PreRegistrationDTO, item);
-    }
+    
 
     @Patch(':id')
     @ApiParam({
@@ -107,12 +109,12 @@ export class PreRegistrationController {
     })
     @ApiOkResponse({
         description: '사전 등록 수정 성공',
-        type: PreRegistrationDTO,
+        type: PreRegistrationDto,
     })
-    async update(@Param('id') id: string, @Body() data: PreRegistrationUpdateDTO): Promise<PreRegistrationDTO> {
+    async update(@Param('id') id: string, @Body() data: UpdatePreRegistrationDto): Promise<PreRegistrationDto> {
         const item = await this.preRegistrationService.update(id, data);
 
-        return plainToInstance(PreRegistrationDTO, item);
+        return plainToInstance(PreRegistrationDto, item);
     }
 
     @Delete(':id')
@@ -126,11 +128,11 @@ export class PreRegistrationController {
     })
     @ApiOkResponse({
         description: '사전 등록 삭제 성공',
-        type: PreRegistrationDTO,
+        type: PreRegistrationDto,
     })
-    async remove(@Param('id') id: string): Promise<PreRegistrationDTO> {
+    async remove(@Param('id') id: string): Promise<PreRegistrationDto> {
         const item = await this.preRegistrationService.remove(id);
 
-        return plainToInstance(PreRegistrationDTO, item);
+        return plainToInstance(PreRegistrationDto, item);
     }
 }

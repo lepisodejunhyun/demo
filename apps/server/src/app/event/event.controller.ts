@@ -1,20 +1,35 @@
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from "../../libs/dtos";
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "../../libs/dtos";
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { EventService } from "./event.service";
-import { EventDTO } from "./dtos/event.dto";
+import { EventDto } from "./dtos/event.dto";
 import { plainToInstance } from "class-transformer";
-import { EventCreateDTO } from "./dtos/event-create.dto";
+import { CreateEventDto } from "./dtos/create-event.dto";
 import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 
 @ApiTags('event')
-@ApiExtraModels(PageInfoDTO)
+@ApiExtraModels(PageInfoDto)
 @UseGuards(JwtAuthGuard)
 @Controller('event')
 export class EventController {
     constructor(
         private readonly eventService: EventService
     ) { }
+
+    @Post('create')
+    @ApiOperation({
+        summary: '행사 정보 신규 등록',
+        description: '행사 정보를 신규 등록 합니다.',
+    })
+    @ApiOkResponse({
+        description: '행사 정보 신규 등록 성공',
+        type: EventDto,
+    })
+    async create(@Body() data: CreateEventDto): Promise<EventDto> {
+        const event = await this.eventService.create(data);
+
+        return plainToInstance(EventDto, event);
+    }
 
     @Get()
     @ApiOperation({
@@ -27,19 +42,19 @@ export class EventController {
             properties: {
                 items: {
                     type: 'array',
-                    items: { $ref: '#/components/schemas/EventDTO' },
+                    items: { $ref: '#/components/schemas/EventDto' },
                 },
                 pageInfo: {
-                    $ref: '#/components/schemas/PageInfoDTO',
+                    $ref: '#/components/schemas/PageInfoDto',
                 },
             },
         },
     })
-    async findAll(@Query() query: PaginationQueryDTO): Promise<OffsetPaginationDTO<EventDTO>> {
+    async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<EventDto>> {
         const result = await this.eventService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(EventDTO, result.items),
+            items: plainToInstance(EventDto, result.items),
             pageInfo: result.pageInfo,
         };
     }
@@ -55,12 +70,27 @@ export class EventController {
     })
     @ApiOkResponse({
         description: '행사 정보 상세 조회 성공',
-        type: EventDTO,
+        type: EventDto,
     })
-    async findById(@Param('id') id: string): Promise<EventDTO> {
+    async findById(@Param('id') id: string): Promise<EventDto> {
         const event = await this.eventService.findById(id);
 
-        return plainToInstance(EventDTO, event);
+        return plainToInstance(EventDto, event);
+    }
+
+    @Patch(':id')
+    @ApiOperation({
+        summary: '행사 정보 수정',
+        description: '행사 정보를 수정합니다.'
+    })
+    @ApiOkResponse({
+        description: '행사 정보 수정 성공',
+        type: EventDto,
+    })
+    async update(@Param('id') id: string, @Body() data: CreateEventDto): Promise<EventDto> {
+        const event = await this.eventService.update(id, data);
+
+        return plainToInstance(EventDto, event);
     }
 
     @Delete(':id')
@@ -74,42 +104,12 @@ export class EventController {
     })
     @ApiOkResponse({
         description: '행사 정보 삭제 성공',
-        type: EventDTO,
+        type: EventDto,
     })
-    async remove(@Param('id') id): Promise<EventDTO> {
+    async remove(@Param('id') id): Promise<EventDto> {
         const event = await this.eventService.remove(id);
 
-        return plainToInstance(EventDTO, event);
-    }
-
-    @Post('create')
-    @ApiOperation({
-        summary: '행사 정보 신규 등록',
-        description: '행사 정보를 신규 등록 합니다.',
-    })
-    @ApiOkResponse({
-        description: '행사 정보 신규 등록 성공',
-        type: EventDTO,
-    })
-    async create(@Body() data: EventCreateDTO): Promise<EventDTO> {
-        const event = await this.eventService.create(data);
-
-        return plainToInstance(EventDTO, event);
-    }
-
-    @Patch(':id')
-    @ApiOperation({
-        summary: '행사 정보 수정',
-        description: '행사 정보를 수정합니다.'
-    })
-    @ApiOkResponse({
-        description: '행사 정보 수정 성공',
-        type: EventDTO,
-    })
-    async update(@Param('id') id: string, @Body() data: EventCreateDTO): Promise<EventDTO> {
-        const event = await this.eventService.update(id, data);
-
-        return plainToInstance(EventDTO, event);
+        return plainToInstance(EventDto, event);
     }
 
 }

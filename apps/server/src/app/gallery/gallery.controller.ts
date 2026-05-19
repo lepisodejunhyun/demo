@@ -1,20 +1,35 @@
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from "../../libs/dtos";
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "../../libs/dtos";
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { GalleryService } from "./gallery.service";
-import { GalleryDTO } from "./dtos/gallery.dto";
+import { GalleryDto } from "./dtos/gallery.dto";
 import { plainToInstance } from "class-transformer";
-import { GalleryCreateDTO } from "./dtos/gallery-create.dto";
+import { CreateGalleryDto } from "./dtos/create-gallery.dto";
 import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 
 @ApiTags('gallery')
-@ApiExtraModels(PageInfoDTO)
+@ApiExtraModels(PageInfoDto)
 @UseGuards(JwtAuthGuard)
 @Controller('gallery')
 export class GalleryController {
     constructor(
         private readonly galleryService: GalleryService
     ) { }
+
+    @Post('create')
+    @ApiOperation({
+        summary: '갤러리 신규 등록',
+        description: '갤러리를 신규 등록 합니다.',
+    })
+    @ApiOkResponse({
+        description: '갤러리 신규 등록 성공',
+        type: GalleryDto,
+    })
+    async create(@Body() data: CreateGalleryDto): Promise<GalleryDto> {
+        const gallery = await this.galleryService.create(data);
+
+        return plainToInstance(GalleryDto, gallery);
+    }
 
     @Get()
     @ApiOperation({
@@ -27,19 +42,19 @@ export class GalleryController {
             properties: {
                 items: {
                     type: 'array',
-                    items: { $ref: '#/components/schemas/GalleryDTO' },
+                    items: { $ref: '#/components/schemas/GalleryDto' },
                 },
                 pageInfo: {
-                    $ref: '#/components/schemas/PageInfoDTO',
+                    $ref: '#/components/schemas/PageInfoDto',
                 },
             },
         },
     })
-    async findAll(@Query() query: PaginationQueryDTO): Promise<OffsetPaginationDTO<GalleryDTO>> {
+    async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<GalleryDto>> {
         const result = await this.galleryService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(GalleryDTO, result.items),
+            items: plainToInstance(GalleryDto, result.items),
             pageInfo: result.pageInfo,
         };
     }
@@ -55,12 +70,27 @@ export class GalleryController {
     })
     @ApiOkResponse({
         description: '갤러리 상세 조회 성공',
-        type: GalleryDTO,
+        type: GalleryDto,
     })
-    async findById(@Param('id') id: string): Promise<GalleryDTO> {
+    async findById(@Param('id') id: string): Promise<GalleryDto> {
         const gallery = await this.galleryService.findById(id);
 
-        return plainToInstance(GalleryDTO, gallery);
+        return plainToInstance(GalleryDto, gallery);
+    }
+
+    @Patch(':id')
+    @ApiOperation({
+        summary: '갤러리 수정',
+        description: '갤러리를 수정합니다.'
+    })
+    @ApiOkResponse({
+        description: '갤러리 수정 성공',
+        type: GalleryDto,
+    })
+    async update(@Param('id') id: string, @Body() data: CreateGalleryDto): Promise<GalleryDto> {
+        const gallery = await this.galleryService.update(id, data);
+
+        return plainToInstance(GalleryDto, gallery);
     }
 
     @Delete(':id')
@@ -74,42 +104,12 @@ export class GalleryController {
     })
     @ApiOkResponse({
         description: '갤러리 삭제 성공',
-        type: GalleryDTO,
+        type: GalleryDto,
     })
-    async remove(@Param('id') id): Promise<GalleryDTO> {
+    async remove(@Param('id') id): Promise<GalleryDto> {
         const gallery = await this.galleryService.remove(id);
 
-        return plainToInstance(GalleryDTO, gallery);
-    }
-
-    @Post('create')
-    @ApiOperation({
-        summary: '갤러리 신규 등록',
-        description: '갤러리를 신규 등록 합니다.',
-    })
-    @ApiOkResponse({
-        description: '갤러리 신규 등록 성공',
-        type: GalleryDTO,
-    })
-    async create(@Body() data: GalleryCreateDTO): Promise<GalleryDTO> {
-        const gallery = await this.galleryService.create(data);
-
-        return plainToInstance(GalleryDTO, gallery);
-    }
-
-    @Patch(':id')
-    @ApiOperation({
-        summary: '갤러리 수정',
-        description: '갤러리를 수정합니다.'
-    })
-    @ApiOkResponse({
-        description: '갤러리 수정 성공',
-        type: GalleryDTO,
-    })
-    async update(@Param('id') id: string, @Body() data: GalleryCreateDTO): Promise<GalleryDTO> {
-        const gallery = await this.galleryService.update(id, data);
-
-        return plainToInstance(GalleryDTO, gallery);
+        return plainToInstance(GalleryDto, gallery);
     }
 
 }

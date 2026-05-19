@@ -1,5 +1,5 @@
 <app-page-header [title]="isEditMode ? '사전 등록 수정' : '사전 등록'">
-    <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
+    <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs()" />
     <p slot="description" class="text-base leading-6 text-on-surface-variant mt-6">
         {{ isEditMode ? '사전 등록 정보를 수정합니다.' : '행사를 선택하고 신청자 정보를 입력하여 사전 등록합니다.' }}
     </p>
@@ -10,14 +10,14 @@
     <app-form-field label="행사" for="pre-reg-event" [required]="true">
         @if (isEditMode) {
         <p class="w-full px-4 py-3 border border-outline-variant rounded bg-surface-container-low text-on-surface-variant text-base">
-            {{ eventTitle }}
+            {{ eventTitle() }}
         </p>
         <p class="text-xs text-on-surface-variant mt-1">행사는 변경할 수 없습니다.</p>
         } @else {
         <select formControlName="eventId" id="pre-reg-event"
             class="w-full px-4 py-3 border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base transition-all bg-white">
             <option value="" disabled>행사를 선택하세요</option>
-            @for (event of availableEvents; track event.id) {
+            @for (event of availableEvents(); track event.id) {
             <option [value]="event.id">{{ event.title }}</option>
             }
         </select>
@@ -32,10 +32,10 @@
         <app-form-input formControlName="contactNumber" id="pre-reg-contact" type="tel" [maxlength]="13" placeholder="연락처를 입력하세요" />
     </app-form-field>
 
-    @if (!isEditMode && termsList.length > 0) {
+    @if (!isEditMode && termsList().length > 0) {
     <app-form-field label="약관 동의" [required]="true">
         <div class="space-y-3">
-            @for (terms of termsList; track terms.id) {
+            @for (terms of termsList(); track terms.id) {
             <div class="flex items-start gap-3 p-4 border border-outline-variant rounded hover:border-primary/30 transition-colors"
                 [class.border-primary/50]="terms.agreed" [class.bg-primary/5]="terms.agreed">
                 <input type="checkbox" [id]="'terms-' + terms.id" [(ngModel)]="terms.agreed"
@@ -66,7 +66,7 @@
     </app-form-field>
     }
 
-    @if (errorMessage) {
-    <p class="text-error text-sm">{{ errorMessage }}</p>
+    @if (errorMessage()) {
+    <p class="text-error text-sm">{{ errorMessage() }}</p>
     }
 </app-form-view>

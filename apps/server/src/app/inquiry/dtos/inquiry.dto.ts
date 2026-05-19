@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
-import { AttachmentDTO } from "../../common/dtos/attachment.dto";
+import { AttachmentDto } from "../../common/dtos/attachment.dto";
 import { InquiryStatus } from "@prisma/client";
 
 @Exclude()
-export class InquiryDTO {
+export class InquiryDto {
     @ApiProperty({
         description: '1:1 문의 고유 식별자'
     })
@@ -80,9 +80,9 @@ export class InquiryDTO {
 
     @ApiProperty({
         description: '첨부 이미지 목록',
-        type: [AttachmentDTO],
+        type: [AttachmentDto],
     })
     @Expose()
-    @Type(() => AttachmentDTO)
-    images: AttachmentDTO[];
+    @Type(() => AttachmentDto)
+    images: AttachmentDto[];
 }
