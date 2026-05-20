@@ -19,6 +19,7 @@ import { FormFieldComponent } from "../../../components/form-field/form-field.co
 import { FormInputComponent } from "../../../components/form-input/form-input.component";
 import { ToastrService } from 'ngx-toastr';
 import { StatusBadgeComponent } from "../../../components/status-badge/status-badge.component";
+import { DialogService } from "../../../components/confirm-dialog/confirm-dialog.service";
 
 @Component({
     selector: 'app-pre-registration-form',
@@ -31,6 +32,7 @@ export default class PreRegistrationFormPage implements OnInit {
     private readonly router = inject(Router);
     private readonly location = inject(Location);
     private readonly toast = inject(ToastrService);
+    private readonly dialog = inject(DialogService);
 
     id = input<string>();
 
@@ -74,14 +76,15 @@ export default class PreRegistrationFormPage implements OnInit {
 
     async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
-        const data = this.form.getRawValue();
+        const { eventId, applicantName, contactNumber } = this.form.getRawValue();
         try {
             if (this.isEditMode) {
+                if (!await this.dialog.confirm({ title: '수정 확인', message: '정말 수정하시겠습니까?', variant: 'warning' })) return;
                 await this.api.invoke(preRegistrationControllerUpdate, {
                     id: this.id()!,
                     body: {
-                        applicantName: data.applicantName,
-                        contactNumber: data.contactNumber,
+                        applicantName,
+                        contactNumber,
                     },
                 });
                 this.router.navigate(['/pre-registration', this.id()]);
@@ -89,9 +92,9 @@ export default class PreRegistrationFormPage implements OnInit {
                 const agreedTermsIds = this.termsList().filter(t => t.agreed).map(t => t.id);
                 const item = await this.api.invoke(preRegistrationControllerCreate, {
                     body: {
-                        eventId: data.eventId,
-                        applicantName: data.applicantName,
-                        contactNumber: data.contactNumber,
+                        eventId,
+                        applicantName,
+                        contactNumber,
                         agreedTermsIds,
                     },
                 });

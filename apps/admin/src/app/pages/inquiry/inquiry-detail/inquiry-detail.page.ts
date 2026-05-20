@@ -18,6 +18,7 @@ import { ButtonComponent } from "../../../components/button/button.component";
 import { DetailFieldComponent } from "../../../components/detail-field/detail-field.component";
 import { StatusBadgeComponent } from "../../../components/status-badge/status-badge.component";
 import { ToastrService } from 'ngx-toastr';
+import { DialogService } from "../../../components/confirm-dialog/confirm-dialog.service";
 
 
 @Component({
@@ -30,6 +31,7 @@ export default class InquiryDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly toast = inject(ToastrService);
+    private readonly dialog = inject(DialogService);
 
     id = input<string>();
 
@@ -94,15 +96,16 @@ export default class InquiryDetailPage implements OnInit {
             return;
         }
 
-        const data = this.answerForm.getRawValue();
+        const { answer } = this.answerForm.getRawValue();
         this.errorMessage.set('');
         this.successMessage.set('');
 
         try {
+            if (!await this.dialog.confirm({ title: '수정 확인', message: '정말 수정하시겠습니까?', variant: 'warning' })) return;
             this.inquiry.set(await this.api.invoke(inquiryControllerUpdate, {
                 id: this.inquiry()!.id,
                 body: {
-                    answer: data.answer,
+                    answer,
                 },
             }));
 
@@ -113,7 +116,7 @@ export default class InquiryDetailPage implements OnInit {
     }
 
     async onDelete(): Promise<void> {
-        if (!confirm('정말 삭제하시겠습니까?')) return;
+        if (!await this.dialog.confirm({ title: '1:1문의 삭제', message: '정말 삭제하시겠습니까?'})) return;
 
         try {
             await this.api.invoke(inquiryControllerRemove, {

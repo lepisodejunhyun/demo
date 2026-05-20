@@ -11,6 +11,7 @@ import { FormInputComponent } from "../../../components/form-input/form-input.co
 import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
 import { ToastrService } from 'ngx-toastr';
 import { FormToggleComponent } from "../../../components/form-toggle/form-toggle.component";
+import { DialogService } from "../../../components/confirm-dialog/confirm-dialog.service";
 
 @Component({
     selector: 'app-terms-form',
@@ -22,6 +23,7 @@ export default class TermsFormPage implements OnInit {
     private readonly router = inject(Router);
     private readonly location = inject(Location);
     private readonly toast = inject(ToastrService);
+    private readonly dialog = inject(DialogService);
 
     id = input<string>();
 
@@ -54,6 +56,7 @@ export default class TermsFormPage implements OnInit {
         const body = this.form.getRawValue();
         try {
             if (this.isEditMode) {
+                if (!await this.dialog.confirm({ title: '수정 확인', message: '정말 수정하시겠습니까?', variant: 'warning' })) return;
                 await this.api.invoke(termsControllerUpdate, {
                     id: this.id()!,
                     body,

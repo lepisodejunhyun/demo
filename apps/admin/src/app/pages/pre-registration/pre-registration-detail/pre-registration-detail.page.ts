@@ -9,6 +9,7 @@ import { ButtonComponent } from "../../../components/button/button.component";
 import { DetailFieldComponent } from "../../../components/detail-field/detail-field.component";
 import { StatusBadgeComponent } from "../../../components/status-badge/status-badge.component";
 import { ToastrService } from 'ngx-toastr';
+import { DialogService } from "../../../components/confirm-dialog/confirm-dialog.service";
 
 @Component({
     selector: 'app-pre-registration-detail',
@@ -19,6 +20,7 @@ export default class PreRegistrationDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly toast = inject(ToastrService);
+    private readonly dialog = inject(DialogService)
 
     id = input<string>();
 
@@ -45,7 +47,7 @@ export default class PreRegistrationDetailPage implements OnInit {
     }
 
     async onDelete(): Promise<void> {
-        if (!confirm('정말 삭제하시겠습니까?')) return;
+        if (!await this.dialog.confirm({ title: '사전 등록 삭제', message: '정말 삭제하시겠습니까?'})) return;
 
         try {
             await this.api.invoke(preRegistrationControllerRemove, {

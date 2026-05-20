@@ -47,7 +47,7 @@ export default class EventDetailPage implements OnInit {
     }
 
     async onDelete(): Promise<void> {
-        if (!await this.dialog.confirm({ title: '갤러리 삭제', message: '정말 삭제하시겠습니까?'})) return;
+        if (!await this.dialog.confirm({ title: '행사 정보 삭제', message: '정말 삭제하시겠습니까?'})) return;
 
         try {
             await this.api.invoke(eventControllerRemove, {

@@ -13,6 +13,7 @@ import { FormInputComponent } from "../../../components/form-input/form-input.co
 import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
 import { ToastrService } from 'ngx-toastr';
 import { ImageUploadComponent } from "../../../components/image-upload/image-upload.component";
+import { DialogService } from '../../../components/confirm-dialog/confirm-dialog.service';
 
 function eventDateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const startDate = control.get('startDate')?.value;
@@ -69,6 +70,7 @@ export default class EventFormPage implements OnInit {
     private readonly location = inject(Location);
     private readonly supabaseService = inject(SupabaseService);
     private readonly toast = inject(ToastrService);
+    private readonly dialog = inject(DialogService);
 
     id = input<string>();
 
@@ -155,6 +157,10 @@ export default class EventFormPage implements OnInit {
     async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
 
+        if (this.isEditMode) {
+            if (!await this.dialog.confirm({ title: '수정 확인', message: '정말 수정하시겠습니까?', variant: 'warning' })) return;
+        }
+
         try {
             // 새 이미지가 선택된 경우에만 업로드
             if (this.selectedFile) {
@@ -163,17 +169,17 @@ export default class EventFormPage implements OnInit {
                 this.form.patchValue({ posterImage: url });
             }
 
-            const data = this.form.getRawValue();
+            const body = this.form.getRawValue();
 
             if (this.isEditMode) {
                 await this.api.invoke(eventControllerUpdate, {
                     id: this.id()!,
-                    body: data,
+                    body,
                 });
                 this.router.navigate(['event', this.id()]);
             } else {
                 const event = await this.api.invoke(eventControllerCreate, {
-                    body: data,
+                    body,
                 });
                 this.router.navigate(['/event', event.id]);
             }

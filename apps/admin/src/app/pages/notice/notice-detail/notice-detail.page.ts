@@ -7,6 +7,7 @@ import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
 import { ButtonComponent } from "../../../components/button/button.component";
 import { ToastrService } from 'ngx-toastr';
+import { DialogService } from "../../../components/confirm-dialog/confirm-dialog.service";
 
 @Component({
     selector: 'app-notice-detail',
@@ -17,6 +18,7 @@ export default class NoticeDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly toast = inject(ToastrService);
+    private readonly dialog = inject(DialogService)
 
     id = input<string>();
 
@@ -45,7 +47,7 @@ export default class NoticeDetailPage implements OnInit {
     }
 
     async onDelete(): Promise<void> {
-        if (!confirm('정말 삭제하시겠습니까?')) return;
+        if (!await this.dialog.confirm({ title: '공지사항 삭제', message: '정말 삭제하시겠습니까?'})) return;
 
         try {
             await this.api.invoke(noticeControllerRemove, {

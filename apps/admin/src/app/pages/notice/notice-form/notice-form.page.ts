@@ -10,6 +10,7 @@ import { FormFieldComponent } from "../../../components/form-field/form-field.co
 import { FormInputComponent } from "../../../components/form-input/form-input.component";
 import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
 import { ToastrService } from 'ngx-toastr';
+import { DialogService } from "../../../components/confirm-dialog/confirm-dialog.service";
 
 @Component({
     selector: 'app-notice-form',
@@ -21,6 +22,7 @@ export default class NoticeFormPage implements OnInit {
     private readonly router = inject(Router);
     private readonly location = inject(Location);
     private readonly toast = inject(ToastrService);
+    private readonly dialog = inject(DialogService);
 
     id = input<string>();
 
@@ -50,6 +52,7 @@ export default class NoticeFormPage implements OnInit {
         const body = this.form.getRawValue();
         try {
             if (this.isEditMode) {
+                if (!await this.dialog.confirm({ title: '수정 확인', message: '정말 수정하시겠습니까?', variant: 'warning' })) return;
                 await this.api.invoke(noticeControllerUpdate, {
                     id: this.id()!,
                     body
