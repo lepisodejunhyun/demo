@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { OffsetPaginationDTO } from '../../libs/dtos';
+import { OffsetPaginationDto } from '../../libs/dtos';
 import { Notice } from '@prisma/client';
 
 @Injectable()
@@ -14,9 +14,9 @@ export class NoticeService {
      * @description 공지사항 전체 조회
      * @param {number} page
      * @param {number} limit
-     * @returns {Promise<OffsetPaginationDTO<Notice>>}
+     * @returns {Promise<OffsetPaginationDto<Notice>>}
      */
-    async findAll(page: number, limit: number): Promise<OffsetPaginationDTO<Notice>> {
+    async findAll(page: number, limit: number): Promise<OffsetPaginationDto<Notice>> {
         const skip = (page - 1) * limit;
 
         const [items, totalItems] = await Promise.all([

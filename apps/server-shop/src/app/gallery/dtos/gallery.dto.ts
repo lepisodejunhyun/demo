@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose, Type } from "class-transformer";
 
-export class AttachmentDTO {
+export class AttachmentDto {
     @ApiProperty({ description: "첨부파일 식별자" })
     @Expose()
     id: string;
@@ -15,7 +15,7 @@ export class AttachmentDTO {
     sortOrder?: number;
 }
 
-export class GalleryDTO {
+export class GalleryDto {
     @ApiProperty({ description: "갤러리 식별자" })
     @Expose()
     id: string;
@@ -46,9 +46,9 @@ export class GalleryDTO {
 
     @ApiProperty({
         description: '첨부 이미지 목록',
-        type: [AttachmentDTO]
+        type: [AttachmentDto]
     })
     @Expose()
-    @Type(() => AttachmentDTO)
-    images: AttachmentDTO[];
+    @Type(() => AttachmentDto)
+    images: AttachmentDto[];
 }

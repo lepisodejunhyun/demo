@@ -7,16 +7,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { InquiryAnswerDto } from '../../models/inquiry-answer-dto';
+import { CreateInquiryDto } from '../../models/create-inquiry-dto';
 import { InquiryDto } from '../../models/inquiry-dto';
 
-export interface InquiryControllerUpdateAnswer$Params {
+export interface InquiryControllerUpdate$Params {
   id: string;
-      body: InquiryAnswerDto
+      body: CreateInquiryDto
 }
 
-export function inquiryControllerUpdateAnswer(http: HttpClient, rootUrl: string, params: InquiryControllerUpdateAnswer$Params, context?: HttpContext): Observable<StrictHttpResponse<InquiryDto>> {
-  const rb = new RequestBuilder(rootUrl, inquiryControllerUpdateAnswer.PATH, 'patch');
+export function inquiryControllerUpdate(http: HttpClient, rootUrl: string, params: InquiryControllerUpdate$Params, context?: HttpContext): Observable<StrictHttpResponse<InquiryDto>> {
+  const rb = new RequestBuilder(rootUrl, inquiryControllerUpdate.PATH, 'patch');
   if (params) {
     rb.path('id', params.id, {});
     rb.body(params.body, 'application/json');
@@ -32,4 +32,4 @@ export function inquiryControllerUpdateAnswer(http: HttpClient, rootUrl: string,
   );
 }
 
-inquiryControllerUpdateAnswer.PATH = '/api/inquiry/{id}';
+inquiryControllerUpdate.PATH = '/api/inquiries/{id}';

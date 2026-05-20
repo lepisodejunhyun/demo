@@ -5,6 +5,7 @@ import { Api, preRegistrationControllerFindAll, PreRegistrationDto } from "@api-
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
 import { DataTableComponent } from "../../components/data-table/data-table.component";
 import { ColumnDef, PageInfo } from "../../components/data-table/data-table.types";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-pre-registration',
@@ -16,6 +17,7 @@ export default class PreRegistrationPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
+    private readonly toast = inject(ToastrService);
 
     preRegistrations = signal<PreRegistrationDto[]>([]);
     pageInfo = signal<PageInfo | null>(null);
@@ -44,6 +46,7 @@ export default class PreRegistrationPage implements OnInit {
             this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
             console.error('사전 등록 목록 조회 실패', error);
+            this.toast.error('데이터를 불러오지 못했습니다.');
         }
     }
 

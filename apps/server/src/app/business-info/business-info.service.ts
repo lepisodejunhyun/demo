@@ -16,7 +16,9 @@ export class BusinessInfoService {
      * @returns {Promise<BusinessInfo | null>}
      */
     async findOne(): Promise<BusinessInfo | null> {
-        return this.prisma.businessInfo.findFirst();
+        const info = await this.prisma.businessInfo.findFirst();
+
+        return info;
     }
 
     /**
@@ -36,8 +38,8 @@ export class BusinessInfoService {
             });
         }
 
-        return this.prisma.businessInfo.create({
-            data,
-        });
+        const result = await this.prisma.businessInfo.create({ data });
+
+        return result;
     }
 }

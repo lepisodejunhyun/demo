@@ -7,11 +7,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { EventCreateDto } from '../../models/event-create-dto';
+import { CreateEventDto } from '../../models/create-event-dto';
 import { EventDto } from '../../models/event-dto';
 
 export interface EventControllerCreate$Params {
-      body: EventCreateDto
+      body: CreateEventDto
 }
 
 export function eventControllerCreate(http: HttpClient, rootUrl: string, params: EventControllerCreate$Params, context?: HttpContext): Observable<StrictHttpResponse<EventDto>> {
@@ -30,4 +30,4 @@ export function eventControllerCreate(http: HttpClient, rootUrl: string, params:
   );
 }
 
-eventControllerCreate.PATH = '/api/event/create';
+eventControllerCreate.PATH = '/api/events/create';

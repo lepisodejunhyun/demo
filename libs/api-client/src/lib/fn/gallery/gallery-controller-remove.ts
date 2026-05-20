@@ -29,4 +29,4 @@ export function galleryControllerRemove(http: HttpClient, rootUrl: string, param
   );
 }
 
-galleryControllerRemove.PATH = '/api/gallery/{id}';
+galleryControllerRemove.PATH = '/api/galleries/{id}';

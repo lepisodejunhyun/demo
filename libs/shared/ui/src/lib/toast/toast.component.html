@@ -1,0 +1,19 @@
+<div class="fixed top-6 right-6 z-[9999] flex flex-col gap-3 max-w-[420px] w-full pointer-events-none">
+    @for (toast of toastService.toasts(); track toast.id) {
+    <div class="toast flex items-center gap-3 px-[18px] py-3.5 rounded-xl text-sm font-medium text-white backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.18),0_2px_8px_rgba(0,0,0,0.08)] pointer-events-auto cursor-pointer transition-all duration-200 hover:-translate-x-1"
+        [ngClass]="{
+            'bg-gradient-to-br from-emerald-600 to-emerald-500': toast.type === 'success',
+            'bg-gradient-to-br from-red-600 to-red-500': toast.type === 'error',
+            'bg-gradient-to-br from-amber-600 to-amber-500': toast.type === 'warning',
+            'bg-gradient-to-br from-blue-600 to-blue-500': toast.type === 'info'
+        }"
+        (click)="toastService.dismiss(toast.id)">
+        <span class="text-lg shrink-0">{{ getIcon(toast.type) }}</span>
+        <span class="flex-1 leading-snug">{{ toast.message }}</span>
+        <button class="shrink-0 text-white/70 hover:text-white hover:bg-white/15 text-sm px-1 py-0.5 rounded transition-colors cursor-pointer"
+            (click)="toastService.dismiss(toast.id); $event.stopPropagation()">
+            ✕
+        </button>
+    </div>
+    }
+</div>

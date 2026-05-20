@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString, MaxLength } from "class-validator";
 
-export class InquiryCreateDTO {
+export class CreateInquiryDto {
     @ApiProperty({ description: '문의 제목' })
     @IsNotEmpty({ message: '제목은 필수 입력 항목입니다.' })
     @IsString()

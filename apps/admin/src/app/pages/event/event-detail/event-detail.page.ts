@@ -5,6 +5,7 @@ import { PageHeaderComponent } from "../../../components/page-header/page-header
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
 import { Api, eventControllerFindById, eventControllerRemove, EventDto } from "@api-client";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-event-detail',
@@ -14,6 +15,7 @@ import { Api, eventControllerFindById, eventControllerRemove, EventDto } from "@
 export default class EventDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
+    private readonly toast = inject(ToastrService);
 
     id = input<string>();
 
@@ -33,6 +35,7 @@ export default class EventDetailPage implements OnInit {
             this.event.set(await this.api.invoke(eventControllerFindById, { id }));
         } catch (error) {
             console.error('행사 정보 조회 실패', error);
+            this.toast.error('데이터를 불러오지 못했습니다.');
 
             this.router.navigate(['/event']);
         }
@@ -46,9 +49,11 @@ export default class EventDetailPage implements OnInit {
             await this.api.invoke(eventControllerRemove, {
                 id: this.event()!.id,
             });
+            this.toast.success('삭제되었습니다.');
             this.router.navigate(['/event']);
         } catch (error) {
             console.error('행사 삭제 실패', error);
+            this.toast.error('삭제에 실패했습니다.');
         }
     }
 

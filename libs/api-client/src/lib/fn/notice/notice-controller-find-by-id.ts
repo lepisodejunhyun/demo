@@ -29,4 +29,4 @@ export function noticeControllerFindById(http: HttpClient, rootUrl: string, para
   );
 }
 
-noticeControllerFindById.PATH = '/api/notice/{id}';
+noticeControllerFindById.PATH = '/api/notices/{id}';

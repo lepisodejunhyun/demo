@@ -5,6 +5,7 @@ import { Api, eventControllerFindAll, EventDto } from "@api-client";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { ColumnDef, PageInfo } from "../../components/data-table/data-table.types";
 import { DataTableComponent } from "../../components/data-table/data-table.component";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-event',
@@ -15,6 +16,7 @@ export default class EventPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
+    private readonly toast = inject(ToastrService);
 
     events = signal<EventDto[]>([]);
     pageInfo = signal<PageInfo | null>(null);
@@ -44,6 +46,7 @@ export default class EventPage implements OnInit {
             this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
             console.error('행사 목록 조회 실패', error);
+            this.toast.error('데이터를 불러오지 못했습니다.');
         }
     }
 

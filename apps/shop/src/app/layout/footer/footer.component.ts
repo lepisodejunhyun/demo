@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { Api, businessInfoControllerFindOne, BusinessInfoDto, termsControllerFindAll, TermsDto } from "@api-client-shop";
 
@@ -10,8 +10,8 @@ import { Api, businessInfoControllerFindOne, BusinessInfoDto, termsControllerFin
 export default class FooterComponent implements OnInit {
     private readonly api = inject(Api);
 
-    businessInfo: BusinessInfoDto | null = null;
-    termsList: TermsDto[] = [];
+    businessInfo = signal<BusinessInfoDto | null>(null);
+    termsList = signal<TermsDto[]>([]);
 
     async ngOnInit(): Promise<void> {
         await this.loadData();
@@ -23,11 +23,11 @@ export default class FooterComponent implements OnInit {
                 this.api.invoke(businessInfoControllerFindOne, {}),
                 this.api.invoke(termsControllerFindAll, {}),
             ]);
-            this.businessInfo = businessInfo;
-            this.termsList = terms;
+            this.businessInfo.set(businessInfo);
+            this.termsList.set(terms);
         } catch {
-            this.businessInfo = null;
-            this.termsList = [];
+            this.businessInfo.set(null);
+            this.termsList.set([]);
         }
     }
 }

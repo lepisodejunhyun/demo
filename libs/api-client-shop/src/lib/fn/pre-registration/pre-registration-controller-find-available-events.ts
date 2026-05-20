@@ -46,4 +46,4 @@ export function preRegistrationControllerFindAvailableEvents(http: HttpClient, r
   );
 }
 
-preRegistrationControllerFindAvailableEvents.PATH = '/api/pre-registration/available-events';
+preRegistrationControllerFindAvailableEvents.PATH = '/api/pre-registrations/available-events';

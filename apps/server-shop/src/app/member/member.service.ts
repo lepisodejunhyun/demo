@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { MemberSignUpDTO } from "./dtos/member-signup.dto";
-import { MemberSignInDTO } from "./dtos/member-signin.dto";
+import { MemberSignUpDto } from "./dtos/member-signup.dto";
+import { MemberSignInDto } from "./dtos/member-signin.dto";
 import { compareSync, hashSync } from "bcryptjs";
 import { JwtService } from "@nestjs/jwt";
 import { Member } from "@prisma/client";
@@ -16,10 +16,10 @@ export class MemberService {
   /**
    * @name signUp
    * @description 회원 가입 (이메일 중복 검증 포함)
-   * @param {MemberSignUpDTO} data
+   * @param {MemberSignUpDto} data
    * @returns {Promise<Member>}
    */
-  async signUp(data: MemberSignUpDTO): Promise<Member> {
+  async signUp(data: MemberSignUpDto): Promise<Member> {
     const existing = await this.prisma.member.findFirst({
       where: { email: data.email, deletedAt: null },
     });
@@ -42,10 +42,10 @@ export class MemberService {
   /**
    * @name signIn
    * @description 회원 로그인 — Access Token + Refresh Token 발급
-   * @param {MemberSignInDTO} data
+   * @param {MemberSignInDto} data
    * @returns {Promise<{ accessToken: string; refreshToken: string; member: Member }>}
    */
-  async signIn(data: MemberSignInDTO): Promise<{ accessToken: string; refreshToken: string; member: Member }> {
+  async signIn(data: MemberSignInDto): Promise<{ accessToken: string; refreshToken: string; member: Member }> {
     const { email, password } = data;
 
     const member = await this.prisma.member.findFirst({

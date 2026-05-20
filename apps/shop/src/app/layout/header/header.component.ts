@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from "../../shared/services/auth.service";
 
 @Component({
@@ -11,9 +12,9 @@ import { AuthService } from "../../shared/services/auth.service";
 export default class HeaderComponent implements OnInit {
     readonly authService = inject(AuthService);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
+    private readonly toast = inject(ToastrService);
 
-    menuOpen = false;
+    menuOpen = signal(false);
 
     navItems = [
         { label: '홈', path: '/' },
@@ -31,12 +32,12 @@ export default class HeaderComponent implements OnInit {
     }
 
     toggleMenu(): void {
-        this.menuOpen = !this.menuOpen;
+        this.menuOpen.update((v) => !v);
     }
 
     async onLogout(): Promise<void> {
         await this.authService.logout();
-        this.cdr.markForCheck();
+        this.toast.success('로그아웃 되었습니다.');
         this.router.navigate(['/']);
     }
 }

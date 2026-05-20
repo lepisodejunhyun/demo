@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Api, galleryControllerFindAll, GalleryDto } from "@api-client";
 import { PageInfo } from "../../components/data-table/data-table.types";
 import { CardGridConfig } from "../../components/card-grid/card-grid.types";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-gallery',
@@ -16,6 +17,7 @@ export default class GalleryPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
+    private readonly toast = inject(ToastrService);
 
     galleries = signal<GalleryDto[]>([]);
     pageInfo = signal<PageInfo | null>(null);
@@ -43,6 +45,7 @@ export default class GalleryPage implements OnInit {
             this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
             console.error('갤러리 목록 조회 실패', error);
+            this.toast.error('데이터를 불러오지 못했습니다.');
         }
     }
 

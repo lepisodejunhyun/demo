@@ -17,6 +17,7 @@ import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/
 import { FormViewComponent } from "../../../components/form-view/form-view.component";
 import { FormFieldComponent } from "../../../components/form-field/form-field.component";
 import { FormInputComponent } from "../../../components/form-input/form-input.component";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-pre-registration-form',
@@ -28,6 +29,7 @@ export default class PreRegistrationFormPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly location = inject(Location);
+    private readonly toast = inject(ToastrService);
 
     id = input<string>();
 
@@ -55,7 +57,7 @@ export default class PreRegistrationFormPage implements OnInit {
         contactNumber: new FormControl('', {
             validators: [
                 Validators.required,
-                Validators.maxLength(20),
+                Validators.maxLength(13),
             ],
             nonNullable: true,
         }),
@@ -94,6 +96,7 @@ export default class PreRegistrationFormPage implements OnInit {
                 });
                 this.router.navigate(['/pre-registration', item.id]);
             }
+            this.toast.success('저장되었습니다.');
         } catch (error: any) {
             this.errorMessage.set(error?.error?.message || '요청이 실패했습니다.');
         }
@@ -120,6 +123,7 @@ export default class PreRegistrationFormPage implements OnInit {
                 })));
             } catch (error) {
                 console.error('초기 데이터 조회 실패', error);
+                this.toast.error('데이터를 불러오지 못했습니다.');
             }
         }
 
@@ -132,6 +136,7 @@ export default class PreRegistrationFormPage implements OnInit {
                 this.form.patchValue(item);
             } catch (error) {
                 console.error('사전 등록 조회 실패', error);
+                this.toast.error('데이터를 불러오지 못했습니다.');
                 this.router.navigate(['/pre-registration']);
             }
         }

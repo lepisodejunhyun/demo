@@ -7,12 +7,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { GalleryCreateDto } from '../../models/gallery-create-dto';
+import { CreateGalleryDto } from '../../models/create-gallery-dto';
 import { GalleryDto } from '../../models/gallery-dto';
 
 export interface GalleryControllerUpdate$Params {
   id: string;
-      body: GalleryCreateDto
+      body: CreateGalleryDto
 }
 
 export function galleryControllerUpdate(http: HttpClient, rootUrl: string, params: GalleryControllerUpdate$Params, context?: HttpContext): Observable<StrictHttpResponse<GalleryDto>> {
@@ -32,4 +32,4 @@ export function galleryControllerUpdate(http: HttpClient, rootUrl: string, param
   );
 }
 
-galleryControllerUpdate.PATH = '/api/gallery/{id}';
+galleryControllerUpdate.PATH = '/api/galleries/{id}';

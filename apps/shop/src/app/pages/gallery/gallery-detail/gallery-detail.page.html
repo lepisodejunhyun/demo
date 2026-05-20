@@ -1,41 +1,25 @@
-<div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12">
-  <div class="mb-6 flex items-center justify-between">
-    <button (click)="goBack()" class="flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
-      <span class="material-symbols-outlined text-lg mr-1">arrow_back</span>
-      목록으로
-    </button>
-  </div>
+<app-content-wrapper padding="pt-28 pb-12">
+  <app-back-button (back)="goBack()" />
 
-  <article *ngIf="gallery" class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 overflow-hidden">
-    <header class="px-8 py-8 border-b border-slate-200 bg-slate-50/50">
-      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">
-        {{ gallery.title }}
-      </h1>
-      <div class="flex items-center text-sm text-slate-500">
-        <span class="flex items-center">
-          <span class="material-symbols-outlined text-base mr-1.5">calendar_today</span>
-          {{ gallery.createdAt | date:'yyyy.MM.dd HH:mm' }}
-        </span>
-      </div>
-    </header>
-    
-    <div class="px-8 py-10 min-h-[300px]">
-      <div *ngIf="gallery.content" class="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap mb-10">
-        {{ gallery.content }}
-      </div>
-
-      <!-- 이미지 갤러리 뷰 -->
-      <div *ngIf="gallery.images && gallery.images.length > 0" class="space-y-6">
-        <div *ngFor="let image of gallery.images" class="w-full overflow-hidden bg-slate-100 flex justify-center items-center">
-          <img [src]="image.url" alt="갤러리 이미지" class="max-w-full h-auto object-contain shadow-sm" />
-        </div>
-      </div>
+  @if (gallery(); as gallery) {
+  <app-article-view [title]="gallery.title" [createdAt]="gallery.createdAt">
+    @if (gallery.content) {
+    <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap break-words mb-10">
+      {{ gallery.content }}
     </div>
-  </article>
+    }
 
-  <!-- Loading State -->
-  <div *ngIf="!gallery" class="flex flex-col items-center justify-center min-h-[400px] text-slate-400">
-    <span class="material-symbols-outlined animate-spin text-4xl mb-4">autorenew</span>
-    <p>갤러리 정보를 불러오는 중입니다...</p>
-  </div>
-</div>
+    @if (gallery.images && gallery.images.length > 0) {
+    <div class="space-y-6">
+      @for (image of gallery.images; track $index) {
+      <div class="w-full overflow-hidden bg-slate-100 flex justify-center items-center">
+        <img [src]="image.url" alt="갤러리 이미지" class="max-w-full h-auto object-contain shadow-sm" />
+      </div>
+      }
+    </div>
+    }
+  </app-article-view>
+  } @else {
+  <app-loading-spinner message="갤러리 정보를 불러오는 중입니다..." />
+  }
+</app-content-wrapper>

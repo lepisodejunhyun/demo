@@ -1,76 +1,70 @@
-<div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12">
-  <div class="mb-6 flex items-center justify-between">
-    <button (click)="goBack()" class="flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
-      <span class="material-symbols-outlined text-lg mr-1">arrow_back</span>
-      목록으로
-    </button>
-  </div>
+<app-content-wrapper padding="pt-28 pb-12">
+  <app-back-button (back)="goBack()" />
 
-  <article *ngIf="event" class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 overflow-hidden">
-    <!-- 포스터 이미지 -->
-    <div *ngIf="event.posterImage" class="w-full h-[400px] overflow-hidden bg-slate-100">
+  @if (event(); as event) {
+  <app-article-view [title]="event.title" [createdAt]="event.createdAt">
+    <!-- Hero: poster image -->
+    @if (event.posterImage) {
+    <div slot="hero" class="w-full h-[400px] overflow-hidden bg-slate-100">
       <img [src]="event.posterImage" [alt]="event.title" class="w-full h-full object-cover" />
     </div>
+    }
 
-    <header class="px-8 py-8 border-b border-slate-200 bg-slate-50/50">
-      <div class="flex items-center gap-3 mb-4">
-        <span *ngIf="getStatus()" class="px-2.5 py-1 text-xs font-bold tracking-wider uppercase"
-              [ngClass]="getStatus()!.class">
-          {{ getStatus()!.label }}
-        </span>
-      </div>
-      <div class="flex items-start justify-between gap-4 mb-6">
-        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
-          {{ event.title }}
-        </h1>
-        <a *ngIf="isPreRegistrationOpen()" [routerLink]="['/pre-registration', event.id]"
-           class="shrink-0 inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#8127cf] to-[#4648d4] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all shadow-lg shadow-primary/20 cursor-pointer">
-          <span class="material-symbols-outlined text-lg">how_to_reg</span>
-          사전 등록
-        </a>
-      </div>
+    <!-- Badges -->
+    <span slot="badges" class="px-2.5 py-1 text-xs font-bold tracking-wider uppercase" [ngClass]="getEventStatus(event).class">
+      {{ getEventStatus(event).label }}
+    </span>
 
-      <!-- 행사 메타 정보 -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-slate-600">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-base text-slate-400">calendar_today</span>
-          <span class="font-medium">행사 기간</span>
-          <span class="text-slate-500">{{ event.startDate | date:'yyyy.MM.dd' }} ~ {{ event.endDate | date:'yyyy.MM.dd' }}</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-base text-slate-400">schedule</span>
-          <span class="font-medium">운영 시간</span>
-          <span class="text-slate-500">{{ event.operatingStartTime }} ~ {{ event.operatingEndTime }}</span>
-        </div>
-        <div *ngIf="event.location" class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-base text-slate-400">location_on</span>
-          <span class="font-medium">장소</span>
-          <span class="text-slate-500">{{ event.location }}</span>
-        </div>
-        <div *ngIf="event.contactNumber" class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-base text-slate-400">call</span>
-          <span class="font-medium">문의</span>
-          <span class="text-slate-500">{{ event.contactNumber }}</span>
-        </div>
-        <div *ngIf="event.preRegStartDate && event.preRegEndDate" class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-base text-slate-400">how_to_reg</span>
-          <span class="font-medium">사전등록</span>
-          <span class="text-slate-500">{{ event.preRegStartDate | date:'yyyy.MM.dd' }} ~ {{ event.preRegEndDate | date:'yyyy.MM.dd' }}</span>
-        </div>
-      </div>
-    </header>
+    <!-- Header Actions: 사전등록 버튼 -->
+    @if (isPreRegistrationOpen(event)) {
+    <a slot="header-actions" [routerLink]="['/pre-registration', event.id]"
+      class="shrink-0 inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#8127cf] to-[#4648d4] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all shadow-lg shadow-primary/20 cursor-pointer tracking-wider uppercase">
+      <span class="material-symbols-outlined text-lg">how_to_reg</span>
+      사전 등록
+    </a>
+    }
 
-    <div class="px-8 py-10 min-h-[300px]">
-      <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap">
-        {{ event.content }}
+    <!-- Header Extra: 메타 정보 -->
+    <div slot="header-extra" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-slate-600 items-start mt-6">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-base text-slate-400">calendar_today</span>
+        <span class="font-medium">행사 기간</span>
+        <span class="text-slate-500">{{ event.startDate | date:'yyyy.MM.dd' }} ~ {{ event.endDate | date:'yyyy.MM.dd' }}</span>
       </div>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-base text-slate-400">schedule</span>
+        <span class="font-medium">운영 시간</span>
+        <span class="text-slate-500">{{ event.operatingStartTime }} ~ {{ event.operatingEndTime }}</span>
+      </div>
+      @if (event.location) {
+      <div class="flex items-start gap-2">
+        <span class="material-symbols-outlined text-base text-slate-400 shrink-0 mt-0.5">location_on</span>
+        <span class="font-medium shrink-0">장소</span>
+        <span class="text-slate-500 break-all">{{ event.location }}</span>
+      </div>
+      }
+      @if (event.contactNumber) {
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-base text-slate-400">call</span>
+        <span class="font-medium">문의</span>
+        <span class="text-slate-500">{{ event.contactNumber }}</span>
+      </div>
+      }
+      @if (event.preRegStartDate && event.preRegEndDate) {
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-base text-slate-400">how_to_reg</span>
+        <span class="font-medium">사전등록</span>
+        <span class="text-slate-500">{{ event.preRegStartDate | date:'yyyy.MM.dd' }} ~ {{ event.preRegEndDate | date:'yyyy.MM.dd' }}</span>
+      </div>
+      }
     </div>
 
-  </article>
-
-  <!-- Loading State -->
-  <div *ngIf="!event" class="flex flex-col items-center justify-center min-h-[400px] text-slate-400">
-    <span class="material-symbols-outlined animate-spin text-4xl mb-4">autorenew</span>
-    <p>행사 정보를 불러오는 중입니다...</p>
-  </div>
-</div>
+    <!-- Body -->
+    <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap break-words">
+      {{ event.content }}
+    </div>
+  </app-article-view>
+  } @else {
+  <app-loading-spinner message="행사 정보를 불러오는 중입니다..." />
+  }
+</app-content-wrapper>

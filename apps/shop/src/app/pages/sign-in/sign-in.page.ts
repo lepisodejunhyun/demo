@@ -2,10 +2,11 @@ import { Component, inject } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router, RouterLink, ActivatedRoute } from "@angular/router";
 import { AuthService } from "../../shared/services/auth.service";
+import { FormFieldComponent } from '../../components/form-field/form-field.component';
 
 @Component({
     selector: 'app-sign-in',
-    imports: [ReactiveFormsModule, RouterLink],
+    imports: [ReactiveFormsModule, RouterLink, FormFieldComponent],
     templateUrl: './sign-in.page.html',
 })
 export default class SignInPage {

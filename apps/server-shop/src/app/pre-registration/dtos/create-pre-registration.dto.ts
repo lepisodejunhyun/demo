@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-export class PreRegistrationCreateDTO {
+export class CreatePreRegistrationDto {
     @ApiProperty({ description: "행사 ID" })
     @IsString()
     @IsNotEmpty()

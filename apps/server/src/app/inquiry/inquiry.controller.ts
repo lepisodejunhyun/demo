@@ -10,13 +10,12 @@ import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 @ApiTags('inquiry')
 @ApiExtraModels(PageInfoDto)
 @UseGuards(JwtAuthGuard)
-@Controller('inquiry')
+@Controller('inquiries')
 export class InquiryController {
     constructor(
         private readonly inquiryService: InquiryService
     ) { }
 
-    @Get()
     @ApiOperation({
         summary: '1:1 문의 전체 조회',
         description: '모든 1:1 문의 내역을 최신순으로 조회합니다. (deletedAt이 null인 항목만)'
@@ -35,16 +34,16 @@ export class InquiryController {
             },
         },
     })
+    @Get()
     async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<InquiryDto>> {
-        const result = await this.inquiryService.findAll(query.page, query.limit);
+        const { items, pageInfo } = await this.inquiryService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(InquiryDto, result.items),
-            pageInfo: result.pageInfo,
+            items: plainToInstance(InquiryDto, items),
+            pageInfo,
         };
     }
 
-    @Get(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -57,13 +56,13 @@ export class InquiryController {
         description: '1:1 문의 상세 조회 성공',
         type: InquiryDto,
     })
+    @Get(':id')
     async findById(@Param('id') id: string): Promise<InquiryDto> {
         const inquiry = await this.inquiryService.findById(id);
 
         return plainToInstance(InquiryDto, inquiry);
     }
 
-    @Patch(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -76,13 +75,13 @@ export class InquiryController {
         description: '답변 저장 성공',
         type: InquiryDto,
     })
+    @Patch(':id')
     async update(@Param('id') id: string, @Body() data: UpdateInquiryDto): Promise<InquiryDto> {
         const inquiry = await this.inquiryService.update(id, data);
 
         return plainToInstance(InquiryDto, inquiry);
     }
 
-    @Delete(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -95,6 +94,7 @@ export class InquiryController {
         description: '1:1 문의 삭제 성공',
         type: InquiryDto,
     })
+    @Delete(':id')
     async remove(@Param('id') id: string): Promise<InquiryDto> {
         const inquiry = await this.inquiryService.remove(id);
 

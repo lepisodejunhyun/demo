@@ -13,6 +13,7 @@ import { PageHeaderComponent } from "../../../components/page-header/page-header
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
 import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -24,6 +25,7 @@ import { FormTextareaComponent } from "../../../components/form-textarea/form-te
 export default class InquiryDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
+    private readonly toast = inject(ToastrService);
 
     id = input<string>();
 
@@ -68,6 +70,7 @@ export default class InquiryDetailPage implements OnInit {
             }
         } catch (error) {
             console.error('1:1 문의 조회 실패', error);
+            this.toast.error('데이터를 불러오지 못했습니다.');
             this.router.navigate(['/inquiry']);
         }
     }
@@ -87,9 +90,9 @@ export default class InquiryDetailPage implements OnInit {
                 },
             }));
 
-            this.successMessage.set('답변이 저장되었습니다.');
+            this.toast.success('답변이 저장되었습니다.');
         } catch (error: any) {
-            this.errorMessage.set(error?.error?.message || '답변 저장에 실패했습니다.');
+            this.toast.error(error?.error?.message || '답변 저장에 실패했습니다.');
         }
     }
 
@@ -100,9 +103,11 @@ export default class InquiryDetailPage implements OnInit {
             await this.api.invoke(inquiryControllerRemove, {
                 id: this.inquiry()!.id,
             });
+            this.toast.success('삭제되었습니다.');
             this.router.navigate(['/inquiry']);
         } catch (error) {
             console.error('1:1 문의 삭제 실패', error);
+            this.toast.error('삭제에 실패했습니다.');
         }
     }
 }

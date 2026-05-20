@@ -38,13 +38,13 @@
         <!-- Mobile Menu Button -->
         <button (click)="toggleMenu()" class="md:hidden p-2 text-on-surface hover:text-primary transition-colors">
             <span class="material-symbols-outlined text-[28px]">
-                {{ menuOpen ? 'close' : 'menu' }}
+                {{ menuOpen() ? 'close' : 'menu' }}
             </span>
         </button>
     </div>
 
     <!-- Mobile Nav -->
-    @if (menuOpen) {
+    @if (menuOpen()) {
     <div class="md:hidden bg-surface border-t border-outline-variant px-5 py-4 space-y-3">
         @for (item of navItems; track item.path) {
         <a [routerLink]="item.path" (click)="toggleMenu()"

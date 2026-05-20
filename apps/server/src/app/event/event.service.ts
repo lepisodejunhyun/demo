@@ -17,24 +17,18 @@ export class EventService {
      * @param {number} limit - 페이지당 항목 수 (기본값: 10)
      * @returns {Promise<OffsetPaginationDto<Event>>}
      */
-    async findAll(page: number, limit: number, search?: string | null): Promise<OffsetPaginationDto<Event>> {
+    async findAll(page: number, limit: number): Promise<OffsetPaginationDto<Event>> {
         const skip = (page - 1) * limit;
 
         const [items, totalItems] = await Promise.all([
             this.prisma.event.findMany({
-                where: {
-                    deletedAt: null,
-                },
-                orderBy: {
-                    createdAt: 'desc',
-                },
+                where: { deletedAt: null },
+                orderBy: { createdAt: 'desc' },
                 skip,
                 take: limit,
             }),
             this.prisma.event.count({
-                where: {
-                    deletedAt: null,
-                },
+                where: { deletedAt: null },
             }),
         ]);
 

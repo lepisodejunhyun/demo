@@ -5,6 +5,7 @@ import { Api, faqControllerFindById, faqControllerRemove, FaqDto } from "@api-cl
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-faq-detail',
@@ -14,6 +15,7 @@ import { DetailViewComponent } from "../../../components/detail-view/detail-view
 export default class FaqDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
+    private readonly toast = inject(ToastrService);
 
     id = input<string>();
 
@@ -35,6 +37,7 @@ export default class FaqDetailPage implements OnInit {
             }));
         } catch (error) {
             console.error('FAQ 조회 실패', error);
+            this.toast.error('데이터를 불러오지 못했습니다.');
 
             this.router.navigate(['/faq']);
         }
@@ -48,9 +51,11 @@ export default class FaqDetailPage implements OnInit {
             await this.api.invoke(faqControllerRemove, {
                 id: this.faq()!.id,
             });
+            this.toast.success('삭제되었습니다.');
             this.router.navigate(['/faq']);
         } catch (error) {
             console.error('FAQ 삭제 실패', error);
+            this.toast.error('삭제에 실패했습니다.');
         }
     }
 }

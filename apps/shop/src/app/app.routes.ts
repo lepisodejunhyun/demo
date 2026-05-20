@@ -95,6 +95,12 @@ export const appRoutes: Route[] = [
                         loadComponent: () => import('./pages/inquiry/inquiry-form/inquiry-form.page'),
                     },
                     {
+                        path: 'inquiry/:id/edit',
+                        data: { title: '문의 수정' },
+                        canActivate: [authGuard],
+                        loadComponent: () => import('./pages/inquiry/inquiry-form/inquiry-form.page'),
+                    },
+                    {
                         path: 'inquiry/:id',
                         data: { title: '문의 상세' },
                         canActivate: [authGuard],

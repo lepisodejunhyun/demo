@@ -1,15 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
-import { MemberDTO } from "./member.dto";
+import { MemberDto } from "./member.dto";
 
 @Exclude()
-export class SignInResponseDTO {
+export class SignInResponseDto {
     @ApiProperty({ description: 'Access Token' })
     @Expose()
     accessToken: string;
 
-    @ApiProperty({ description: '회원 정보', type: MemberDTO })
+    @ApiProperty({ description: '회원 정보', type: MemberDto })
     @Expose()
-    @Type(() => MemberDTO)
-    member: MemberDTO;
+    @Type(() => MemberDto)
+    member: MemberDto;
 }

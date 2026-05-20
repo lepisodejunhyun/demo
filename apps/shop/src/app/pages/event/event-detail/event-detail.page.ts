@@ -1,22 +1,31 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Api, eventControllerFindById, EventDto } from '@api-client-shop';
+import { ToastrService } from 'ngx-toastr';
+import { ContentWrapperComponent } from '../../../components/content-wrapper/content-wrapper.component';
+import { BackButtonComponent } from '../../../components/back-button/back-button.component';
+import { ArticleViewComponent } from '../../../components/article-view/article-view.component';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { getEventStatus, isPreRegistrationOpen } from '../../../shared/utils/event-status.util';
 
 @Component({
   selector: 'app-event-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ContentWrapperComponent, BackButtonComponent, ArticleViewComponent, LoadingSpinnerComponent],
   templateUrl: './event-detail.page.html',
 })
 export default class EventDetailPage implements OnInit {
   private readonly api = inject(Api);
   private readonly router = inject(Router);
-  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly toast = inject(ToastrService);
 
   id = input<string>();
 
-  event: EventDto | null = null;
+  event = signal<EventDto | null>(null);
+
+  readonly getEventStatus = getEventStatus;
+  readonly isPreRegistrationOpen = isPreRegistrationOpen;
 
   async ngOnInit(): Promise<void> {
     const id = this.id();
@@ -24,49 +33,15 @@ export default class EventDetailPage implements OnInit {
     if (!id) return;
 
     try {
-      this.event = await this.api.invoke(eventControllerFindById, {
-        id: id,
-      });
-      this.cdr.markForCheck();
+      this.event.set(await this.api.invoke(eventControllerFindById, { id }));
     } catch (error) {
       console.error('행사 조회 실패', error);
+      this.toast.error('데이터를 불러오지 못했습니다.');
       this.router.navigate(['/event']);
     }
   }
 
   goBack(): void {
     this.router.navigate(['/event']);
-  }
-
-  /** 행사 진행 상태를 계산 */
-  getStatus(): { label: string; class: string } | null {
-    if (!this.event) return null;
-    const now = new Date();
-    const start = new Date(this.event.startDate);
-    const end = new Date(this.event.endDate);
-
-    if (now > end) {
-      return { label: '종료', class: 'bg-slate-100 text-slate-500' };
-    } else if (now >= start) {
-      return { label: '진행중', class: 'bg-emerald-100 text-emerald-700' };
-    } else if (this.event.preRegStartDate && this.event.preRegEndDate) {
-      const preStart = new Date(this.event.preRegStartDate);
-      const preDeadline = new Date(this.event.preRegEndDate);
-      preDeadline.setDate(preDeadline.getDate() + 1);
-      if (now >= preStart && now < preDeadline) {
-        return { label: '사전 등록중', class: 'bg-violet-100 text-violet-700' };
-      }
-    }
-    return { label: '예정', class: 'bg-blue-100 text-blue-700' };
-  }
-
-  /** 현재 사전등록 기간인지 확인 */
-  isPreRegistrationOpen(): boolean {
-    if (!this.event?.preRegStartDate || !this.event?.preRegEndDate) return false;
-    const now = new Date();
-    const preStart = new Date(this.event.preRegStartDate);
-    const preEnd = new Date(this.event.preRegEndDate);
-    preEnd.setDate(preEnd.getDate() + 1);
-    return now >= preStart && now < preEnd;
   }
 }

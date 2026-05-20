@@ -1,19 +1,18 @@
 import { ApiExtraModels, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from "../../libs/dtos";
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "../../libs/dtos";
 import { Controller, Get, Param, Query } from "@nestjs/common";
 import { FaqService } from "./faq.service";
-import { FaqDTO } from "./dtos/faq.dto";
+import { FaqDto } from "./dtos/faq.dto";
 import { plainToInstance } from "class-transformer";
 
 @ApiTags('faq')
-@ApiExtraModels(PageInfoDTO)
-@Controller('faq')
+@ApiExtraModels(PageInfoDto)
+@Controller('faqs')
 export class FaqController {
     constructor(
         private readonly faqService: FaqService
     ) { }
 
-    @Get()
     @ApiOperation({
         summary: 'FAQ 전체 조회',
         description: 'FAQ 전체 목록을 조회합니다.'
@@ -24,24 +23,24 @@ export class FaqController {
             properties: {
                 items: {
                     type: 'array',
-                    items: { $ref: '#/components/schemas/FaqDTO' },
+                    items: { $ref: '#/components/schemas/FaqDto' },
                 },
                 pageInfo: {
-                    $ref: '#/components/schemas/PageInfoDTO',
+                    $ref: '#/components/schemas/PageInfoDto',
                 },
             },
         },
     })
-    async findAll(@Query() query: PaginationQueryDTO): Promise<OffsetPaginationDTO<FaqDTO>> {
-        const result = await this.faqService.findAll(query.page, query.limit);
+    @Get()
+    async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<FaqDto>> {
+        const { items, pageInfo } = await this.faqService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(FaqDTO, result.items),
-            pageInfo: result.pageInfo,
+            items: plainToInstance(FaqDto, items),
+            pageInfo,
         };
     }
 
-    @Get(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -52,11 +51,12 @@ export class FaqController {
     })
     @ApiResponse({
         description: 'FAQ 정보 상세 조회 성공',
-        type: FaqDTO,
+        type: FaqDto,
     })
-    async findById(@Param('id') id: string): Promise<FaqDTO> {
+    @Get(':id')
+    async findById(@Param('id') id: string): Promise<FaqDto> {
         const faq = await this.faqService.findById(id);
 
-        return plainToInstance(FaqDTO, faq);
+        return plainToInstance(FaqDto, faq);
     }
 }

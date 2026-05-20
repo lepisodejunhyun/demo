@@ -9,6 +9,7 @@ import { FormViewComponent } from "../../../components/form-view/form-view.compo
 import { FormFieldComponent } from "../../../components/form-field/form-field.component";
 import { FormInputComponent } from "../../../components/form-input/form-input.component";
 import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-terms-form',
@@ -19,6 +20,7 @@ export default class TermsFormPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly location = inject(Location);
+    private readonly toast = inject(ToastrService);
 
     id = input<string>();
 
@@ -60,6 +62,7 @@ export default class TermsFormPage implements OnInit {
                 const terms = await this.api.invoke(termsControllerCreate, { body });
                 this.router.navigate(['/terms', terms.id]);
             }
+            this.toast.success('저장되었습니다.');
         } catch (error: any) {
             this.errorMessage.set(error?.error?.message || '요청이 실패했습니다.');
         }

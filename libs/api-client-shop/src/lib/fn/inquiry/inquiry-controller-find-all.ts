@@ -46,4 +46,4 @@ export function inquiryControllerFindAll(http: HttpClient, rootUrl: string, para
   );
 }
 
-inquiryControllerFindAll.PATH = '/api/inquiry';
+inquiryControllerFindAll.PATH = '/api/inquiries';

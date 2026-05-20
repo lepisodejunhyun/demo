@@ -10,13 +10,12 @@ import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 @ApiTags('gallery')
 @ApiExtraModels(PageInfoDto)
 @UseGuards(JwtAuthGuard)
-@Controller('gallery')
+@Controller('galleries')
 export class GalleryController {
     constructor(
         private readonly galleryService: GalleryService
     ) { }
 
-    @Post('create')
     @ApiOperation({
         summary: '갤러리 신규 등록',
         description: '갤러리를 신규 등록 합니다.',
@@ -25,13 +24,13 @@ export class GalleryController {
         description: '갤러리 신규 등록 성공',
         type: GalleryDto,
     })
+    @Post('create')
     async create(@Body() data: CreateGalleryDto): Promise<GalleryDto> {
         const gallery = await this.galleryService.create(data);
 
         return plainToInstance(GalleryDto, gallery);
     }
 
-    @Get()
     @ApiOperation({
         summary: '갤러리 전체 조회',
         description: "갤러리 목록을 최신순으로 조회합니다."
@@ -50,16 +49,16 @@ export class GalleryController {
             },
         },
     })
+    @Get()
     async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<GalleryDto>> {
-        const result = await this.galleryService.findAll(query.page, query.limit);
+        const { items, pageInfo } = await this.galleryService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(GalleryDto, result.items),
-            pageInfo: result.pageInfo,
+            items: plainToInstance(GalleryDto, items),
+            pageInfo,
         };
     }
 
-    @Get(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -72,13 +71,13 @@ export class GalleryController {
         description: '갤러리 상세 조회 성공',
         type: GalleryDto,
     })
+    @Get(':id')
     async findById(@Param('id') id: string): Promise<GalleryDto> {
         const gallery = await this.galleryService.findById(id);
 
         return plainToInstance(GalleryDto, gallery);
     }
 
-    @Patch(':id')
     @ApiOperation({
         summary: '갤러리 수정',
         description: '갤러리를 수정합니다.'
@@ -87,13 +86,13 @@ export class GalleryController {
         description: '갤러리 수정 성공',
         type: GalleryDto,
     })
+    @Patch(':id')
     async update(@Param('id') id: string, @Body() data: CreateGalleryDto): Promise<GalleryDto> {
         const gallery = await this.galleryService.update(id, data);
 
         return plainToInstance(GalleryDto, gallery);
     }
 
-    @Delete(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -106,6 +105,7 @@ export class GalleryController {
         description: '갤러리 삭제 성공',
         type: GalleryDto,
     })
+    @Delete(':id')
     async remove(@Param('id') id): Promise<GalleryDto> {
         const gallery = await this.galleryService.remove(id);
 

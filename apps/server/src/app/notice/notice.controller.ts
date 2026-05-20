@@ -10,13 +10,12 @@ import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 @ApiTags('notice')
 @ApiExtraModels(PageInfoDto)
 @UseGuards(JwtAuthGuard)
-@Controller('notice')
+@Controller('notices')
 export class NoticeController {
     constructor(
         private readonly noticeService: NoticeService
     ) { }
 
-    @Post('create')
     @ApiOperation({
         summary: '공지사항 신규 등록',
         description: '공지사항을 신규 등록 합니다.',
@@ -25,13 +24,13 @@ export class NoticeController {
         description: '공지사항 신규 등록 성공',
         type: NoticeDto,
     })
+    @Post('create')
     async create(@Body() data: CreateNoticeDto): Promise<NoticeDto> {
         const notice = await this.noticeService.create(data);
 
         return plainToInstance(NoticeDto, notice);
     }
 
-    @Get()
     @ApiOperation({
         summary: '공지사항 전체 조회',
         description: "공지사항 목록을 최신순으로 조회합니다."
@@ -50,16 +49,16 @@ export class NoticeController {
             },
         },
     })
+    @Get()
     async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<NoticeDto>> {
-        const result = await this.noticeService.findAll(query.page, query.limit);
+        const { items, pageInfo } = await this.noticeService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(NoticeDto, result.items),
-            pageInfo: result.pageInfo,
+            items: plainToInstance(NoticeDto, items),
+            pageInfo,
         };
     }
 
-    @Get(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -72,13 +71,13 @@ export class NoticeController {
         description: '공지사항 상세 조회 성공',
         type: NoticeDto,
     })
+    @Get(':id')
     async findById(@Param('id') id: string): Promise<NoticeDto> {
         const notice = await this.noticeService.findById(id);
 
         return plainToInstance(NoticeDto, notice);
     }
 
-    @Patch(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -91,13 +90,13 @@ export class NoticeController {
         description: '공지사항 수정 성공',
         type: NoticeDto,
     })
+    @Patch(':id')
     async update(@Param('id') id: string, @Body() data: CreateNoticeDto): Promise<NoticeDto> {
         const notice = await this.noticeService.update(id, data);
 
         return plainToInstance(NoticeDto, notice);
     }
 
-    @Delete(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -110,6 +109,7 @@ export class NoticeController {
         description: '공지사항 삭제 성공',
         type: NoticeDto,
     })
+    @Delete(':id')
     async remove(@Param('id') id: string): Promise<NoticeDto> {
         const notice = await this.noticeService.remove(id);
 

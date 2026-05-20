@@ -7,6 +7,7 @@ import { PageHeaderComponent } from "../../components/page-header/page-header.co
 import { FormViewComponent } from "../../components/form-view/form-view.component";
 import { FormFieldComponent } from "../../components/form-field/form-field.component";
 import { FormInputComponent } from "../../components/form-input/form-input.component";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-business-info',
@@ -15,6 +16,7 @@ import { FormInputComponent } from "../../components/form-input/form-input.compo
 })
 export default class BusinessInfoPage implements OnInit {
     private readonly api = inject(Api);
+    private readonly toast = inject(ToastrService);
 
     isLoaded = signal<boolean>(false);
     isEditMode = signal<boolean>(false);
@@ -102,9 +104,9 @@ export default class BusinessInfoPage implements OnInit {
                 body,
             }));
             this.isEditMode.set(false);
-            this.successMessage.set('사업자 정보가 저장되었습니다.');
+            this.toast.success('사업자 정보가 저장되었습니다.');
         } catch (error: any) {
-            this.errorMessage.set(error?.error?.message || '저장에 실패했습니다.');
+            this.toast.error(error?.error?.message || '저장에 실패했습니다.');
         }
     }
 

@@ -10,6 +10,7 @@ import { Router } from "@angular/router";
 import { SupabaseService } from "../../../services/supabase.service";
 import { FormInputComponent } from "../../../components/form-input/form-input.component";
 import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-gallery-form',
@@ -21,6 +22,7 @@ export default class GalleryFormPage implements OnInit {
     private readonly router = inject(Router);
     private readonly location = inject(Location);
     private readonly supabaseService = inject(SupabaseService);
+    private readonly toast = inject(ToastrService);
 
     id = input<string>();
 
@@ -53,13 +55,13 @@ export default class GalleryFormPage implements OnInit {
         const remaining = this.maxImages - this.imageItems().length;
 
         if (remaining <= 0) {
-            alert(`이미지는 최대 ${this.maxImages}장까지 등록할 수 있습니다.`);
+            this.toast.warning(`이미지는 최대 ${this.maxImages}장까지 등록할 수 있습니다.`);
             input.value = '';
             return;
         }
 
         if (files.length > remaining) {
-            alert(`이미지는 최대 ${this.maxImages}장까지 등록할 수 있습니다. ${remaining}장만 추가됩니다.`);
+            this.toast.warning(`이미지는 최대 ${this.maxImages}장까지 등록할 수 있습니다. ${remaining}장만 추가됩니다.`);
         }
 
         const count = Math.min(files.length, remaining);
@@ -112,6 +114,7 @@ export default class GalleryFormPage implements OnInit {
                 });
                 this.router.navigate(['/gallery', gallery.id]);
             }
+            this.toast.success('저장되었습니다.');
         } catch (error: any) {
             this.errorMessage.set(error?.error?.message || '요청이 실패했습니다.');
         } finally {

@@ -1,23 +1,26 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Api, faqControllerFindAll, FaqDto, PageInfoDto } from "@api-client-shop";
 import { PaginationComponent } from '../../components/pagination/pagination.component';
+import { ContentWrapperComponent } from '../../components/content-wrapper/content-wrapper.component';
+import { EmptyStateComponent } from '../../components/empty-state/empty-state.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-faq',
-    imports: [CommonModule, PaginationComponent],
+    imports: [CommonModule, PaginationComponent, ContentWrapperComponent, EmptyStateComponent],
     templateUrl: './faq.page.html',
 })
 export default class FaqPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly route = inject(ActivatedRoute);
+    private readonly toast = inject(ToastrService);
 
-    faqs: FaqDto[] = [];
-    pageInfo: PageInfoDto | null = null;
-    expandedId: string | null = null;
+    faqs = signal<FaqDto[]>([]);
+    pageInfo = signal<PageInfoDto | null>(null);
+    expandedId = signal<string | null>(null);
 
     ngOnInit(): void {
         this.route.queryParams.subscribe((params) => {
@@ -32,11 +35,11 @@ export default class FaqPage implements OnInit {
                 page,
                 limit: 10,
             });
-            this.faqs = result.items || [];
-            this.pageInfo = result.pageInfo ?? null;
-            this.cdr.markForCheck();
+            this.faqs.set(result.items || []);
+            this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
             console.error('FAQ 목록 조회 실패', error);
+            this.toast.error('데이터를 불러오지 못했습니다.');
         }
     }
 
@@ -47,6 +50,6 @@ export default class FaqPage implements OnInit {
     }
 
     toggle(id: string): void {
-        this.expandedId = this.expandedId === id ? null : id;
+        this.expandedId.set(this.expandedId() === id ? null : id);
     }
 }

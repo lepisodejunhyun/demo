@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 
 @Exclude()
-export class BusinessInfoDTO {
+export class BusinessInfoDto {
     @ApiProperty({
         description: '사업자 정보 고유 식별자'
     })

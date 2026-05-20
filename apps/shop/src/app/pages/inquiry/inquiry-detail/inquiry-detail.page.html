@@ -1,65 +1,50 @@
-<div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12">
-    <div class="mb-6 flex items-center justify-between">
-        <button (click)="goBack()"
-            class="flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
-            <span class="material-symbols-outlined text-lg mr-1">arrow_back</span>
-            목록으로
-        </button>
-    </div>
+<app-content-wrapper>
+    <app-back-button (back)="goBack()">
+        @if (inquiry()?.status === 'PENDING') {
+        <a slot="actions" [routerLink]="['/support/inquiry', id(), 'edit']"
+            class="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-primary border border-primary/30 rounded-xl hover:bg-primary/5 transition-colors cursor-pointer">
+            <span class="material-symbols-outlined text-base">edit</span>
+            수정
+        </a>
+        }
+    </app-back-button>
 
-    <article *ngIf="inquiry" class="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 overflow-hidden">
-        <!-- Header -->
-        <header class="px-8 py-8 border-b border-slate-200 bg-slate-50/50">
-            <div class="flex items-center gap-3 mb-4">
-                <span class="px-3 py-1 text-xs font-semibold rounded-full" [ngClass]="getStatusStyle(inquiry.status)">
-                    {{ statusLabels[inquiry.status] }}
-                </span>
-            </div>
-            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4 break-words">
-                {{ inquiry.title }}
-            </h1>
-            <div class="flex items-center text-sm text-slate-500">
-                <span class="flex items-center">
-                    <span class="material-symbols-outlined text-base mr-1.5">calendar_today</span>
-                    {{ inquiry.createdAt | date:'yyyy.MM.dd HH:mm' }}
-                </span>
-            </div>
-        </header>
+    @if (inquiry(); as inquiry) {
+    <app-article-view [title]="inquiry.title" [createdAt]="inquiry.createdAt">
+        <span slot="badges" class="px-3 py-1 text-xs font-semibold rounded-full" [ngClass]="getStatusStyle(inquiry.status)">
+            {{ statusLabels[inquiry.status] }}
+        </span>
 
-        <!-- 문의 내용 -->
-        <div class="px-8 py-10">
-            <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap break-words">
-                {{ inquiry.content }}
-            </div>
+        <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap break-words">
+            {{ inquiry.content }}
         </div>
 
         <!-- 답변 영역 -->
-        <div *ngIf="inquiry.answer"
+        @if (inquiry.answer) {
+        <div slot="footer"
             class="mx-8 mb-8 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20 overflow-hidden">
             <div class="px-6 py-4 border-b border-primary/15 flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary text-lg">support_agent</span>
                 <span class="font-semibold text-primary text-sm">관리자 답변</span>
-                <span *ngIf="inquiry.answeredAt" class="text-xs text-slate-500 ml-auto">
+                @if (inquiry.answeredAt) {
+                <span class="text-xs text-slate-500 ml-auto">
                     {{ inquiry.answeredAt | date:'yyyy.MM.dd HH:mm' }}
                 </span>
+                }
             </div>
             <div class="px-6 py-5 text-slate-700 leading-relaxed whitespace-pre-wrap text-sm break-words">
                 {{ inquiry.answer }}
             </div>
         </div>
-
-        <!-- 답변 대기 상태 -->
-        <div *ngIf="!inquiry.answer"
-            class="mx-8 mb-8 bg-slate-50 rounded-xl border border-slate-200 px-6 py-8 text-center">
+        } @else {
+        <div slot="footer" class="mx-8 mb-8 bg-slate-50 rounded-xl border border-slate-200 px-6 py-8 text-center">
             <span class="material-symbols-outlined text-slate-300 text-[40px] mb-3">hourglass_top</span>
             <p class="text-slate-500 text-sm font-medium">아직 답변이 등록되지 않았습니다.</p>
             <p class="text-slate-400 text-xs mt-1">빠른 시일 내에 답변드리겠습니다.</p>
         </div>
-    </article>
-
-    <!-- Loading State -->
-    <div *ngIf="!inquiry" class="flex flex-col items-center justify-center min-h-[400px] text-slate-400">
-        <span class="material-symbols-outlined animate-spin text-4xl mb-4">autorenew</span>
-        <p>문의 내용을 불러오는 중입니다...</p>
-    </div>
-</div>
+        }
+    </app-article-view>
+    } @else {
+    <app-loading-spinner message="문의 내용을 불러오는 중입니다..." />
+    }
+</app-content-wrapper>

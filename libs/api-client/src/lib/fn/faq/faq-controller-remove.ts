@@ -29,4 +29,4 @@ export function faqControllerRemove(http: HttpClient, rootUrl: string, params: F
   );
 }
 
-faqControllerRemove.PATH = '/api/faq/{id}';
+faqControllerRemove.PATH = '/api/faqs/{id}';

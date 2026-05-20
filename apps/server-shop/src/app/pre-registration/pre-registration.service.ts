@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { PreRegistrationCreateDTO } from './dtos/pre-registration-create.dto';
+import { CreatePreRegistrationDto } from './dtos/create-pre-registration.dto';
 import { Event, PreRegistration } from '@prisma/client';
-import { OffsetPaginationDTO } from '../../libs/dtos';
+import { OffsetPaginationDto } from '../../libs/dtos';
 
 @Injectable()
 export class PreRegistrationService {
@@ -16,9 +16,9 @@ export class PreRegistrationService {
      *              조건: preRegStartDate/preRegEndDate가 설정되어 있고, 현재 시각이 해당 기간 내인 행사
      * @param {number} page
      * @param {number} limit
-     * @returns {Promise<OffsetPaginationDTO<Event>>}
+     * @returns {Promise<OffsetPaginationDto<Event>>}
      */
-    async findAvailableEvents(page: number, limit: number): Promise<OffsetPaginationDTO<Event>> {
+    async findAvailableEvents(page: number, limit: number): Promise<OffsetPaginationDto<Event>> {
         const now = new Date();
         const skip = (page - 1) * limit;
 
@@ -56,11 +56,11 @@ export class PreRegistrationService {
      *              - 행사 존재 및 사전등록 기간 검증
      *              - 필수 약관 동의 검증
      *              - memberId는 optional (로그인 시 자동 연결)
-     * @param {PreRegistrationCreateDTO} data
+     * @param {CreatePreRegistrationDto} data
      * @param {string | null} memberId - 로그인한 회원의 ID (비회원이면 null)
      * @returns {Promise<PreRegistration>}
      */
-    async create(data: PreRegistrationCreateDTO, memberId: string | null): Promise<PreRegistration> {
+    async create(data: CreatePreRegistrationDto, memberId: string | null): Promise<PreRegistration> {
         await this.assertEventAvailable(data.eventId);
 
         const agreedTermsIds = data.agreedTermsIds ?? [];

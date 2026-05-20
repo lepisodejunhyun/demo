@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@angular-devkit/build-angular": "21.2.7",
+    "@angular/animations": "^21.2.9",
     "@angular/common": "21.2.9",
     "@angular/compiler": "21.2.9",
     "@angular/core": "21.2.9",
@@ -35,6 +36,7 @@
     "dotenv": "^17.4.2",
     "express": "^4.21.2",
     "ng-openapi-gen": "^1.0.5",
+    "ngx-toastr": "^20.0.5",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.20.0",

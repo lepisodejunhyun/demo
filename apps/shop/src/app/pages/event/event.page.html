@@ -1,50 +1,27 @@
 <app-page-header title="행사 안내" description="다양한 행사 정보를 한눈에 확인하세요." />
 
-<!-- Content -->
-<div class="max-w-[1280px] mx-auto px-5 md:px-16 py-10">
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-    <div *ngFor="let item of events"
-         (click)="goDetail(item)"
-         class="group overflow-hidden cursor-pointer">
-
-      <!-- 포스터 이미지 영역 -->
-      <div class="aspect-[4/3] overflow-hidden bg-slate-100 mb-4">
-        <img *ngIf="item.posterImage" [src]="item.posterImage" [alt]="item.title"
-             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-
-        <div *ngIf="!item.posterImage"
-             class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400 group-hover:scale-105 transition-transform duration-500">
-          <span class="material-symbols-outlined text-5xl mb-2 opacity-50">event</span>
-          <span class="text-xs font-medium uppercase tracking-widest opacity-50">No Image</span>
-        </div>
+<app-content-wrapper>
+  <app-card-grid [isEmpty]="events().length === 0" emptyIcon="event_busy" emptyMessage="등록된 행사가 없습니다.">
+    @for (item of events(); track item.id) {
+    <app-image-card (click)="goDetail(item)" [imageUrl]="item.posterImage" fallbackIcon="event" [alt]="item.title">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase" [ngClass]="getEventStatus(item).class">
+          {{ getEventStatus(item).label }}
+        </span>
       </div>
+      <h3 class="font-bold text-lg text-slate-900 line-clamp-1 break-all group-hover:text-primary transition-colors">{{
+        item.title }}</h3>
+      <p class="text-sm text-slate-500 mt-1">{{ item.startDate | date:'yyyy.MM.dd' }} ~ {{ item.endDate |
+        date:'yyyy.MM.dd' }}</p>
+      @if (item.location) {
+      <p class="text-sm text-slate-400 mt-1 flex items-center gap-1 truncate">
+        <span class="material-symbols-outlined text-sm shrink-0">location_on</span>
+        <span class="truncate">{{ item.location }}</span>
+      </p>
+      }
+    </app-image-card>
+    }
+  </app-card-grid>
 
-      <!-- 정보 영역 -->
-      <div>
-        <div class="flex items-center gap-2 mb-2">
-          <span class="px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase"
-                [ngClass]="getStatus(item).class">
-            {{ getStatus(item).label }}
-          </span>
-        </div>
-        <h3 class="font-bold text-lg text-slate-900 line-clamp-1 group-hover:text-primary transition-colors">{{ item.title }}</h3>
-        <p class="text-sm text-slate-500 mt-1">{{ item.startDate | date:'yyyy.MM.dd' }} ~ {{ item.endDate | date:'yyyy.MM.dd' }}</p>
-        <p *ngIf="item.location" class="text-sm text-slate-400 mt-1 flex items-center gap-1">
-          <span class="material-symbols-outlined text-sm">location_on</span>
-          {{ item.location }}
-        </p>
-      </div>
-    </div>
-
-    <!-- 빈 상태 -->
-    <div *ngIf="events.length === 0" class="col-span-full py-20 text-center text-slate-500">
-      <div class="flex flex-col items-center gap-3">
-        <span class="material-symbols-outlined text-5xl opacity-50">event_busy</span>
-        <p class="text-sm">등록된 행사가 없습니다.</p>
-      </div>
-    </div>
-  </div>
-
-  <app-pagination [pageInfo]="pageInfo" (pageChange)="onPageChange($event)" />
-</div>
+  <app-pagination [pageInfo]="pageInfo()" (pageChange)="onPageChange($event)" />
+</app-content-wrapper>

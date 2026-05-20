@@ -12,13 +12,12 @@ import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 @ApiTags('pre-registration')
 @ApiExtraModels(PageInfoDto)
 @UseGuards(JwtAuthGuard)
-@Controller('pre-registration')
+@Controller('pre-registrations')
 export class PreRegistrationController {
     constructor(
         private readonly preRegistrationService: PreRegistrationService
     ) { }
 
-    @Post('create')
     @ApiOperation({
         summary: '사전 등록 신규 생성',
         description: '행사를 선택하고 신청자 정보를 입력하여 사전 등록합니다. 행사가 사전 등록 가능한 상태인지 서버에서 검증합니다.',
@@ -27,13 +26,13 @@ export class PreRegistrationController {
         description: '사전 등록 성공',
         type: PreRegistrationDto,
     })
+    @Post('create')
     async create(@Body() data: CreatePreRegistrationDto): Promise<PreRegistrationDto> {
         const item = await this.preRegistrationService.create(data);
 
         return plainToInstance(PreRegistrationDto, item);
     }
 
-    @Get()
     @ApiOperation({
         summary: '사전 등록 전체 조회',
         description: '등록된 사전 등록 신청 내역을 최신순으로 조회합니다. (deletedAt이 null인 내역만)',
@@ -52,16 +51,16 @@ export class PreRegistrationController {
             },
         },
     })
+    @Get()
     async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<PreRegistrationDto>> {
-        const result = await this.preRegistrationService.findAll(query.page, query.limit);
+        const { items, pageInfo } = await this.preRegistrationService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(PreRegistrationDto, result.items),
-            pageInfo: result.pageInfo,
+            items: plainToInstance(PreRegistrationDto, items),
+            pageInfo,
         };
     }
 
-    @Get('available-events')
     @ApiOperation({
         summary: '사전 등록 가능한 행사 목록',
         description: '사전 등록 기간이 설정되어 있고 현재 시각이 그 기간 내인 행사 목록을 반환합니다. (등록 폼 dropdown용)',
@@ -71,13 +70,13 @@ export class PreRegistrationController {
         type: AvailableEventDto,
         isArray: true,
     })
+    @Get('available-events')
     async findAvailableEvents(): Promise<AvailableEventDto[]> {
         const events = await this.preRegistrationService.findAvailableEvents();
 
         return plainToInstance(AvailableEventDto, events);
     }
 
-    @Get(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -90,15 +89,13 @@ export class PreRegistrationController {
         description: '사전 등록 상세 조회 성공',
         type: PreRegistrationDto,
     })
+    @Get(':id')
     async findById(@Param('id') id: string): Promise<PreRegistrationDto> {
         const item = await this.preRegistrationService.findById(id);
 
         return plainToInstance(PreRegistrationDto, item);
     }
 
-    
-
-    @Patch(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -111,13 +108,13 @@ export class PreRegistrationController {
         description: '사전 등록 수정 성공',
         type: PreRegistrationDto,
     })
+    @Patch(':id')
     async update(@Param('id') id: string, @Body() data: UpdatePreRegistrationDto): Promise<PreRegistrationDto> {
         const item = await this.preRegistrationService.update(id, data);
 
         return plainToInstance(PreRegistrationDto, item);
     }
 
-    @Delete(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -130,6 +127,7 @@ export class PreRegistrationController {
         description: '사전 등록 삭제 성공',
         type: PreRegistrationDto,
     })
+    @Delete(':id')
     async remove(@Param('id') id: string): Promise<PreRegistrationDto> {
         const item = await this.preRegistrationService.remove(id);
 

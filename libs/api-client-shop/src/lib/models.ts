@@ -3,10 +3,11 @@
 
 export type { AttachmentDto } from './models/attachment-dto';
 export type { BusinessInfoDto } from './models/business-info-dto';
+export type { CreateInquiryDto } from './models/create-inquiry-dto';
+export type { CreatePreRegistrationDto } from './models/create-pre-registration-dto';
 export type { EventDto } from './models/event-dto';
 export type { FaqDto } from './models/faq-dto';
 export type { GalleryDto } from './models/gallery-dto';
-export type { InquiryCreateDto } from './models/inquiry-create-dto';
 export type { InquiryDto } from './models/inquiry-dto';
 export type { KakaoLoginDto } from './models/kakao-login-dto';
 export type { MemberDto } from './models/member-dto';
@@ -14,7 +15,6 @@ export type { MemberSignInDto } from './models/member-sign-in-dto';
 export type { MemberSignUpDto } from './models/member-sign-up-dto';
 export type { NoticeDto } from './models/notice-dto';
 export type { PageInfoDto } from './models/page-info-dto';
-export type { PreRegistrationCreateDto } from './models/pre-registration-create-dto';
 export type { PreRegistrationDto } from './models/pre-registration-dto';
 export type { SignInResponseDto } from './models/sign-in-response-dto';
 export type { TermsDto } from './models/terms-dto';

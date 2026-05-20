@@ -8,11 +8,11 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { PreRegistrationDto } from '../../models/pre-registration-dto';
-import { PreRegistrationUpdateDto } from '../../models/pre-registration-update-dto';
+import { UpdatePreRegistrationDto } from '../../models/update-pre-registration-dto';
 
 export interface PreRegistrationControllerUpdate$Params {
   id: string;
-      body: PreRegistrationUpdateDto
+      body: UpdatePreRegistrationDto
 }
 
 export function preRegistrationControllerUpdate(http: HttpClient, rootUrl: string, params: PreRegistrationControllerUpdate$Params, context?: HttpContext): Observable<StrictHttpResponse<PreRegistrationDto>> {
@@ -32,4 +32,4 @@ export function preRegistrationControllerUpdate(http: HttpClient, rootUrl: strin
   );
 }
 
-preRegistrationControllerUpdate.PATH = '/api/pre-registration/{id}';
+preRegistrationControllerUpdate.PATH = '/api/pre-registrations/{id}';

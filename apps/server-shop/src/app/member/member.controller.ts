@@ -2,10 +2,10 @@ import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { MemberService } from "./member.service";
 import { plainToInstance } from "class-transformer";
-import { MemberDTO } from "./dtos/member.dto";
-import { MemberSignUpDTO } from "./dtos/member-signup.dto";
-import { MemberSignInDTO } from "./dtos/member-signin.dto";
-import { SignInResponseDTO } from "./dtos/sign-in-response.dto";
+import { MemberDto } from "./dtos/member.dto";
+import { MemberSignUpDto } from "./dtos/member-signup.dto";
+import { MemberSignInDto } from "./dtos/member-signin.dto";
+import { SignInResponseDto } from "./dtos/sign-in-response.dto";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { Request, Response } from "express";
 
@@ -14,30 +14,30 @@ import { Request, Response } from "express";
 export class MemberController {
   constructor(private readonly memberService: MemberService) { }
 
-  @Post('signup')
   @ApiOperation({
     summary: '회원가입',
     description: '이메일, 비밀번호, 이름으로 회원가입합니다.',
   })
   @ApiOkResponse({
     description: '회원가입 성공',
-    type: MemberDTO,
+    type: MemberDto,
   })
-  async signup(@Body() data: MemberSignUpDTO): Promise<MemberDTO> {
+  @Post('signup')
+  async signup(@Body() data: MemberSignUpDto): Promise<MemberDto> {
     const member = await this.memberService.signUp(data);
-    return plainToInstance(MemberDTO, member);
+    return plainToInstance(MemberDto, member);
   }
 
-  @Post('signin')
   @ApiOperation({
     summary: '로그인',
     description: 'Access Token은 응답 body, Refresh Token은 httpOnly 쿠키로 전달됩니다.',
   })
   @ApiOkResponse({
     description: '로그인 성공',
-    type: SignInResponseDTO,
+    type: SignInResponseDto,
   })
-  async signin(@Body() data: MemberSignInDTO, @Res({ passthrough: true }) res: Response,): Promise<SignInResponseDTO> {
+  @Post('signin')
+  async signin(@Body() data: MemberSignInDto, @Res({ passthrough: true }) res: Response,): Promise<SignInResponseDto> {
     const { accessToken, refreshToken, member } = await this.memberService.signIn(data);
 
     res.cookie('refreshToken', refreshToken, {
@@ -48,14 +48,14 @@ export class MemberController {
       path: '/',
     });
 
-    return plainToInstance(SignInResponseDTO, { accessToken, member });
+    return plainToInstance(SignInResponseDto, { accessToken, member });
   }
 
-  @Post('refresh')
   @ApiOperation({
     summary: '토큰 갱신',
     description: 'Refresh Token으로 새 Access Token을 발급합니다.',
   })
+  @Post('refresh')
   async refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
@@ -72,11 +72,11 @@ export class MemberController {
     return { accessToken };
   }
 
-  @Post('logout')
   @ApiOperation({
     summary: '로그아웃',
     description: 'Refresh Token 쿠키를 삭제합니다.',
   })
+  @Post('logout')
   async logout(@Res({ passthrough: true }) res: Response): Promise<{ message: string }> {
     res.clearCookie('refreshToken', {
       httpOnly: true,
@@ -88,7 +88,6 @@ export class MemberController {
     return { message: '로그아웃 되었습니다.' };
   }
 
-  @Get('me')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: '내 정보 조회',
@@ -96,9 +95,10 @@ export class MemberController {
   })
   @ApiOkResponse({
     description: '내 정보 조회 성공',
-    type: MemberDTO,
+    type: MemberDto,
   })
-  async me(@Req() req: Request): Promise<MemberDTO> {
-    return plainToInstance(MemberDTO, req.user);
+  @Get('me')
+  async me(@Req() req: Request): Promise<MemberDto> {
+    return plainToInstance(MemberDto, req.user);
   }
 }

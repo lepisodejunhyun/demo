@@ -27,4 +27,4 @@ export function businessInfoControllerFindOne(http: HttpClient, rootUrl: string,
   );
 }
 
-businessInfoControllerFindOne.PATH = '/api/business-info';
+businessInfoControllerFindOne.PATH = '/api/business-infos';

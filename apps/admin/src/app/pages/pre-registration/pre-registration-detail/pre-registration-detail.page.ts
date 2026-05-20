@@ -5,6 +5,7 @@ import { Api, preRegistrationControllerFindById, preRegistrationControllerRemove
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-pre-registration-detail',
@@ -14,6 +15,7 @@ import { DetailViewComponent } from "../../../components/detail-view/detail-view
 export default class PreRegistrationDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
+    private readonly toast = inject(ToastrService);
 
     id = input<string>();
 
@@ -33,6 +35,7 @@ export default class PreRegistrationDetailPage implements OnInit {
             this.preRegistration.set(await this.api.invoke(preRegistrationControllerFindById, { id }));
         } catch (error) {
             console.error('사전 등록 조회 실패', error);
+            this.toast.error('데이터를 불러오지 못했습니다.');
 
             this.router.navigate(['/pre-registration']);
         }
@@ -45,9 +48,11 @@ export default class PreRegistrationDetailPage implements OnInit {
             await this.api.invoke(preRegistrationControllerRemove, {
                 id: this.preRegistration()!.id
             });
+            this.toast.success('삭제되었습니다.');
             this.router.navigate(['/pre-registration']);
         } catch (error) {
             console.error('사전 등록 삭제 실패', error);
+            this.toast.error('삭제에 실패했습니다.');
         }
     }
 }

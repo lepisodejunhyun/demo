@@ -8,23 +8,7 @@
 
 <!-- Tabs -->
 <div class="max-w-[1280px] mx-auto px-5 md:px-16 pt-8">
-    <div class="flex gap-2 border-b border-outline-variant pb-1">
-        <a routerLink="/support/notice" routerLinkActive="text-primary border-primary"
-            [routerLinkActiveOptions]="{ exact: false }"
-            class="px-4 py-2 text-sm font-semibold border-b-2 border-transparent transition-colors hover:text-primary -mb-[5px]">
-            공지사항
-        </a>
-        <a routerLink="/support/faq" routerLinkActive="text-primary border-primary"
-            [routerLinkActiveOptions]="{ exact: false }"
-            class="px-4 py-2 text-sm font-semibold border-b-2 border-transparent transition-colors hover:text-primary -mb-[5px]">
-            자주 묻는 질문
-        </a>
-        <a routerLink="/support/inquiry" routerLinkActive="text-primary border-primary"
-            [routerLinkActiveOptions]="{ exact: false }"
-            class="px-4 py-2 text-sm font-semibold border-b-2 border-transparent transition-colors hover:text-primary -mb-[5px]">
-            1:1 문의
-        </a>
-    </div>
+    <app-tab-nav [items]="tabs" />
 </div>
 
 <!-- Child Content -->

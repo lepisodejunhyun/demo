@@ -1,40 +1,24 @@
-<!-- Form -->
-<section class="max-w-[900px] mx-auto px-5 md:px-16 py-10">
+<app-content-wrapper>
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
-        <!-- Title -->
-        <div>
-            <label for="inquiry-title" class="block text-sm font-semibold text-on-surface mb-2">
-                제목 <span class="text-error">*</span>
-            </label>
+        <app-form-field label="제목" for="inquiry-title" [required]="true">
             <input formControlName="title" id="inquiry-title" type="text" maxlength="100"
                 placeholder="문의 제목을 입력하세요"
                 class="w-full px-4 py-3.5 bg-surface-container-lowest border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline" />
-        </div>
+        </app-form-field>
 
-        <!-- Content -->
-        <div>
-            <label for="inquiry-content" class="block text-sm font-semibold text-on-surface mb-2">
-                내용 <span class="text-error">*</span>
-            </label>
+        <app-form-field label="내용" for="inquiry-content" [required]="true">
             <textarea formControlName="content" id="inquiry-content" rows="8" maxlength="2000"
                 placeholder="문의 내용을 자세히 작성해주세요"
                 class="w-full px-4 py-3.5 bg-surface-container-lowest border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline resize-none"></textarea>
-        </div>
+        </app-form-field>
 
-        @if (errorMessage) {
-        <p class="text-error text-sm">{{ errorMessage }}</p>
+        @if (errorMessage()) {
+        <p class="text-error text-sm">{{ errorMessage() }}</p>
         }
 
-        <!-- Actions -->
-        <div class="flex items-center justify-end gap-3 pt-4">
-            <button type="button" (click)="goBack()"
-                class="px-6 py-3 text-sm font-semibold text-on-surface-variant border border-outline-variant rounded-xl hover:bg-surface-container transition-colors cursor-pointer">
-                취소
-            </button>
-            <button type="submit"
-                class="px-8 py-3 bg-gradient-to-r from-[#8127cf] to-[#4648d4] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all shadow-lg shadow-primary/20 cursor-pointer tracking-wider uppercase">
-                작성하기
-            </button>
-        </div>
+        <app-form-actions
+            [submitText]="isEditMode ? '수정하기' : '작성하기'"
+            (cancel)="goBack()"
+            (submit)="onSubmit()" />
     </form>
-</section>
+</app-content-wrapper>

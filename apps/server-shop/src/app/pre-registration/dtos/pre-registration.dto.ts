@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
 
-export class PreRegistrationDTO {
+export class PreRegistrationDto {
     @ApiProperty({ description: "사전 등록 식별자" })
     @Expose()
     id: string;

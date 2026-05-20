@@ -29,4 +29,4 @@ export function inquiryControllerFindById(http: HttpClient, rootUrl: string, par
   );
 }
 
-inquiryControllerFindById.PATH = '/api/inquiry/{id}';
+inquiryControllerFindById.PATH = '/api/inquiries/{id}';

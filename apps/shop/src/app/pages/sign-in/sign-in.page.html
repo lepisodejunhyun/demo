@@ -16,20 +16,18 @@
         <div class="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8">
             <form [formGroup]="form" (ngSubmit)="onSubmit()">
                 <!-- Email -->
-                <div class="mb-5">
-                    <label for="sign-in-email" class="block text-sm font-semibold text-on-surface mb-2">이메일</label>
+                <app-form-field label="이메일" for="sign-in-email" class="mb-5">
                     <input formControlName="email" id="sign-in-email" type="email" maxlength="40"
                         placeholder="example&#64;email.com"
-                        class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline" />
-                </div>
+                        class="w-full px-4 py-3.5 bg-surface-container-lowest border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline" />
+                </app-form-field>
 
                 <!-- Password -->
-                <div class="mb-6">
-                    <label for="sign-in-password" class="block text-sm font-semibold text-on-surface mb-2">비밀번호</label>
+                <app-form-field label="비밀번호" for="sign-in-password" class="mb-6">
                     <input formControlName="password" id="sign-in-password" type="password" maxlength="40"
                         placeholder="비밀번호를 입력하세요"
-                        class="w-full px-4 py-3 bg-surface border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline" />
-                </div>
+                        class="w-full px-4 py-3.5 bg-surface-container-lowest border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline" />
+                </app-form-field>
 
                 @if (errorMessage) {
                 <p class="text-error text-sm mb-4">{{ errorMessage }}</p>
@@ -37,7 +35,7 @@
 
                 <!-- Submit -->
                 <button type="submit"
-                    class="w-full py-3.5 bg-gradient-to-r from-[#8127cf] to-[#4648d4] text-white font-bold text-sm rounded-xl hover:brightness-110 transition-all shadow-lg shadow-primary/30 cursor-pointer tracking-wider uppercase">
+                    class="w-full py-3.5 px-8 bg-gradient-to-r from-[#8127cf] to-[#4648d4] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all shadow-lg shadow-primary/20 cursor-pointer tracking-wider uppercase">
                     로그인
                 </button>
             </form>

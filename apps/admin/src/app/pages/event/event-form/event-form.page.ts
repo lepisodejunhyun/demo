@@ -11,6 +11,7 @@ import { SupabaseService } from "../../../services/supabase.service";
 import { formatPhoneNumber } from "../../../shared/utils/format-phone";
 import { FormInputComponent } from "../../../components/form-input/form-input.component";
 import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
+import { ToastrService } from 'ngx-toastr';
 
 function eventDateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const startDate = control.get('startDate')?.value;
@@ -46,6 +47,7 @@ export default class EventFormPage implements OnInit {
     private readonly router = inject(Router);
     private readonly location = inject(Location);
     private readonly supabaseService = inject(SupabaseService);
+    private readonly toast = inject(ToastrService);
 
     id = input<string>();
 
@@ -112,14 +114,14 @@ export default class EventFormPage implements OnInit {
 
         const allowedTypes = ['image/jpeg', 'image/png'];
         if (!allowedTypes.includes(file.type)) {
-            this.errorMessage.set('이미지는 JPG, PNG 형식만 업로드할 수 있습니다.');
+            this.toast.warning('이미지는 JPG, PNG 형식만 업로드할 수 있습니다.');
             input.value = '';
             return;
         }
 
         const maxSize = 5 * 1024 * 1024;
         if (file.size > maxSize) {
-            this.errorMessage.set('이미지 파일 크기는 최대 5MB까지 업로드할 수 있습니다.');
+            this.toast.warning('이미지 파일 크기는 최대 5MB까지 업로드할 수 있습니다.');
             input.value = '';
             return;
         }
@@ -160,6 +162,7 @@ export default class EventFormPage implements OnInit {
                 });
                 this.router.navigate(['/event', event.id]);
             }
+            this.toast.success('저장되었습니다.');
         } catch (error: any) {
             this.errorMessage.set(error?.error?.message || '요청이 실패했습니다.');
         } finally {

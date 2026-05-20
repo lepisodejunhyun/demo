@@ -1,22 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { OffsetPaginationDTO } from '../../libs/dtos';
-import { Gallery } from '@prisma/client';
+import { OffsetPaginationDto } from '../../libs/dtos';
+import { Attachment, Gallery } from '@prisma/client';
 
 @Injectable()
 export class GalleryService {
     constructor(
         private readonly prisma: PrismaService
-    ) {}
+    ) { }
 
     /**
      * @name findAll
      * @description 갤러리 전체 조회 (썸네일 포함)
      * @param {number} page
      * @param {number} limit
-     * @returns {Promise<OffsetPaginationDTO<any>>}
+     * @returns {Promise<OffsetPaginationDto<Gallery & { thumbnailUrl: string | null }>>}
      */
-    async findAll(page: number, limit: number): Promise<OffsetPaginationDTO<any>> {
+    async findAll(page: number, limit: number): Promise<OffsetPaginationDto<Gallery & { thumbnailUrl: string | null }>> {
         const skip = (page - 1) * limit;
 
         const [items, totalItems] = await Promise.all([
@@ -38,9 +38,7 @@ export class GalleryService {
                         entityType: 'gallery',
                         entityId: gallery.id,
                     },
-                    orderBy: {
-                        sortOrder: 'asc',
-                    },
+                    orderBy: { sortOrder: 'asc' },
                 });
                 return {
                     ...gallery,
@@ -57,7 +55,7 @@ export class GalleryService {
                 pageItems: items.length,
                 totalItems,
                 totalPages: Math.ceil(totalItems / limit),
-            }
+            },
         };
     }
 
@@ -65,11 +63,14 @@ export class GalleryService {
      * @name findById
      * @description 갤러리 상세 조회 (이미지 전체 포함)
      * @param {string} id
-     * @returns {Promise<any>}
+     * @returns {Promise<Gallery & { images: Attachment[] }>}
      */
-    async findById(id: string): Promise<any> {
+    async findById(id: string): Promise<Gallery & { images: Attachment[] }> {
         const gallery = await this.prisma.gallery.findUnique({
-            where: { id, deletedAt: null },
+            where: {
+                id,
+                deletedAt: null,
+            },
         });
 
         if (!gallery) throw new NotFoundException('갤러리 정보를 찾을 수 없습니다.');
@@ -79,9 +80,7 @@ export class GalleryService {
                 entityType: 'gallery',
                 entityId: id,
             },
-            orderBy: {
-                sortOrder: 'asc',
-            },
+            orderBy: { sortOrder: 'asc' },
         });
 
         return { ...gallery, images };

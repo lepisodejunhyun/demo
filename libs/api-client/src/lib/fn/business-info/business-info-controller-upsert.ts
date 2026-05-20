@@ -8,10 +8,10 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 import { BusinessInfoDto } from '../../models/business-info-dto';
-import { BusinessInfoUpdateDto } from '../../models/business-info-update-dto';
+import { UpdateBusinessInfoDto } from '../../models/update-business-info-dto';
 
 export interface BusinessInfoControllerUpsert$Params {
-      body: BusinessInfoUpdateDto
+      body: UpdateBusinessInfoDto
 }
 
 export function businessInfoControllerUpsert(http: HttpClient, rootUrl: string, params: BusinessInfoControllerUpsert$Params, context?: HttpContext): Observable<StrictHttpResponse<BusinessInfoDto>> {
@@ -30,4 +30,4 @@ export function businessInfoControllerUpsert(http: HttpClient, rootUrl: string, 
   );
 }
 
-businessInfoControllerUpsert.PATH = '/api/business-info';
+businessInfoControllerUpsert.PATH = '/api/business-infos';

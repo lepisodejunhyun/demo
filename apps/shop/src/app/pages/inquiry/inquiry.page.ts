@@ -1,27 +1,29 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Api, inquiryControllerFindAll, InquiryDto, PageInfoDto } from "@api-client-shop";
 import { PaginationComponent } from '../../components/pagination/pagination.component';
+import { ContentWrapperComponent } from '../../components/content-wrapper/content-wrapper.component';
+import { EmptyStateComponent } from '../../components/empty-state/empty-state.component';
+import { ToastrService } from 'ngx-toastr';
+import { INQUIRY_STATUS_LABELS, getInquiryStatusStyle } from '../../shared/constants/inquiry.constants';
 
 @Component({
     selector: 'app-inquiry',
-    imports: [CommonModule, RouterLink, PaginationComponent],
+    imports: [CommonModule, RouterLink, PaginationComponent, ContentWrapperComponent, EmptyStateComponent],
     templateUrl: './inquiry.page.html',
 })
 export default class InquiryPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
     private readonly route = inject(ActivatedRoute);
+    private readonly toast = inject(ToastrService);
 
-    inquiries: InquiryDto[] = [];
-    pageInfo: PageInfoDto | null = null;
+    inquiries = signal<InquiryDto[]>([]);
+    pageInfo = signal<PageInfoDto | null>(null);
 
-    readonly statusLabels: Record<string, string> = {
-        'PENDING': '답변 대기',
-        'COMPLETED': '답변 완료',
-    };
+    readonly statusLabels = INQUIRY_STATUS_LABELS;
+    readonly getStatusStyle = getInquiryStatusStyle;
 
     ngOnInit(): void {
         this.route.queryParams.subscribe((params) => {
@@ -33,14 +35,14 @@ export default class InquiryPage implements OnInit {
     async loadData(page: number): Promise<void> {
         try {
             const result = await this.api.invoke(inquiryControllerFindAll, {
-                page: page,
+                page,
                 limit: 10,
             });
-            this.inquiries = result.items ?? [];
-            this.pageInfo = result.pageInfo ?? null;
-            this.cdr.markForCheck();
+            this.inquiries.set(result.items ?? []);
+            this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
             console.error('문의 목록 조회 실패', error);
+            this.toast.error('데이터를 불러오지 못했습니다.');
         }
     }
 
@@ -48,11 +50,5 @@ export default class InquiryPage implements OnInit {
         this.router.navigate([], {
             queryParams: { page },
         });
-    }
-
-    getStatusStyle(status: string): string {
-        return status === 'COMPLETED'
-            ? 'bg-primary/10 text-primary'
-            : 'bg-secondary/10 text-secondary';
     }
 }

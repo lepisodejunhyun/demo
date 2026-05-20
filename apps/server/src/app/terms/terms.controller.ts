@@ -16,7 +16,6 @@ export class TermsController {
         private readonly termsService: TermsService
     ) { }
 
-    @Post('create')
     @ApiOperation({
         summary: '약관 신규 등록',
         description: '제목과 내용을 입력하여 약관을 등록합니다.',
@@ -25,13 +24,13 @@ export class TermsController {
         description: '약관 신규 등록 성공',
         type: TermsDto,
     })
+    @Post('create')
     async create(@Body() data: CreateTermsDto): Promise<TermsDto> {
         const terms = await this.termsService.create(data);
 
         return plainToInstance(TermsDto, terms);
     }
 
-    @Get()
     @ApiOperation({
         summary: '약관 전체 조회',
         description: '등록된 약관 목록을 최신순으로 조회합니다. (deletedAt이 null인 약관만)',
@@ -50,16 +49,16 @@ export class TermsController {
             },
         },
     })
+    @Get()
     async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<TermsDto>> {
-        const result = await this.termsService.findAll(query.page, query.limit);
+        const { items, pageInfo } = await this.termsService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(TermsDto, result.items),
-            pageInfo: result.pageInfo,
+            items: plainToInstance(TermsDto, items),
+            pageInfo,
         };
     }
 
-    @Get(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -72,13 +71,13 @@ export class TermsController {
         description: '약관 상세 조회 성공',
         type: TermsDto,
     })
+    @Get(':id')
     async findById(@Param('id') id: string): Promise<TermsDto> {
         const terms = await this.termsService.findById(id);
 
         return plainToInstance(TermsDto, terms);
-    }    
+    }
 
-    @Patch(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -91,13 +90,13 @@ export class TermsController {
         description: '약관 수정 성공',
         type: TermsDto,
     })
+    @Patch(':id')
     async update(@Param('id') id: string, @Body() data: CreateTermsDto): Promise<TermsDto> {
         const terms = await this.termsService.update(id, data);
 
         return plainToInstance(TermsDto, terms);
     }
 
-    @Delete(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -110,6 +109,7 @@ export class TermsController {
         description: '약관 삭제 성공',
         type: TermsDto,
     })
+    @Delete(':id')
     async remove(@Param('id') id: string): Promise<TermsDto> {
         const terms = await this.termsService.remove(id);
 

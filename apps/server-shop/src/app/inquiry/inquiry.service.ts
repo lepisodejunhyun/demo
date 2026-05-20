@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { OffsetPaginationDTO } from '../../libs/dtos';
+import { OffsetPaginationDto } from '../../libs/dtos';
 import { Inquiry } from '@prisma/client';
+import { CreateInquiryDto } from './dtos/create-inquiry.dto';
 
 @Injectable()
 export class InquiryService {
@@ -15,9 +16,9 @@ export class InquiryService {
      * @param {string} memberId
      * @param {number} page
      * @param {number} limit
-     * @returns {Promise<OffsetPaginationDTO<Inquiry>>}
+     * @returns {Promise<OffsetPaginationDto<Inquiry>>}
      */
-    async findAllByMemberId(memberId: string, page: number, limit: number): Promise<OffsetPaginationDTO<Inquiry>> {
+    async findAllByMemberId(memberId: string, page: number, limit: number): Promise<OffsetPaginationDto<Inquiry>> {
         const skip = (page - 1) * limit;
 
         const [items, totalItems] = await Promise.all([
@@ -65,18 +66,38 @@ export class InquiryService {
      * @name create
      * @description 1:1 문의 작성
      * @param {string} memberId
-     * @param {string} title
-     * @param {string} content
+     * @param {CreateInquiryDto} data
      * @returns {Promise<Inquiry>}
      */
-    async create(memberId: string, title: string, content: string): Promise<Inquiry> {
+    async create(memberId: string, data: CreateInquiryDto): Promise<Inquiry> {
         return this.prisma.inquiry.create({
             data: {
                 memberId,
-                title,
-                content,
+                title: data.title,
+                content: data.content,
                 status: 'PENDING',
             },
+        });
+    }
+
+    /**
+     * @name update
+     * @description 1:1 문의 수정 (답변 전 상태에서만 가능)
+     * @param {string} id
+     * @param {string} memberId
+     * @param {CreateInquiryDto} data
+     * @returns {Promise<Inquiry>}
+     */
+    async update(id: string, memberId: string, data: CreateInquiryDto): Promise<Inquiry> {
+        const inquiry = await this.findByIdAndMemberId(id, memberId);
+
+        if (inquiry.status !== 'PENDING') {
+            throw new BadRequestException('답변이 완료된 문의는 수정할 수 없습니다.');
+        }
+
+        return this.prisma.inquiry.update({
+            where: { id },
+            data: { title: data.title, content: data.content },
         });
     }
 }

@@ -29,4 +29,4 @@ export function eventControllerFindById(http: HttpClient, rootUrl: string, param
   );
 }
 
-eventControllerFindById.PATH = '/api/event/{id}';
+eventControllerFindById.PATH = '/api/events/{id}';

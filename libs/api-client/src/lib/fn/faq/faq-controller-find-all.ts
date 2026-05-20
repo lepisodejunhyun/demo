@@ -46,4 +46,4 @@ export function faqControllerFindAll(http: HttpClient, rootUrl: string, params?:
   );
 }
 
-faqControllerFindAll.PATH = '/api/faq';
+faqControllerFindAll.PATH = '/api/faqs';

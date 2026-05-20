@@ -29,4 +29,4 @@ export function galleryControllerFindById(http: HttpClient, rootUrl: string, par
   );
 }
 
-galleryControllerFindById.PATH = '/api/gallery/{id}';
+galleryControllerFindById.PATH = '/api/galleries/{id}';

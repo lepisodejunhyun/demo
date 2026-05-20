@@ -1,14 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PageInfoDTO } from "./page-info.dto";
+import { PageInfoDto } from "./page-info.dto";
 
-export class OffsetPaginationDTO<T> {
+export class OffsetPaginationDto<T> {
     @ApiProperty({
         isArray: true
     })
     items: T[];
 
     @ApiProperty({
-        type: PageInfoDTO
+        type: PageInfoDto
     })
-    pageInfo: PageInfoDTO;
+    pageInfo: PageInfoDto;
 }

@@ -46,4 +46,4 @@ export function eventControllerFindAll(http: HttpClient, rootUrl: string, params
   );
 }
 
-eventControllerFindAll.PATH = '/api/event';
+eventControllerFindAll.PATH = '/api/events';

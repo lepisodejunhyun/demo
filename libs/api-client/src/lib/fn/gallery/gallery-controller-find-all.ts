@@ -46,4 +46,4 @@ export function galleryControllerFindAll(http: HttpClient, rootUrl: string, para
   );
 }
 
-galleryControllerFindAll.PATH = '/api/gallery';
+galleryControllerFindAll.PATH = '/api/galleries';

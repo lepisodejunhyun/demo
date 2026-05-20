@@ -1,17 +1,16 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
-import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from '../../libs/dtos';
-import { GalleryDTO } from './dtos/gallery.dto';
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from '../../libs/dtos';
+import { GalleryDto } from './dtos/gallery.dto';
 import { GalleryService } from './gallery.service';
 
 @ApiTags('gallery')
-@ApiExtraModels(PageInfoDTO)
-@Controller('gallery')
+@ApiExtraModels(PageInfoDto)
+@Controller('galleries')
 export class GalleryController {
-    constructor(private readonly galleryService: GalleryService) {}
+    constructor(private readonly galleryService: GalleryService) { }
 
-    @Get()
     @ApiOperation({
         summary: '갤러리 전체 조회',
         description: "갤러리 목록을 최신순으로 조회합니다."
@@ -22,24 +21,24 @@ export class GalleryController {
             properties: {
                 items: {
                     type: 'array',
-                    items: { $ref: '#/components/schemas/GalleryDTO' },
+                    items: { $ref: '#/components/schemas/GalleryDto' },
                 },
                 pageInfo: {
-                    $ref: '#/components/schemas/PageInfoDTO',
+                    $ref: '#/components/schemas/PageInfoDto',
                 },
             },
         },
     })
-    async findAll(@Query() query: PaginationQueryDTO): Promise<OffsetPaginationDTO<GalleryDTO>> {
-        const result = await this.galleryService.findAll(query.page, query.limit);
+    @Get()
+    async findAll(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<GalleryDto>> {
+        const { items, pageInfo } = await this.galleryService.findAll(query.page, query.limit);
 
         return {
-            items: plainToInstance(GalleryDTO, result.items),
-            pageInfo: result.pageInfo,
+            items: plainToInstance(GalleryDto, items),
+            pageInfo,
         };
     }
 
-    @Get(':id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -50,11 +49,12 @@ export class GalleryController {
     })
     @ApiOkResponse({
         description: '갤러리 정보 상세 조회 성공',
-        type: GalleryDTO,
+        type: GalleryDto,
     })
-    async findById(@Param('id') id: string): Promise<GalleryDTO> {
+    @Get(':id')
+    async findById(@Param('id') id: string): Promise<GalleryDto> {
         const gallery = await this.galleryService.findById(id);
 
-        return plainToInstance(GalleryDTO, gallery);
+        return plainToInstance(GalleryDto, gallery);
     }
 }

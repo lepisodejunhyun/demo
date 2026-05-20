@@ -1,0 +1,24 @@
+import { Component, input, output } from '@angular/core';
+
+@Component({
+  selector: 'app-form-actions',
+  template: `
+    <div class="flex items-center justify-end gap-3 pt-4">
+      <button type="button" (click)="cancel.emit()"
+        class="px-6 py-3 text-sm font-semibold text-on-surface-variant border border-outline-variant rounded-xl hover:bg-surface-container transition-colors cursor-pointer">
+        취소
+      </button>
+      <button type="submit" (click)="submit.emit()" [disabled]="loading()"
+        class="px-8 py-3 bg-gradient-to-r from-[#8127cf] to-[#4648d4] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all shadow-lg shadow-primary/20 cursor-pointer tracking-wider uppercase"
+        [class.opacity-50]="loading()" [class.cursor-not-allowed]="loading()">
+        {{ loading() ? '처리 중...' : submitText() }}
+      </button>
+    </div>
+  `,
+})
+export class FormActionsComponent {
+  submitText = input<string>('등록하기');
+  loading = input<boolean>(false);
+  cancel = output();
+  submit = output();
+}

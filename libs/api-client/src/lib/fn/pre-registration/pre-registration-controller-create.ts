@@ -7,11 +7,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { PreRegistrationCreateDto } from '../../models/pre-registration-create-dto';
+import { CreatePreRegistrationDto } from '../../models/create-pre-registration-dto';
 import { PreRegistrationDto } from '../../models/pre-registration-dto';
 
 export interface PreRegistrationControllerCreate$Params {
-      body: PreRegistrationCreateDto
+      body: CreatePreRegistrationDto
 }
 
 export function preRegistrationControllerCreate(http: HttpClient, rootUrl: string, params: PreRegistrationControllerCreate$Params, context?: HttpContext): Observable<StrictHttpResponse<PreRegistrationDto>> {
@@ -30,4 +30,4 @@ export function preRegistrationControllerCreate(http: HttpClient, rootUrl: strin
   );
 }
 
-preRegistrationControllerCreate.PATH = '/api/pre-registration/create';
+preRegistrationControllerCreate.PATH = '/api/pre-registrations/create';

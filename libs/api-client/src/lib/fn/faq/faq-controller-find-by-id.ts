@@ -29,4 +29,4 @@ export function faqControllerFindById(http: HttpClient, rootUrl: string, params:
   );
 }
 
-faqControllerFindById.PATH = '/api/faq/{id}';
+faqControllerFindById.PATH = '/api/faqs/{id}';

@@ -46,4 +46,4 @@ export function preRegistrationControllerFindAll(http: HttpClient, rootUrl: stri
   );
 }
 
-preRegistrationControllerFindAll.PATH = '/api/pre-registration';
+preRegistrationControllerFindAll.PATH = '/api/pre-registrations';

@@ -7,11 +7,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { InquiryCreateDto } from '../../models/inquiry-create-dto';
+import { CreateInquiryDto } from '../../models/create-inquiry-dto';
 import { InquiryDto } from '../../models/inquiry-dto';
 
 export interface InquiryControllerCreate$Params {
-      body: InquiryCreateDto
+      body: CreateInquiryDto
 }
 
 export function inquiryControllerCreate(http: HttpClient, rootUrl: string, params: InquiryControllerCreate$Params, context?: HttpContext): Observable<StrictHttpResponse<InquiryDto>> {
@@ -30,4 +30,4 @@ export function inquiryControllerCreate(http: HttpClient, rootUrl: string, param
   );
 }
 
-inquiryControllerCreate.PATH = '/api/inquiry/create';
+inquiryControllerCreate.PATH = '/api/inquiries/create';

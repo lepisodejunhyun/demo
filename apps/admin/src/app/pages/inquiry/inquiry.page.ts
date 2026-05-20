@@ -5,6 +5,7 @@ import { Api, inquiryControllerFindAll, InquiryDto } from "@api-client";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
 import { DataTableComponent } from "../../components/data-table/data-table.component";
 import { ColumnDef, PageInfo } from "../../components/data-table/data-table.types";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-inquiry',
@@ -16,6 +17,7 @@ export default class InquiryPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
+    private readonly toast = inject(ToastrService);
 
     inquiries = signal<(InquiryDto & { statusLabel: string })[]>([]);
     pageInfo = signal<PageInfo | null>(null);
@@ -52,6 +54,7 @@ export default class InquiryPage implements OnInit {
             this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
             console.error('1:1 문의 목록 조회 실패', error);
+            this.toast.error('데이터를 불러오지 못했습니다.');
         }
     }
 

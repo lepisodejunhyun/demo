@@ -29,4 +29,4 @@ export function preRegistrationControllerRemove(http: HttpClient, rootUrl: strin
   );
 }
 
-preRegistrationControllerRemove.PATH = '/api/pre-registration/{id}';
+preRegistrationControllerRemove.PATH = '/api/pre-registrations/{id}';

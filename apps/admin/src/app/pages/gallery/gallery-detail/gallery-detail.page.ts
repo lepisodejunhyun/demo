@@ -4,6 +4,7 @@ import { Router, RouterLink } from "@angular/router";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
+import { ToastrService } from 'ngx-toastr';
 import { Api, galleryControllerFindById, galleryControllerRemove, GalleryDto } from "@api-client";
 
 @Component({
@@ -14,6 +15,7 @@ import { Api, galleryControllerFindById, galleryControllerRemove, GalleryDto } f
 export default class GalleryDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
+    private readonly toast = inject(ToastrService);
 
     id = input<string>();
 
@@ -33,6 +35,7 @@ export default class GalleryDetailPage implements OnInit {
             this.gallery.set(await this.api.invoke(galleryControllerFindById, { id }));
         } catch (error) {
             console.error('갤러리 조회 실패', error);
+            this.toast.error('데이터를 불러오지 못했습니다.');
 
             this.router.navigate(['/gallery']);
         }
@@ -46,9 +49,11 @@ export default class GalleryDetailPage implements OnInit {
             await this.api.invoke(galleryControllerRemove, {
                 id: this.gallery()!.id,
             });
+            this.toast.success('삭제되었습니다.');
             this.router.navigate(['/gallery']);
         } catch (error) {
             console.error('갤러리 삭제 실패', error);
+            this.toast.error('삭제에 실패했습니다.');
         }
     }
 

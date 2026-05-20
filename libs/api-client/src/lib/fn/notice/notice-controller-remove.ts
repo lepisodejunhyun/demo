@@ -29,4 +29,4 @@ export function noticeControllerRemove(http: HttpClient, rootUrl: string, params
   );
 }
 
-noticeControllerRemove.PATH = '/api/notice/{id}';
+noticeControllerRemove.PATH = '/api/notices/{id}';

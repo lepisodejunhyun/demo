@@ -7,12 +7,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { NoticeCreateDto } from '../../models/notice-create-dto';
+import { CreateNoticeDto } from '../../models/create-notice-dto';
 import { NoticeDto } from '../../models/notice-dto';
 
 export interface NoticeControllerUpdate$Params {
   id: string;
-      body: NoticeCreateDto
+      body: CreateNoticeDto
 }
 
 export function noticeControllerUpdate(http: HttpClient, rootUrl: string, params: NoticeControllerUpdate$Params, context?: HttpContext): Observable<StrictHttpResponse<NoticeDto>> {
@@ -32,4 +32,4 @@ export function noticeControllerUpdate(http: HttpClient, rootUrl: string, params
   );
 }
 
-noticeControllerUpdate.PATH = '/api/notice/{id}';
+noticeControllerUpdate.PATH = '/api/notices/{id}';

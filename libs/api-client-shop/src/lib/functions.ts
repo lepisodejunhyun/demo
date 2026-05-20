@@ -31,6 +31,8 @@ export type { InquiryControllerFindAll$Params as InquiryControllerFindAll$Params
 export { inquiryControllerFindAll as inquiryControllerFindAll } from './fn/inquiry/inquiry-controller-find-all';
 export type { InquiryControllerFindById$Params as InquiryControllerFindById$Params } from './fn/inquiry/inquiry-controller-find-by-id';
 export { inquiryControllerFindById as inquiryControllerFindById } from './fn/inquiry/inquiry-controller-find-by-id';
+export type { InquiryControllerUpdate$Params as InquiryControllerUpdate$Params } from './fn/inquiry/inquiry-controller-update';
+export { inquiryControllerUpdate as inquiryControllerUpdate } from './fn/inquiry/inquiry-controller-update';
 export type { InquiryControllerCreate$Params as InquiryControllerCreate$Params } from './fn/inquiry/inquiry-controller-create';
 export { inquiryControllerCreate as inquiryControllerCreate } from './fn/inquiry/inquiry-controller-create';
 export type { TermsControllerFindAll$Params as TermsControllerFindAll$Params } from './fn/terms/terms-controller-find-all';

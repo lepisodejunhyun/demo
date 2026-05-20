@@ -7,12 +7,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { TermsCreateDto } from '../../models/terms-create-dto';
+import { CreateTermsDto } from '../../models/create-terms-dto';
 import { TermsDto } from '../../models/terms-dto';
 
 export interface TermsControllerUpdate$Params {
   id: string;
-      body: TermsCreateDto
+      body: CreateTermsDto
 }
 
 export function termsControllerUpdate(http: HttpClient, rootUrl: string, params: TermsControllerUpdate$Params, context?: HttpContext): Observable<StrictHttpResponse<TermsDto>> {

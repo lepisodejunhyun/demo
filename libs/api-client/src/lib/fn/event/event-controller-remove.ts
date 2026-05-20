@@ -29,4 +29,4 @@ export function eventControllerRemove(http: HttpClient, rootUrl: string, params:
   );
 }
 
-eventControllerRemove.PATH = '/api/event/{id}';
+eventControllerRemove.PATH = '/api/events/{id}';

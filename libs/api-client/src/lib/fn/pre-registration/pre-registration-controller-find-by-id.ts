@@ -29,4 +29,4 @@ export function preRegistrationControllerFindById(http: HttpClient, rootUrl: str
   );
 }
 
-preRegistrationControllerFindById.PATH = '/api/pre-registration/{id}';
+preRegistrationControllerFindById.PATH = '/api/pre-registrations/{id}';

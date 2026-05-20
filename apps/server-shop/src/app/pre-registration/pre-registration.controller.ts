@@ -2,20 +2,19 @@ import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/comm
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { Request } from 'express';
-import { OffsetPaginationDTO, PageInfoDTO, PaginationQueryDTO } from '../../libs/dtos';
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from '../../libs/dtos';
 import { OptionalJwtAuthGuard } from '../member/guards/optional-jwt-auth.guard';
-import { EventDTO } from '../event/dtos/event.dto';
-import { PreRegistrationDTO } from './dtos/pre-registration.dto';
-import { PreRegistrationCreateDTO } from './dtos/pre-registration-create.dto';
+import { EventDto } from '../event/dtos/event.dto';
+import { PreRegistrationDto } from './dtos/pre-registration.dto';
+import { CreatePreRegistrationDto } from './dtos/create-pre-registration.dto';
 import { PreRegistrationService } from './pre-registration.service';
 
 @ApiTags('pre-registration')
-@ApiExtraModels(PageInfoDTO)
-@Controller('pre-registration')
+@ApiExtraModels(PageInfoDto)
+@Controller('pre-registrations')
 export class PreRegistrationController {
     constructor(private readonly preRegistrationService: PreRegistrationService) {}
 
-    @Get('available-events')
     @ApiOperation({
         summary: '사전 등록 가능한 행사 목록',
         description: '현재 사전등록 기간 내인 행사 목록을 조회합니다.',
@@ -26,24 +25,24 @@ export class PreRegistrationController {
             properties: {
                 items: {
                     type: 'array',
-                    items: { $ref: '#/components/schemas/EventDTO' },
+                    items: { $ref: '#/components/schemas/EventDto' },
                 },
                 pageInfo: {
-                    $ref: '#/components/schemas/PageInfoDTO',
+                    $ref: '#/components/schemas/PageInfoDto',
                 },
             },
         },
     })
-    async findAvailableEvents(@Query() query: PaginationQueryDTO): Promise<OffsetPaginationDTO<EventDTO>> {
-        const result = await this.preRegistrationService.findAvailableEvents(query.page, query.limit);
+    @Get('available-events')
+    async findAvailableEvents(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<EventDto>> {
+        const { items, pageInfo } = await this.preRegistrationService.findAvailableEvents(query.page, query.limit);
 
         return {
-            items: plainToInstance(EventDTO, result.items),
-            pageInfo: result.pageInfo,
+            items: plainToInstance(EventDto, items),
+            pageInfo,
         };
     }
 
-    @Post()
     @UseGuards(OptionalJwtAuthGuard)
     @ApiOperation({
         summary: '사전 등록',
@@ -51,12 +50,13 @@ export class PreRegistrationController {
     })
     @ApiOkResponse({
         description: '사전 등록 성공',
-        type: PreRegistrationDTO,
+        type: PreRegistrationDto,
     })
-    async create(@Req() req: Request, @Body() data: PreRegistrationCreateDTO): Promise<PreRegistrationDTO> {
+    @Post()
+    async create(@Req() req: Request, @Body() data: CreatePreRegistrationDto): Promise<PreRegistrationDto> {
         const memberId = (req.user as any)?.id ?? null;
         const preRegistration = await this.preRegistrationService.create(data, memberId);
 
-        return plainToInstance(PreRegistrationDTO, preRegistration, { excludeExtraneousValues: true });
+        return plainToInstance(PreRegistrationDto, preRegistration, { excludeExtraneousValues: true });
     }
 }

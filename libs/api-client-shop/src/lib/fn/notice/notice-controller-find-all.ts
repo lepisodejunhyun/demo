@@ -46,4 +46,4 @@ export function noticeControllerFindAll(http: HttpClient, rootUrl: string, param
   );
 }
 
-noticeControllerFindAll.PATH = '/api/notice';
+noticeControllerFindAll.PATH = '/api/notices';

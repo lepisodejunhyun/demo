@@ -7,11 +7,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { FaqCreateDto } from '../../models/faq-create-dto';
+import { CreateFaqDto } from '../../models/create-faq-dto';
 import { FaqDto } from '../../models/faq-dto';
 
 export interface FaqControllerCreate$Params {
-      body: FaqCreateDto
+      body: CreateFaqDto
 }
 
 export function faqControllerCreate(http: HttpClient, rootUrl: string, params: FaqControllerCreate$Params, context?: HttpContext): Observable<StrictHttpResponse<FaqDto>> {
@@ -30,4 +30,4 @@ export function faqControllerCreate(http: HttpClient, rootUrl: string, params: F
   );
 }
 
-faqControllerCreate.PATH = '/api/faq/create';
+faqControllerCreate.PATH = '/api/faqs/create';

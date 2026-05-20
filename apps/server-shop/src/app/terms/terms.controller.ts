@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
-import { TermsDTO } from './dtos/terms.dto';
+import { TermsDto } from './dtos/terms.dto';
 import { TermsService } from './terms.service';
 
 @ApiTags('terms')
@@ -9,18 +9,18 @@ import { TermsService } from './terms.service';
 export class TermsController {
     constructor(private readonly termsService: TermsService) {}
 
-    @Get()
     @ApiOperation({
         summary: '약관 전체 조회',
         description: '사용 가능한 약관 목록을 조회합니다.',
     })
     @ApiOkResponse({
         description: '약관 목록 조회 성공',
-        type: [TermsDTO],
+        type: [TermsDto],
     })
-    async findAll(): Promise<TermsDTO[]> {
+    @Get()
+    async findAll(): Promise<TermsDto[]> {
         const terms = await this.termsService.findAll();
 
-        return plainToInstance(TermsDTO, terms, { excludeExtraneousValues: true });
+        return plainToInstance(TermsDto, terms, { excludeExtraneousValues: true });
     }
 }

@@ -7,11 +7,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AdminSignInDto } from '../../models/admin-sign-in-dto';
+import { SignInAdminDto } from '../../models/sign-in-admin-dto';
 import { SignInResponseDto } from '../../models/sign-in-response-dto';
 
 export interface AdminControllerSignin$Params {
-      body: AdminSignInDto
+      body: SignInAdminDto
 }
 
 export function adminControllerSignin(http: HttpClient, rootUrl: string, params: AdminControllerSignin$Params, context?: HttpContext): Observable<StrictHttpResponse<SignInResponseDto>> {
