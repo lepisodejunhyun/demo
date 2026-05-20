@@ -8,6 +8,7 @@ import { ButtonComponent } from "../../../components/button/button.component";
 import { DetailFieldComponent } from "../../../components/detail-field/detail-field.component";
 import { Api, eventControllerFindById, eventControllerRemove, EventDto } from "@api-client";
 import { ToastrService } from 'ngx-toastr';
+import { DialogService } from "../../../components/confirm-dialog/confirm-dialog.service";
 
 @Component({
     selector: 'app-event-detail',
@@ -18,6 +19,7 @@ export default class EventDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly toast = inject(ToastrService);
+    private readonly dialog = inject(DialogService);
 
     id = input<string>();
 
@@ -45,7 +47,7 @@ export default class EventDetailPage implements OnInit {
     }
 
     async onDelete(): Promise<void> {
-        if (!confirm('정말 삭제하시겠습니까?')) return;
+        if (!await this.dialog.confirm({ title: '갤러리 삭제', message: '정말 삭제하시겠습니까?'})) return;
 
         try {
             await this.api.invoke(eventControllerRemove, {
