@@ -1,0 +1,13 @@
+<div class="flex items-center gap-3">
+    <label class="relative inline-flex items-center cursor-pointer" [class.opacity-50]="isDisabled()">
+        <input type="checkbox" [id]="inputId()" class="sr-only peer"
+            [checked]="value()" [disabled]="isDisabled()" (change)="onToggle($event)" />
+        <div class="w-11 h-6 bg-outline-variant rounded-full peer-checked:bg-primary transition-colors
+                    after:content-[''] after:absolute after:top-[2px] after:start-[2px]
+                    after:bg-white after:rounded-full after:h-5 after:w-5
+                    after:transition-all peer-checked:after:translate-x-full"></div>
+    </label>
+    <span class="text-sm" [class.text-primary]="value()" [class.text-on-surface-variant]="!value()">
+        {{ value() ? labelOn() : labelOff() }}
+    </span>
+</div>

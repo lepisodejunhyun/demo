@@ -12,6 +12,7 @@ import { formatPhoneNumber } from "../../../shared/utils/format-phone";
 import { FormInputComponent } from "../../../components/form-input/form-input.component";
 import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
 import { ToastrService } from 'ngx-toastr';
+import { ImageUploadComponent } from "../../../components/image-upload/image-upload.component";
 
 function eventDateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const startDate = control.get('startDate')?.value;
@@ -60,7 +61,7 @@ function eventDateRangeValidator(control: AbstractControl): ValidationErrors | n
 @Component({
     selector: 'app-event-form',
     templateUrl: 'event-form.page.html',
-    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormsModule, ReactiveFormsModule, FormInputComponent, FormTextareaComponent]
+    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormsModule, ReactiveFormsModule, FormInputComponent, FormTextareaComponent, ImageUploadComponent]
 })
 export default class EventFormPage implements OnInit {
     private readonly api = inject(Api);
@@ -127,22 +128,16 @@ export default class EventFormPage implements OnInit {
         preRegEndDate: new FormControl<string | null>(null),
     }, { validators: eventDateRangeValidator });
 
-    onFileSelected(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        const file = input.files?.[0];
-        if (!file) return;
-
+    onFileSelected(file: File): void {
         const allowedTypes = ['image/jpeg', 'image/png'];
         if (!allowedTypes.includes(file.type)) {
             this.toast.warning('이미지는 JPG, PNG 형식만 업로드할 수 있습니다.');
-            input.value = '';
             return;
         }
 
         const maxSize = 5 * 1024 * 1024;
         if (file.size > maxSize) {
             this.toast.warning('이미지 파일 크기는 최대 5MB까지 업로드할 수 있습니다.');
-            input.value = '';
             return;
         }
 

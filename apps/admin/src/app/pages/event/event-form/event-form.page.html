@@ -96,39 +96,11 @@
 
     <!-- 포스터 이미지 (선택) -->
     <app-form-field label="포스터 이미지" for="event-poster">
-        <div class="flex items-start gap-6">
-            <!-- 미리보기 영역 -->
-            <div
-                class="w-40 h-52 rounded-lg border-2 border-dashed border-outline-variant flex items-center justify-center overflow-hidden bg-surface-container shrink-0">
-                @if (imagePreview()) {
-                <img [src]="imagePreview()" alt="포스터 미리보기" class="w-full h-full object-cover" />
-                } @else {
-                <div class="text-center text-outline">
-                    <span class="material-symbols-outlined text-3xl">image</span>
-                    <p class="text-xs mt-1">미리보기</p>
-                </div>
-                }
-            </div>
-
-            <!-- 업로드 버튼 영역 -->
-            <div class="flex flex-col gap-2">
-                <label for="event-poster"
-                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-container-highest text-on-surface rounded font-medium text-sm cursor-pointer hover:bg-outline-variant transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">upload</span>
-                    이미지 선택
-                </label>
-                <input id="event-poster" type="file" accept=".jpg,.jpeg,.png" (change)="onFileSelected($event)"
-                    (cancel)="$event.stopPropagation()" class="hidden" />
-                <p class="text-xs text-outline">JPG, PNG (최대 5MB)</p>
-
-                @if (uploading()) {
-                <p class="text-sm text-primary font-medium flex items-center gap-1">
-                    <span class="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
-                    업로드 중...
-                </p>
-                }
-            </div>
-        </div>
+        <app-image-upload
+            inputId="event-poster"
+            [preview]="imagePreview()"
+            [uploading]="uploading()"
+            (fileSelected)="onFileSelected($event)" />
     </app-form-field>
 
     @if (errorMessage()) {

@@ -31,6 +31,9 @@
     --color-on-error: #ffffff;
     --color-error-container: #ffdad6;
 
+    --color-warning: #f59e0b;
+    --color-on-warning: #ffffff;
+
     --font-family-inter: 'Inter', sans-serif;
 }
 

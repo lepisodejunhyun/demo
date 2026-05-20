@@ -5,18 +5,21 @@ import { PageHeaderComponent } from "../../../components/page-header/page-header
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
 import { ButtonComponent } from "../../../components/button/button.component";
+import { EmptyStateComponent } from "../../../components/empty-state/empty-state.component";
 import { ToastrService } from 'ngx-toastr';
 import { Api, galleryControllerFindById, galleryControllerRemove, GalleryDto } from "@api-client";
+import { DialogService } from "../../../components/confirm-dialog/confirm-dialog.service";
 
 @Component({
     selector: 'app-gallery-detail',
     templateUrl: './gallery-detail.page.html',
-    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, ButtonComponent]
+    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, ButtonComponent, EmptyStateComponent]
 })
 export default class GalleryDetailPage implements OnInit {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly toast = inject(ToastrService);
+    private readonly dialog = inject(DialogService);
 
     id = input<string>();
 
@@ -44,7 +47,7 @@ export default class GalleryDetailPage implements OnInit {
     }
 
     async onDelete(): Promise<void> {
-        if (!confirm('정말 삭제하시겠습니까?')) return;
+        if (!await this.dialog.confirm({ title: '갤러리 삭제', message: '정말 삭제하시겠습니까?'})) return;
 
         try {
             await this.api.invoke(galleryControllerRemove, {

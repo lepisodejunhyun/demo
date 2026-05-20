@@ -18,10 +18,7 @@
         }
     </div>
     } @else {
-    <div class="py-16 text-center text-on-surface-variant">
-        <span class="material-symbols-outlined text-[48px] text-outline-variant">photo_library</span>
-        <p class="text-sm mt-3">등록된 이미지가 없습니다.</p>
-    </div>
+    <app-empty-state icon="photo_library" title="등록된 이미지가 없습니다." />
     }
 
     <!-- 본문 내용 -->

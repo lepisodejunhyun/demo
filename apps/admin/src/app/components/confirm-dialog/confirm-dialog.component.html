@@ -1,0 +1,55 @@
+@if (config()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]" (click)="onCancel()"></div>
+
+    <!-- Dialog -->
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
+        <!-- Top accent bar -->
+        <div class="h-1 w-full"
+            [class.bg-error]="config()!.variant === 'error'"
+            [class.bg-warning]="config()!.variant === 'warning'"
+            [class.bg-primary]="config()!.variant === 'primary'"></div>
+
+        <div class="px-6 pt-6 pb-5">
+            <!-- Icon + Title -->
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+                    [class.bg-error/10]="config()!.variant === 'error'"
+                    [class.bg-warning/10]="config()!.variant === 'warning'"
+                    [class.bg-primary/10]="config()!.variant === 'primary'">
+                    <span class="material-symbols-outlined text-[20px]"
+                        [class.text-error]="config()!.variant === 'error'"
+                        [class.text-warning]="config()!.variant === 'warning'"
+                        [class.text-primary]="config()!.variant === 'primary'">
+                        {{ config()!.variant === 'error' ? 'delete' : config()!.variant === 'warning' ? 'warning' : 'info' }}
+                    </span>
+                </div>
+                <h3 class="text-base font-bold text-on-surface">{{ config()!.title }}</h3>
+            </div>
+
+            <!-- Message -->
+            @if (config()!.message) {
+            <p class="text-sm text-on-surface-variant leading-relaxed mb-5">{{ config()!.message }}</p>
+            }
+
+            <!-- Actions -->
+            <div class="flex items-center justify-end gap-2">
+                @if (config()!.mode === 'confirm') {
+                <button type="button" (click)="onCancel()"
+                    class="px-4 py-2 text-sm font-semibold text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors cursor-pointer">
+                    {{ config()!.cancelLabel }}
+                </button>
+                }
+                <button type="button" (click)="onConfirm()"
+                    class="px-5 py-2 text-sm font-semibold text-white rounded-lg transition-colors cursor-pointer"
+                    [class.bg-error]="config()!.variant === 'error'"
+                    [class.bg-warning]="config()!.variant === 'warning'"
+                    [class.bg-primary]="config()!.variant === 'primary'">
+                    {{ config()!.confirmLabel }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+}

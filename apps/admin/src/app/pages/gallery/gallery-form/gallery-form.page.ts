@@ -11,6 +11,7 @@ import { SupabaseService } from "../../../services/supabase.service";
 import { FormInputComponent } from "../../../components/form-input/form-input.component";
 import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
 import { ToastrService } from 'ngx-toastr';
+import { DialogService } from '../../../components/confirm-dialog/confirm-dialog.service';
 
 @Component({
     selector: 'app-gallery-form',
@@ -23,6 +24,7 @@ export default class GalleryFormPage implements OnInit {
     private readonly location = inject(Location);
     private readonly supabaseService = inject(SupabaseService);
     private readonly toast = inject(ToastrService);
+    private readonly dialog = inject(DialogService);
 
     id = input<string>();
 
@@ -82,6 +84,10 @@ export default class GalleryFormPage implements OnInit {
 
     async onSubmit(): Promise<void> {
         if (this.form.invalid) return;
+
+        if (this.isEditMode) {
+            if (!await this.dialog.confirm({ title: '수정 확인', message: '정말 수정하시겠습니까?', variant: 'warning' })) return;
+        }
 
         try {
             this.uploading.set(true);

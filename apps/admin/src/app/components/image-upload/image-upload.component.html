@@ -1,0 +1,25 @@
+<div class="flex items-start gap-6">
+    <div class="w-40 h-52 rounded-lg border-2 border-dashed border-outline-variant flex items-center justify-center overflow-hidden bg-surface-container shrink-0">
+        @if (preview()) {
+        <img [src]="preview()" alt="미리보기" class="w-full h-full object-cover" />
+        } @else {
+        <div class="text-center text-outline">
+            <span class="material-symbols-outlined text-3xl">image</span>
+            <p class="text-xs mt-1">미리보기</p>
+        </div>
+        }
+    </div>
+    <div class="flex flex-col gap-2">
+        <label [for]="inputId()" class="inline-flex items-center gap-2 px-4 py-2.5 bg-surface-container-highest text-on-surface rounded font-medium text-sm cursor-pointer hover:bg-outline-variant transition-colors">
+            <span class="material-symbols-outlined text-[18px]">upload</span>이미지 선택
+        </label>
+        <input [id]="inputId()" type="file" [accept]="accept()" (change)="onFileChange($event)" (cancel)="$event.stopPropagation()" class="hidden" />
+        <p class="text-xs text-outline">{{ hint() }}</p>
+        @if (uploading()) {
+        <p class="text-sm text-primary font-medium flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
+            업로드 중...
+        </p>
+        }
+    </div>
+</div>

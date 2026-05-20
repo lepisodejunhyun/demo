@@ -10,11 +10,12 @@ import { FormFieldComponent } from "../../../components/form-field/form-field.co
 import { FormInputComponent } from "../../../components/form-input/form-input.component";
 import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
 import { ToastrService } from 'ngx-toastr';
+import { FormToggleComponent } from "../../../components/form-toggle/form-toggle.component";
 
 @Component({
     selector: 'app-terms-form',
     templateUrl: './terms-form.page.html',
-    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormInputComponent, FormTextareaComponent],
+    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormInputComponent, FormTextareaComponent, FormToggleComponent],
 })
 export default class TermsFormPage implements OnInit {
     private readonly api = inject(Api);

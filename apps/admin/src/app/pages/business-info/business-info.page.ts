@@ -9,11 +9,12 @@ import { FormFieldComponent } from "../../components/form-field/form-field.compo
 import { FormInputComponent } from "../../components/form-input/form-input.component";
 import { ToastrService } from 'ngx-toastr';
 import { DetailFieldComponent } from "../../components/detail-field/detail-field.component";
+import { EmptyStateComponent } from "../../components/empty-state/empty-state.component";
 
 @Component({
     selector: 'app-business-info',
     templateUrl: './business-info.page.html',
-    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, FormViewComponent, FormFieldComponent, FormInputComponent, DetailFieldComponent],
+    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, FormViewComponent, FormFieldComponent, FormInputComponent, DetailFieldComponent, EmptyStateComponent],
 })
 export default class BusinessInfoPage implements OnInit {
     private readonly api = inject(Api);
