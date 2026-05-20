@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/comm
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { Request } from 'express';
-import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from '../../libs/dtos';
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from '@org/api/pagination';
 import { OptionalJwtAuthGuard } from '../member/guards/optional-jwt-auth.guard';
 import { EventDto } from '../event/dtos/event.dto';
 import { PreRegistrationDto } from './dtos/pre-registration.dto';

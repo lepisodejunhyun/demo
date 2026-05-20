@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
-import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from '../../libs/dtos';
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from '@org/api/pagination';
 import { NoticeDto } from './dtos/notice.dto';
 import { NoticeService } from './notice.service';
 

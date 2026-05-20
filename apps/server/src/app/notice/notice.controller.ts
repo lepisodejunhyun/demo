@@ -4,7 +4,7 @@ import { NoticeService } from "./notice.service";
 import { NoticeDto } from "./dtos/notice.dto";
 import { plainToInstance } from "class-transformer";
 import { CreateNoticeDto } from "./dtos/create-notice.dto";
-import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "../../libs/dtos";
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "@org/api/pagination";
 import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 
 @ApiTags('notice')

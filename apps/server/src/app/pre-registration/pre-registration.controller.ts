@@ -1,5 +1,5 @@
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "../../libs/dtos";
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "@org/api/pagination";
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { PreRegistrationService } from "./pre-registration.service";
 import { PreRegistrationDto } from "./dtos/pre-registration.dto";

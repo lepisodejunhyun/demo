@@ -1,9 +1,20 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { OffsetPaginationDto } from "../../libs/dtos";
-import { Event, PreRegistration } from "@prisma/client";
+import { OffsetPaginationDto, paginate } from "@org/api/pagination";
+import { Event, PreRegistration, Prisma } from "@prisma/client";
 import { CreatePreRegistrationDto } from "./dtos/create-pre-registration.dto";
 import { UpdatePreRegistrationDto } from "./dtos/update-pre-registration.dto";
+
+/**
+ * @name PreRegistrationWithEventMember
+ * @description 행사(title) + 회원(name) 정보를 포함한 사전 등록 타입
+ */
+type PreRegistrationWithEventMember = Prisma.PreRegistrationGetPayload<{
+    include: {
+        event: { select: { title: true } };
+        member: { select: { name: true } };
+    };
+}>;
 
 @Injectable()
 export class PreRegistrationService {
@@ -19,45 +30,24 @@ export class PreRegistrationService {
      * @returns {Promise<OffsetPaginationDto<any>>}
      */
     async findAll(page: number = 1, limit: number = 10): Promise<OffsetPaginationDto<any>> {
-        const skip = (page - 1) * limit;
-
-        const [items, totalItems] = await Promise.all([
-            this.prisma.preRegistration.findMany({
-                where: {
-                    deletedAt: null,
-                },
-                orderBy: {
-                    createdAt: 'desc',
-                },
-                skip,
-                take: limit,
-                include: {
-                    event: { select: { title: true } },
-                    member: { select: { name: true } },
-                },
-            }),
-            this.prisma.preRegistration.count({
-                where: {
-                    deletedAt: null,
-                },
-            }),
-        ]);
-
-        const flattenedItems = items.map((item) => ({
-            ...item,
-            eventTitle: item.event.title,
-            memberName: item.member?.name ?? null,
-        }));
+        const result = await paginate<typeof this.prisma.preRegistration, PreRegistrationWithEventMember>(this.prisma.preRegistration, {
+            page,
+            limit,
+            where: { deletedAt: null },
+            orderBy: { createdAt: 'desc' },
+            include: {
+                event: { select: { title: true } },
+                member: { select: { name: true } },
+            },
+        });
 
         return {
-            items: flattenedItems,
-            pageInfo: {
-                page,
-                limit,
-                pageItems: items.length,
-                totalItems,
-                totalPages: Math.ceil(totalItems / limit),
-            },
+            ...result,
+            items: result.items.map((item) => ({
+                ...item,
+                eventTitle: item.event.title,
+                memberName: item.member?.name ?? null,
+            })),
         };
     }
 

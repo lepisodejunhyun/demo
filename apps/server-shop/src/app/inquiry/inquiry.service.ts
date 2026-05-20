@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { OffsetPaginationDto } from '../../libs/dtos';
+import { OffsetPaginationDto, paginate } from '@org/api/pagination';
 import { Inquiry } from '@prisma/client';
 import { CreateInquiryDto } from './dtos/create-inquiry.dto';
 
@@ -19,30 +19,12 @@ export class InquiryService {
      * @returns {Promise<OffsetPaginationDto<Inquiry>>}
      */
     async findAllByMemberId(memberId: string, page: number, limit: number): Promise<OffsetPaginationDto<Inquiry>> {
-        const skip = (page - 1) * limit;
-
-        const [items, totalItems] = await Promise.all([
-            this.prisma.inquiry.findMany({
-                where: { memberId, deletedAt: null },
-                orderBy: { createdAt: 'desc' },
-                skip,
-                take: limit,
-            }),
-            this.prisma.inquiry.count({
-                where: { memberId, deletedAt: null },
-            })
-        ]);
-
-        return {
-            items,
-            pageInfo: {
-                page,
-                limit,
-                pageItems: items.length,
-                totalItems,
-                totalPages: Math.ceil(totalItems / limit),
-            }
-        };
+        return paginate(this.prisma.inquiry, {
+            page,
+            limit,
+            where: { memberId, deletedAt: null },
+            orderBy: { createdAt: 'desc' },
+        });
     }
 
     /**

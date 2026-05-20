@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { OffsetPaginationDto } from "../../libs/dtos";
+import { OffsetPaginationDto, paginate } from "@org/api/pagination";
 import { Terms } from "@prisma/client";
 import { CreateTermsDto } from "./dtos/create-terms.dto";
 
@@ -18,36 +18,12 @@ export class TermsService {
      * @returns {Promise<OffsetPaginationDto<Terms>>}
      */
     async findAll(page: number = 1, limit: number = 10): Promise<OffsetPaginationDto<Terms>> {
-        const skip = (page - 1) * limit;
-
-        const [items, totalItems] = await Promise.all([
-            this.prisma.terms.findMany({
-                where: {
-                    deletedAt: null,
-                },
-                orderBy: {
-                    createdAt: 'desc',
-                },
-                skip,
-                take: limit,
-            }),
-            this.prisma.terms.count({
-                where: {
-                    deletedAt: null,
-                },
-            }),
-        ]);
-
-        return {
-            items,
-            pageInfo: {
-                page,
-                limit,
-                pageItems: items.length,
-                totalItems,
-                totalPages: Math.ceil(totalItems / limit),
-            },
-        };
+        return paginate(this.prisma.terms, {
+            page,
+            limit,
+            where: { deletedAt: null },
+            orderBy: { createdAt: 'desc' },
+        });
     }
 
     /**

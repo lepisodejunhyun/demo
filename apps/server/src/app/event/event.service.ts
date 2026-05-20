@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { OffsetPaginationDto } from "../../libs/dtos";
+import { OffsetPaginationDto, paginate } from "@org/api/pagination";
 import { Event } from "@prisma/client";
 import { CreateEventDto } from "./dtos/create-event.dto";
 
@@ -18,30 +18,12 @@ export class EventService {
      * @returns {Promise<OffsetPaginationDto<Event>>}
      */
     async findAll(page: number, limit: number): Promise<OffsetPaginationDto<Event>> {
-        const skip = (page - 1) * limit;
-
-        const [items, totalItems] = await Promise.all([
-            this.prisma.event.findMany({
-                where: { deletedAt: null },
-                orderBy: { createdAt: 'desc' },
-                skip,
-                take: limit,
-            }),
-            this.prisma.event.count({
-                where: { deletedAt: null },
-            }),
-        ]);
-
-        return {
-            items,
-            pageInfo: {
-                page,
-                limit,
-                pageItems: items.length,
-                totalItems,
-                totalPages: Math.ceil(totalItems / limit),
-            },
-        };
+        return paginate(this.prisma.event, {
+            page,
+            limit,
+            where: { deletedAt: null },
+            orderBy: { createdAt: 'desc' },
+        });
     }
 
     /**

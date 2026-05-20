@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreatePreRegistrationDto } from './dtos/create-pre-registration.dto';
 import { Event, PreRegistration } from '@prisma/client';
-import { OffsetPaginationDto } from '../../libs/dtos';
+import { OffsetPaginationDto, paginate } from '@org/api/pagination';
 
 @Injectable()
 export class PreRegistrationService {
@@ -20,34 +20,17 @@ export class PreRegistrationService {
      */
     async findAvailableEvents(page: number, limit: number): Promise<OffsetPaginationDto<Event>> {
         const now = new Date();
-        const skip = (page - 1) * limit;
 
-        const where = {
-            deletedAt: null,
-            preRegStartDate: { not: null, lte: now } as any,
-            preRegEndDate: { not: null, gte: now } as any,
-        };
-
-        const [items, totalItems] = await Promise.all([
-            this.prisma.event.findMany({
-                where,
-                orderBy: { preRegEndDate: 'asc' as const },
-                skip,
-                take: limit,
-            }),
-            this.prisma.event.count({ where }),
-        ]);
-
-        return {
-            items,
-            pageInfo: {
-                page,
-                limit,
-                pageItems: items.length,
-                totalItems,
-                totalPages: Math.ceil(totalItems / limit),
+        return paginate(this.prisma.event, {
+            page,
+            limit,
+            where: {
+                deletedAt: null,
+                preRegStartDate: { not: null, lte: now },
+                preRegEndDate: { not: null, gte: now },
             },
-        };
+            orderBy: { preRegEndDate: 'asc' },
+        });
     }
 
     /**

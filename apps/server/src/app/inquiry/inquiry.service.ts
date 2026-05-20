@@ -1,8 +1,16 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { OffsetPaginationDto } from "../../libs/dtos";
-import { Inquiry } from "@prisma/client";
+import { OffsetPaginationDto, paginate } from "@org/api/pagination";
+import { Inquiry, Prisma } from "@prisma/client";
 import { UpdateInquiryDto } from "./dtos/update-inquiry.dto";
+
+/**
+ * @name InquiryWithMember
+ * @description 작성자(member) 정보를 포함한 1:1 문의 타입
+ */
+type InquiryWithMember = Prisma.InquiryGetPayload<{
+    include: { member: { select: { name: true; email: true } } };
+}>;
 
 @Injectable()
 export class InquiryService {
@@ -18,44 +26,23 @@ export class InquiryService {
      * @returns {Promise<OffsetPaginationDto<any>>}
      */
     async findAll(page: number = 1, limit: number = 10): Promise<OffsetPaginationDto<any>> {
-        const skip = (page - 1) * limit;
-
-        const [items, totalItems] = await Promise.all([
-            this.prisma.inquiry.findMany({
-                where: {
-                    deletedAt: null,
-                },
-                orderBy: {
-                    createdAt: 'desc',
-                },
-                skip,
-                take: limit,
-                include: {
-                    member: { select: { name: true, email: true } },
-                },
-            }),
-            this.prisma.inquiry.count({
-                where: {
-                    deletedAt: null,
-                },
-            }),
-        ]);
-
-        const flattenedItems = items.map((inquiry) => ({
-            ...inquiry,
-            authorName: inquiry.member.name,
-            authorEmail: inquiry.member.email,
-        }));
+        const result = await paginate<typeof this.prisma.inquiry, InquiryWithMember>(this.prisma.inquiry, {
+            page,
+            limit,
+            where: { deletedAt: null },
+            orderBy: { createdAt: 'desc' },
+            include: {
+                member: { select: { name: true, email: true } },
+            },
+        });
 
         return {
-            items: flattenedItems,
-            pageInfo: {
-                page,
-                limit,
-                pageItems: items.length,
-                totalItems,
-                totalPages: Math.ceil(totalItems / limit),
-            },
+            ...result,
+            items: result.items.map((inquiry) => ({
+                ...inquiry,
+                authorName: inquiry.member.name,
+                authorEmail: inquiry.member.email,
+            })),
         };
     }
 

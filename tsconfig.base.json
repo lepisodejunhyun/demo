@@ -26,7 +26,8 @@
       "@org/shop/shared-ui": ["libs/shop/shared-ui/src/index.ts"],
       "@api-client": ["libs/api-client/src/lib/index.ts"],
       "@api-client-shop": ["libs/api-client-shop/src/lib/index.ts"],
-      "@org/shared/ui": ["./libs/shared/ui/src/index.ts"]
+      "@org/shared/ui": ["./libs/shared/ui/src/index.ts"],
+      "@org/api/pagination": ["./libs/api/pagination/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

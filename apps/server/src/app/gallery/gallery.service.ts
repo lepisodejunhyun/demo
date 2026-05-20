@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { OffsetPaginationDto } from "../../libs/dtos";
+import { OffsetPaginationDto, paginate } from "@org/api/pagination";
 import { Attachment, Gallery } from "@prisma/client";
 import { CreateGalleryDto } from "./dtos/create-gallery.dto";
 
@@ -48,22 +48,15 @@ export class GalleryService {
      * @returns {Promise<OffsetPaginationDto<Gallery & { thumbnailUrl: string | null }>>}
      */
     async findAll(page: number, limit: number): Promise<OffsetPaginationDto<Gallery & { thumbnailUrl: string | null }>> {
-        const skip = (page - 1) * limit;
-
-        const [items, totalItems] = await Promise.all([
-            this.prisma.gallery.findMany({
-                where: { deletedAt: null },
-                orderBy: { createdAt: 'desc' },
-                skip,
-                take: limit,
-            }),
-            this.prisma.gallery.count({
-                where: { deletedAt: null },
-            }),
-        ]);
+        const result = await paginate(this.prisma.gallery, {
+            page,
+            limit,
+            where: { deletedAt: null },
+            orderBy: { createdAt: 'desc' },
+        });
 
         const itemsWithThumbnail = await Promise.all(
-            items.map(async (gallery) => {
+            result.items.map(async (gallery) => {
                 const firstImage = await this.prisma.attachment.findFirst({
                     where: {
                         entityType: 'gallery',
@@ -79,14 +72,8 @@ export class GalleryService {
         );
 
         return {
+            ...result,
             items: itemsWithThumbnail,
-            pageInfo: {
-                page,
-                limit,
-                pageItems: items.length,
-                totalItems,
-                totalPages: Math.ceil(totalItems / limit),
-            },
         };
     }
 

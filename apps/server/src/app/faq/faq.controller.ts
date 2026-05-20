@@ -4,7 +4,7 @@ import { FaqService } from "./faq.service";
 import { plainToInstance } from "class-transformer";
 import { FaqDto } from "./dtos/faq.dto";
 import { CreateFaqDto } from "./dtos/create-faq.dto";
-import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "../../libs/dtos";
+import { OffsetPaginationDto, PageInfoDto, PaginationQueryDto } from "@org/api/pagination";
 import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 
 @ApiTags('faq')
