@@ -6,5 +6,7 @@
         }
     </label>
     <ng-content />
-    <ng-content select="[slot=error]" />
+    @if (showError) {
+    <p class="text-error text-xs mt-1">필수 입력 항목입니다.</p>
+    }
 </div>

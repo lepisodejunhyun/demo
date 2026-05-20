@@ -76,12 +76,7 @@ export class TermsService {
      * @returns {Promise<Terms>}
      */
     async create(data: CreateTermsDto): Promise<Terms> {
-        return this.prisma.terms.create({
-            data: {
-                title: data.title,
-                content: data.content,
-            },
-        });
+        return this.prisma.terms.create({ data });
     }
 
     /**
@@ -96,10 +91,7 @@ export class TermsService {
 
         return this.prisma.terms.update({
             where: { id },
-            data: {
-                title: data.title,
-                content: data.content,
-            },
+            data,
         });
     }
 

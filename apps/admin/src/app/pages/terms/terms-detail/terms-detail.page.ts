@@ -1,16 +1,18 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnInit, signal } from "@angular/core";
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 import { Api, termsControllerFindById, termsControllerRemove, TermsDto } from "@api-client";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
+import { ButtonComponent } from "../../../components/button/button.component";
+import { StatusBadgeComponent } from "../../../components/status-badge/status-badge.component";
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-terms-detail',
     templateUrl: 'terms-detail.page.html',
-    imports: [CommonModule, RouterLink, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent]
+    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, ButtonComponent, StatusBadgeComponent]
 })
 export default class TermsDetailPage implements OnInit {
     private readonly api = inject(Api);

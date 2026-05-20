@@ -6,11 +6,11 @@
 </app-page-header>
 
 <app-form-view [formGroup]="form" [submitText]="isEditMode ? '수정하기' : '등록하기'" (cancel)="goBack()" (submit)="onSubmit()">
-    <app-form-field label="질문" for="faq-question" [required]="true">
+    <app-form-field label="질문" for="faq-question" [required]="true" [control]="form.controls.question">
         <app-form-input formControlName="question" id="faq-question" [maxlength]="100" placeholder="질문을 입력하세요" />
     </app-form-field>
 
-    <app-form-field label="답변" for="faq-answer" [required]="true">
+    <app-form-field label="답변" for="faq-answer" [required]="true" [control]="form.controls.answer">
         <app-form-textarea formControlName="answer" id="faq-answer" [rows]="16" [maxlength]="2000"
             placeholder="답변을 입력하세요" />
     </app-form-field>

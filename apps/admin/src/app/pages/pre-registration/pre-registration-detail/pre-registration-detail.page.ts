@@ -1,16 +1,19 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnInit, signal } from "@angular/core";
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 import { Api, preRegistrationControllerFindById, preRegistrationControllerRemove, PreRegistrationDto } from "@api-client";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
+import { ButtonComponent } from "../../../components/button/button.component";
+import { DetailFieldComponent } from "../../../components/detail-field/detail-field.component";
+import { StatusBadgeComponent } from "../../../components/status-badge/status-badge.component";
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-pre-registration-detail',
     templateUrl: 'pre-registration-detail.page.html',
-    imports: [CommonModule, RouterLink, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent]
+    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, ButtonComponent, DetailFieldComponent, StatusBadgeComponent]
 })
 export default class PreRegistrationDetailPage implements OnInit {
     private readonly api = inject(Api);

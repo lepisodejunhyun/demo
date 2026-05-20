@@ -12,7 +12,11 @@ import {
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
+import { FormFieldComponent } from "../../../components/form-field/form-field.component";
 import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
+import { ButtonComponent } from "../../../components/button/button.component";
+import { DetailFieldComponent } from "../../../components/detail-field/detail-field.component";
+import { StatusBadgeComponent } from "../../../components/status-badge/status-badge.component";
 import { ToastrService } from 'ngx-toastr';
 
 
@@ -20,7 +24,7 @@ import { ToastrService } from 'ngx-toastr';
     selector: 'app-inquiry-detail',
     templateUrl: 'inquiry-detail.page.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, FormTextareaComponent],
+    imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, FormFieldComponent, FormTextareaComponent, ButtonComponent, DetailFieldComponent, StatusBadgeComponent],
 })
 export default class InquiryDetailPage implements OnInit {
     private readonly api = inject(Api);
@@ -76,7 +80,19 @@ export default class InquiryDetailPage implements OnInit {
     }
 
     async onSubmitAnswer(): Promise<void> {
-        if (this.answerForm.invalid) return;
+        this.answerForm.markAllAsTouched();
+        if (this.answerForm.invalid) {
+            setTimeout(() => {
+                const el = document.querySelector<HTMLElement>(
+                    'app-form-textarea.ng-invalid textarea'
+                );
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.focus();
+                }
+            }, 0);
+            return;
+        }
 
         const data = this.answerForm.getRawValue();
         this.errorMessage.set('');

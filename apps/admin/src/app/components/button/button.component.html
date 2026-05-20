@@ -1,0 +1,15 @@
+@if (link()) {
+<a [routerLink]="link()" [class]="classes()">
+    @if (icon()) {
+    <span class="material-symbols-outlined text-[18px]">{{ icon() }}</span>
+    }
+    {{ label() }}
+</a>
+} @else {
+<button type="button" [class]="classes()" (click)="onClick()">
+    @if (icon()) {
+    <span class="material-symbols-outlined text-[18px]">{{ icon() }}</span>
+    }
+    {{ label() }}
+</button>
+}

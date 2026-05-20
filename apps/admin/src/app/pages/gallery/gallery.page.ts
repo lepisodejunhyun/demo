@@ -2,7 +2,8 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
 import { CardGridComponent } from "../../components/card-grid/card-grid.component";
-import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
+import { ButtonComponent } from "../../components/button/button.component";
 import { Api, galleryControllerFindAll, GalleryDto } from "@api-client";
 import { PageInfo } from "../../components/data-table/data-table.types";
 import { CardGridConfig } from "../../components/card-grid/card-grid.types";
@@ -11,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
     selector: 'app-gallery',
     templateUrl: './gallery.page.html',
-    imports: [CommonModule, PageHeaderComponent, CardGridComponent, RouterLink]
+    imports: [CommonModule, PageHeaderComponent, CardGridComponent, ButtonComponent]
 })
 export default class GalleryPage implements OnInit {
     private readonly api = inject(Api);
@@ -25,8 +26,7 @@ export default class GalleryPage implements OnInit {
     config: CardGridConfig = {
         imageField: 'thumbnailUrl',
         titleField: 'title',
-        dateField: 'createdAt',
-    };
+        dateField: 'createdAt' };
 
     ngOnInit(): void {
         this.route.queryParams.subscribe(params => {
@@ -39,8 +39,7 @@ export default class GalleryPage implements OnInit {
         try {
             const result = await this.api.invoke(galleryControllerFindAll, {
                 page,
-                limit: 8,
-            });
+                limit: 8 });
             this.galleries.set(result.items ?? []);
             this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
@@ -53,8 +52,7 @@ export default class GalleryPage implements OnInit {
         this.router.navigate([], {
             queryParams: {
                 page
-            },
-        });
+            } });
     }
 
     goDetail(gallery: GalleryDto): void {

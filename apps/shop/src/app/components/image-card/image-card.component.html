@@ -1,0 +1,16 @@
+<div class="group overflow-hidden cursor-pointer">
+  <div class="aspect-[4/3] overflow-hidden bg-slate-100 mb-4">
+    @if (imageUrl()) {
+      <img [src]="imageUrl()" [alt]="alt()"
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+    } @else {
+      <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400 group-hover:scale-105 transition-transform duration-500">
+        <span class="material-symbols-outlined text-5xl mb-2 opacity-50">{{ fallbackIcon() }}</span>
+        <span class="text-xs font-medium uppercase tracking-widest opacity-50">No Image</span>
+      </div>
+    }
+  </div>
+  <div>
+    <ng-content />
+  </div>
+</div>

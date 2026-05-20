@@ -2,7 +2,8 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
 import { Api, eventControllerFindAll, EventDto } from "@api-client";
-import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
+import { ButtonComponent } from "../../components/button/button.component";
 import { ColumnDef, PageInfo } from "../../components/data-table/data-table.types";
 import { DataTableComponent } from "../../components/data-table/data-table.component";
 import { ToastrService } from 'ngx-toastr';
@@ -10,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
     selector: 'app-event',
     templateUrl: './event.page.html',
-    imports: [CommonModule, PageHeaderComponent, DataTableComponent, RouterLink]
+    imports: [CommonModule, PageHeaderComponent, DataTableComponent, ButtonComponent]
 })
 export default class EventPage implements OnInit {
     private readonly api = inject(Api);
@@ -40,8 +41,7 @@ export default class EventPage implements OnInit {
         try {
             const result = await this.api.invoke(eventControllerFindAll, {
                 page,
-                limit: 10,
-            });
+                limit: 10 });
             this.events.set(result.items ?? []);
             this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
@@ -54,8 +54,7 @@ export default class EventPage implements OnInit {
         this.router.navigate([], {
             queryParams: {
                 page
-            },
-        });
+            } });
     }
 
     goDetail(event: EventDto): void {

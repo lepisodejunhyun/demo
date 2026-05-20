@@ -1,11 +1,7 @@
 @if (inquiry()) {
 <app-page-header title="1:1 문의 상세">
     <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
-    <button slot="actions" (click)="onDelete()"
-        class="px-4 py-2 text-error font-semibold text-xs border border-transparent rounded hover:bg-error-container/20 transition-colors flex items-center gap-1 cursor-pointer">
-        <span class="material-symbols-outlined text-[18px]">delete</span>
-        삭제
-    </button>
+     <app-button slot="actions" variant="ghost-error" icon="delete" label="삭제" (action)="onDelete()" />
 </app-page-header>
 
 <app-detail-view [createdAt]="inquiry()!.createdAt" [updatedAt]="inquiry()!.updatedAt">
@@ -14,31 +10,33 @@
         <h3 class="text-lg font-semibold mb-4">문의 내용</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-                <p class="text-sm text-on-surface-variant mb-1 ">제목</p>
-                <p class="text-base font-medium break-words">{{ inquiry()!.title }}</p>
+                <app-detail-field label="제목" variant="stack">
+                    <span class="break-words">{{ inquiry()!.title }}</span>
+                </app-detail-field>
             </div>
             <div>
-                <p class="text-sm text-on-surface-variant mb-1">작성자</p>
-                <p class="text-base font-medium">{{ inquiry()!.authorName }} ({{ inquiry()!.authorEmail }})</p>
+                <app-detail-field label="작성자" variant="stack">{{ inquiry()!.authorName }} ({{ inquiry()!.authorEmail }})</app-detail-field>
             </div>
         </div>
         <div class="mb-4">
-            <p class="text-sm text-on-surface-variant mb-1">내용</p>
-            <div class="text-base whitespace-pre-wrap bg-surface-container-low rounded p-4 break-words">{{
-                inquiry()!.content
-                }}</div>
+            <app-detail-field label="내용" variant="stack">
+                <div class="whitespace-pre-wrap bg-surface-container-low rounded p-4 break-words">{{
+                    inquiry()!.content
+                    }}</div>
+            </app-detail-field>
         </div>
 
         <!-- 첨부 이미지 -->
         @if (inquiry()!.images && inquiry()!.images.length > 0) {
         <div>
-            <p class="text-sm text-on-surface-variant mb-2">첨부 이미지</p>
-            <div class="flex flex-wrap gap-3">
-                @for (image of inquiry()!.images; track image.id) {
-                <img [src]="image.url" [alt]="image.fileName"
-                    class="w-32 h-32 object-cover rounded border border-outline-variant" />
-                }
-            </div>
+            <app-detail-field label="첨부 이미지" variant="stack">
+                <div class="flex flex-wrap gap-3">
+                    @for (image of inquiry()!.images; track image.id) {
+                    <img [src]="image.url" [alt]="image.fileName"
+                        class="w-32 h-32 object-cover rounded border border-outline-variant" />
+                    }
+                </div>
+            </app-detail-field>
         </div>
         }
     </div>
@@ -47,23 +45,19 @@
     <div class="border-t border-outline-variant pt-6">
         <div class="flex items-center gap-3 mb-4">
             <h3 class="text-lg font-semibold">답변</h3>
-            @if (inquiry()!.status === 'COMPLETED') {
-            <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-primary/10 text-primary">답변 완료</span>
-            } @else {
-            <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-outline/10 text-outline">답변 대기</span>
-            }
+            <app-status-badge
+                [label]="inquiry()!.status === 'COMPLETED' ? '답변 완료' : '답변 대기'"
+                [variant]="inquiry()!.status === 'COMPLETED' ? 'primary' : 'outline'"
+                [pill]="true" />
             @if (inquiry()!.answeredAt) {
             <span class="text-xs text-on-surface-variant">{{ inquiry()!.answeredAt | date:'yyyy.MM.dd HH:mm' }}</span>
             }
         </div>
         <form [formGroup]="answerForm" (ngSubmit)="onSubmitAnswer()">
 
-            <div class="mb-4">
-                <label class="text-sm font-medium text-on-surface mb-1 block">
-                    답변 내용 <span class="text-error">*</span>
-                </label>
-                <app-form-textarea formControlName="answer" [rows]="8" [maxlength]="2000" placeholder="답변을 입력하세요" />
-            </div>
+            <app-form-field label="답변 내용" for="inquiry-answer" [required]="true" [control]="answerForm.controls.answer" class="mb-4">
+                <app-form-textarea formControlName="answer" id="inquiry-answer" [rows]="8" [maxlength]="2000" placeholder="답변을 입력하세요" />
+            </app-form-field>
 
             @if (errorMessage()) {
             <p class="text-error text-sm mb-3">{{ errorMessage() }}</p>

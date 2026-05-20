@@ -7,7 +7,7 @@
 
 <app-form-view [formGroup]="form" [submitText]="isEditMode ? '수정하기' : '등록하기'" (cancel)="goBack()" (submit)="onSubmit()">
 
-    <app-form-field label="제목" for="gallery-title" [required]="true">
+    <app-form-field label="제목" for="gallery-title" [required]="true" [control]="form.controls.title">
         <app-form-input formControlName="title" id="gallery-title" [maxlength]="100" placeholder="제목을 입력하세요" />
     </app-form-field>
 

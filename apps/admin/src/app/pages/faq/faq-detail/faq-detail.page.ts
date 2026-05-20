@@ -1,16 +1,17 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnInit, signal } from "@angular/core";
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 import { Api, faqControllerFindById, faqControllerRemove, FaqDto } from "@api-client";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
+import { ButtonComponent } from "../../../components/button/button.component";
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-faq-detail',
     templateUrl: './faq-detail.page.html',
-    imports: [CommonModule, RouterLink, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent]
+    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, ButtonComponent]
 })
 export default class FaqDetailPage implements OnInit {
     private readonly api = inject(Api);

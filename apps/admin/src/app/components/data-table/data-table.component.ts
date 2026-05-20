@@ -1,11 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component, input, output } from "@angular/core";
 import { ColumnDef, PageInfo } from "./data-table.types";
+import { StatusBadgeComponent } from "../status-badge/status-badge.component";
 
 @Component({
     selector: 'app-data-table',
     templateUrl: './data-table.component.html',
-    imports: [CommonModule],
+    imports: [CommonModule, StatusBadgeComponent],
 })
 export class DataTableComponent {
     columns = input.required<ColumnDef[]>();

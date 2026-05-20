@@ -8,7 +8,7 @@
 <app-form-view [formGroup]="form" [submitText]="isEditMode ? '수정하기' : '등록하기'" (cancel)="goBack()" (submit)="onSubmit()">
 
     <!-- 행사명 -->
-    <app-form-field label="행사명" for="event-title" [required]="true">
+    <app-form-field label="행사명" for="event-title" [required]="true" [control]="form.controls.title">
         <app-form-input formControlName="title" id="event-title" [maxlength]="100" placeholder="행사명을 입력하세요" />
         @if (form.get('title')?.errors?.['maxlength'] && form.get('title')?.touched) {
         <p class="text-error text-xs mt-1">행사명은 최대 100자까지 입력할 수 있습니다.</p>
@@ -16,7 +16,7 @@
     </app-form-field>
 
     <!-- 행사 내용 -->
-    <app-form-field label="행사 내용" for="event-content" [required]="true">
+    <app-form-field label="행사 내용" for="event-content" [required]="true" [control]="form.controls.content">
         <app-form-textarea formControlName="content" id="event-content" [rows]="10" [maxlength]="2000"
             placeholder="행사 내용을 입력하세요" />
         @if (form.get('content')?.errors?.['maxlength'] && form.get('content')?.touched) {
@@ -26,28 +26,31 @@
 
     <!-- 행사 기간 (2열) -->
     <div class="grid grid-cols-2 gap-4">
-        <app-form-field label="행사 시작일" for="event-start-date" [required]="true">
+        <app-form-field label="행사 시작일" for="event-start-date" [required]="true" [control]="form.controls.startDate">
             <app-form-input formControlName="startDate" id="event-start-date" type="date" />
         </app-form-field>
 
-        <app-form-field label="행사 종료일" for="event-end-date" [required]="true">
+        <app-form-field label="행사 종료일" for="event-end-date" [required]="true" [control]="form.controls.endDate">
             <app-form-input formControlName="endDate" id="event-end-date" type="date" />
         </app-form-field>
     </div>
-    @if (form.errors?.['endDateBeforeStart'] && form.get('endDate')?.touched) {
+    @if (form.errors?.['endDateBeforeStart'] && (form.get('startDate')?.touched || form.get('endDate')?.touched)) {
     <p class="text-error text-xs -mt-2">종료일은 시작일 이후여야 합니다.</p>
     }
 
     <!-- 운영 시간 (2열) -->
     <div class="grid grid-cols-2 gap-4">
-        <app-form-field label="운영 시작 시간" for="event-start-time" [required]="true">
+        <app-form-field label="운영 시작 시간" for="event-start-time" [required]="true" [control]="form.controls.operatingStartTime">
             <app-form-input formControlName="operatingStartTime" id="event-start-time" type="time" />
         </app-form-field>
 
-        <app-form-field label="운영 종료 시간" for="event-end-time" [required]="true">
+        <app-form-field label="운영 종료 시간" for="event-end-time" [required]="true" [control]="form.controls.operatingEndTime">
             <app-form-input formControlName="operatingEndTime" id="event-end-time" type="time" />
         </app-form-field>
     </div>
+    @if (form.errors?.['operatingEndNotAfterStart'] && (form.get('operatingStartTime')?.touched || form.get('operatingEndTime')?.touched)) {
+    <p class="text-error text-xs -mt-2">운영 종료 시간은 시작 시간 이후여야 합니다.</p>
+    }
 
     <!-- 장소 & 연락처 (2열) -->
     <div class="grid grid-cols-2 gap-4">
@@ -75,10 +78,19 @@
             <app-form-input formControlName="preRegEndDate" id="event-prereg-end" type="date" />
         </app-form-field>
     </div>
-    @if (form.errors?.['preRegEndBeforeStart'] && form.get('preRegEndDate')?.touched) {
+    @if (form.errors?.['preRegStartWithoutEnd'] && form.get('preRegStartDate')?.touched) {
+    <p class="text-error text-xs -mt-2">사전 등록 종료일을 함께 입력해주세요.</p>
+    }
+    @if (form.errors?.['preRegEndWithoutStart'] && form.get('preRegEndDate')?.touched) {
+    <p class="text-error text-xs -mt-2">사전 등록 시작일을 함께 입력해주세요.</p>
+    }
+    @if (form.errors?.['preRegEndBeforeStart'] && (form.get('preRegStartDate')?.touched || form.get('preRegEndDate')?.touched)) {
     <p class="text-error text-xs -mt-2">사전 등록 종료일은 시작일 이후여야 합니다.</p>
     }
-    @if (form.errors?.['preRegEndAfterEventStart'] && form.get('preRegEndDate')?.touched) {
+    @if (form.errors?.['preRegStartAfterEventStart'] && (form.get('preRegStartDate')?.touched || form.get('startDate')?.touched)) {
+    <p class="text-error text-xs -mt-2">사전 등록 시작일은 행사 시작일 이전이어야 합니다.</p>
+    }
+    @if (form.errors?.['preRegEndAfterEventStart'] && (form.get('preRegEndDate')?.touched || form.get('startDate')?.touched)) {
     <p class="text-error text-xs -mt-2">사전 등록 종료일은 행사 시작일 이전이어야 합니다.</p>
     }
 

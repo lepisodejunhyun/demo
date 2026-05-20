@@ -10,12 +10,9 @@
 <div class="border-t border-outline-variant pt-10">
 
     @if (businessInfo()) {
-    <div class="space-y-6">
+    <div class="grid grid-cols-[160px_1fr] gap-x-4 gap-y-6 items-start">
         @for (field of displayFields; track field.key) {
-        <div class="grid grid-cols-[160px_1fr] items-start gap-4">
-            <span class="text-sm font-semibold text-on-surface-variant">{{ field.label }}</span>
-            <span class="text-base text-on-surface break-words">{{ businessInfo()![field.key] }}</span>
-        </div>
+            <app-detail-field [label]="field.label">{{ businessInfo()![field.key] }}</app-detail-field>
         }
     </div>
     } @else {

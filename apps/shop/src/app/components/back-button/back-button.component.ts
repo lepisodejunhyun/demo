@@ -2,18 +2,7 @@ import { Component, output } from '@angular/core';
 
 @Component({
   selector: 'app-back-button',
-  template: `
-    <div class="mb-6 flex items-center justify-between">
-      <button (click)="back.emit()"
-        class="flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">
-        <span class="material-symbols-outlined text-lg mr-1">arrow_back</span>
-        목록으로
-      </button>
-      <div class="flex items-center gap-2">
-        <ng-content select="[slot=actions]" />
-      </div>
-    </div>
-  `,
+  templateUrl: './back-button.component.html',
 })
 export class BackButtonComponent {
   back = output();

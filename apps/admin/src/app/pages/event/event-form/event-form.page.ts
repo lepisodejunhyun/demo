@@ -16,18 +16,38 @@ import { ToastrService } from 'ngx-toastr';
 function eventDateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const startDate = control.get('startDate')?.value;
     const endDate = control.get('endDate')?.value;
+    const operatingStartTime = control.get('operatingStartTime')?.value;
+    const operatingEndTime = control.get('operatingEndTime')?.value;
     const preRegStartDate = control.get('preRegStartDate')?.value;
     const preRegEndDate = control.get('preRegEndDate')?.value;
 
     const errors: ValidationErrors = {};
 
+    // 행사 종료일 < 행사 시작일
     if (startDate && endDate && endDate < startDate) {
         errors['endDateBeforeStart'] = true;
     }
 
-    if (preRegEndDate) {
-        if (preRegStartDate && preRegEndDate < preRegStartDate) {
+    // 운영 종료 시간 <= 운영 시작 시간
+    if (operatingStartTime && operatingEndTime && operatingEndTime <= operatingStartTime) {
+        errors['operatingEndNotAfterStart'] = true;
+    }
+
+    // 사전등록 날짜 한쪽만 입력된 경우
+    if (preRegStartDate && !preRegEndDate) {
+        errors['preRegStartWithoutEnd'] = true;
+    }
+    if (!preRegStartDate && preRegEndDate) {
+        errors['preRegEndWithoutStart'] = true;
+    }
+
+    // 사전등록 날짜 범위 검증 (둘 다 입력된 경우)
+    if (preRegStartDate && preRegEndDate) {
+        if (preRegEndDate < preRegStartDate) {
             errors['preRegEndBeforeStart'] = true;
+        }
+        if (startDate && preRegStartDate >= startDate) {
+            errors['preRegStartAfterEventStart'] = true;
         }
         if (startDate && preRegEndDate > startDate) {
             errors['preRegEndAfterEventStart'] = true;

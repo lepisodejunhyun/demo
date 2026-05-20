@@ -19,13 +19,15 @@
                     @if (col.type === 'date') {
                     {{ getValue(item, col.field) | date: (col.dateFormat || 'yyyy.MM.dd') }}
                     } @else if (col.type === 'boolean') {
-                    <span class="text-[11px] font-bold px-2 py-0.5 rounded"
-                        [class.text-error]="getValue(item, col.field)" [class.bg-error/10]="getValue(item, col.field)"
-                        [class.text-on-surface-variant]="!getValue(item, col.field)"
-                        [class.bg-surface-container-low]="!getValue(item, col.field)">
-                        {{ getValue(item, col.field) ? (col.booleanLabels?.true || 'Y') : (col.booleanLabels?.false ||
-                        'N') }}
-                    </span>
+                    <app-status-badge
+                        [label]="getValue(item, col.field) ? (col.booleanLabels?.true || 'Y') : (col.booleanLabels?.false || 'N')"
+                        [variant]="getValue(item, col.field) ? 'error' : 'neutral'"
+                        size="xs" />
+                    } @else if (col.type === 'badge' && col.badgeMap) {
+                    <app-status-badge
+                        [label]="col.badgeMap[getValue(item, col.field)]?.label || getValue(item, col.field)"
+                        [variant]="col.badgeMap[getValue(item, col.field)]?.variant || 'neutral'"
+                        size="xs" [pill]="true" />
                     } @else {
                     {{ getValue(item, col.field) }}
                     }

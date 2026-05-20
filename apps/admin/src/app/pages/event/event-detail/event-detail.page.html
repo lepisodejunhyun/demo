@@ -1,16 +1,8 @@
 @if (event()) {
 <app-page-header [title]="event()!.title">
     <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
-    <a slot="actions" [routerLink]="'/event/' + event()!.id + '/edit'"
-        class="px-4 py-2 text-primary font-semibold text-xs rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
-        <span class="material-symbols-outlined text-[18px]">edit</span>
-        수정
-    </a>
-    <button slot="actions" (click)="onDelete()"
-        class="px-4 py-2 text-error font-semibold text-xs border border-transparent rounded hover:bg-error-container/20 transition-colors flex items-center gap-1 cursor-pointer">
-        <span class="material-symbols-outlined text-[18px]">delete</span>
-        삭제
-    </button>
+    <app-button slot="actions" variant="ghost-primary" icon="edit" label="수정" [link]="'/event/' + event()!.id + '/edit'" />
+    <app-button slot="actions" variant="ghost-error" icon="delete" label="삭제" (action)="onDelete()" />
 </app-page-header>
 
 <app-detail-view [createdAt]="event()!.createdAt" [updatedAt]="event()!.updatedAt">
@@ -25,26 +17,26 @@
         }
 
         <div class="grid grid-cols-[140px_1fr] gap-y-6 text-base content-start flex-1">
-            <span class="font-semibold text-on-surface-variant">행사 기간</span>
-            <span>{{ event()!.startDate | date:'yyyy.MM.dd' }} ~ {{ event()!.endDate | date:'yyyy.MM.dd' }}</span>
+            <app-detail-field label="행사 기간">
+                {{ event()!.startDate | date:'yyyy.MM.dd' }} ~ {{ event()!.endDate | date:'yyyy.MM.dd' }}
+            </app-detail-field>
 
-            <span class="font-semibold text-on-surface-variant">운영 시간</span>
-            <span>{{ event()!.operatingStartTime }} ~ {{ event()!.operatingEndTime }}</span>
+            <app-detail-field label="운영 시간">
+                {{ event()!.operatingStartTime }} ~ {{ event()!.operatingEndTime }}
+            </app-detail-field>
 
             @if (event()!.location) {
-            <span class="font-semibold text-on-surface-variant">행사 장소</span>
-            <span class="break-words min-w-0">{{ event()!.location }}</span>
+            <app-detail-field label="행사 장소">{{ event()!.location }}</app-detail-field>
             }
 
             @if (event()!.contactNumber) {
-            <span class="font-semibold text-on-surface-variant">연락처</span>
-            <span>{{ event()!.contactNumber }}</span>
+            <app-detail-field label="연락처">{{ event()!.contactNumber }}</app-detail-field>
             }
 
             @if (event()!.preRegStartDate && event()!.preRegEndDate) {
-            <span class="font-semibold text-on-surface-variant">사전 등록 기간</span>
-            <span>{{ event()!.preRegStartDate | date:'yyyy.MM.dd' }} ~ {{ event()!.preRegEndDate | date:'yyyy.MM.dd'
-                }}</span>
+            <app-detail-field label="사전 등록 기간">
+                {{ event()!.preRegStartDate | date:'yyyy.MM.dd' }} ~ {{ event()!.preRegEndDate | date:'yyyy.MM.dd' }}
+            </app-detail-field>
             }
         </div>
 

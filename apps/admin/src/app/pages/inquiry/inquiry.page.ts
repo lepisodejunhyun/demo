@@ -19,18 +19,19 @@ export default class InquiryPage implements OnInit {
     private readonly route = inject(ActivatedRoute);
     private readonly toast = inject(ToastrService);
 
-    inquiries = signal<(InquiryDto & { statusLabel: string })[]>([]);
+    inquiries = signal<InquiryDto[]>([]);
     pageInfo = signal<PageInfo | null>(null);
-
-    readonly statusLabels: Record<string, string> = {
-        'PENDING': '답변 대기',
-        'COMPLETED': '답변 완료',
-    };
 
     columns: ColumnDef[] = [
         { field: 'title', name: '제목', truncate: true },
         { field: 'authorName', name: '작성자', width: 'w-28' },
-        { field: 'statusLabel', name: '상태', width: 'w-28' },
+        {
+            field: 'status', name: '상태', type: 'badge', width: 'w-28',
+            badgeMap: {
+                'COMPLETED': { label: '답변 완료', variant: 'primary' },
+                'PENDING': { label: '답변 대기', variant: 'outline' },
+            },
+        },
         { field: 'createdAt', name: '등록일', type: 'date', width: 'w-44' },
     ];
 
@@ -47,10 +48,7 @@ export default class InquiryPage implements OnInit {
                 page,
                 limit: 10,
             });
-            this.inquiries.set((result.items ?? []).map((item: InquiryDto) => ({
-                ...item,
-                statusLabel: this.statusLabels[item.status] ?? item.status,
-            })));
+            this.inquiries.set(result.items ?? []);
             this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
             console.error('1:1 문의 목록 조회 실패', error);

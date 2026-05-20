@@ -1,32 +1,16 @@
 @if (terms()) {
 <app-page-header [title]="terms()!.title">
     <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
-    <a slot="actions" [routerLink]="'/terms/' + terms()!.id + '/edit'"
-        class="px-4 py-2 text-primary font-semibold text-xs rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
-        <span class="material-symbols-outlined text-[18px]">edit</span>
-        수정
-    </a>
-    <button slot="actions" (click)="onDelete()"
-        class="px-4 py-2 text-error font-semibold text-xs border border-transparent rounded hover:bg-error-container/20 transition-colors flex items-center gap-1 cursor-pointer">
-        <span class="material-symbols-outlined text-[18px]">delete</span>
-        삭제
-    </button>
+    <app-button slot="actions" variant="ghost-primary" icon="edit" label="수정" [link]="'/terms/' + terms()!.id + '/edit'" />
+    <app-button slot="actions" variant="ghost-error" icon="delete" label="삭제" (action)="onDelete()" />
 </app-page-header>
 
 <app-detail-view [createdAt]="terms()!.createdAt" [updatedAt]="terms()!.updatedAt">
     <div class="mb-6">
-        @if (terms()!.isRequired) {
-        <span class="inline-flex items-center gap-1 text-xs font-bold text-error bg-error/10 px-2.5 py-1 rounded">
-            <span class="material-symbols-outlined text-sm">lock</span>
-            필수 약관
-        </span>
-        } @else {
-        <span
-            class="inline-flex items-center gap-1 text-xs font-bold text-on-surface-variant bg-surface-container-low px-2.5 py-1 rounded">
-            <span class="material-symbols-outlined text-sm">lock_open</span>
-            선택 약관
-        </span>
-        }
+        <app-status-badge
+            [label]="terms()!.isRequired ? '필수 약관' : '선택 약관'"
+            [variant]="terms()!.isRequired ? 'error' : 'neutral'"
+            [icon]="terms()!.isRequired ? 'lock' : 'lock_open'" />
     </div>
     <div class="whitespace-pre-wrap">{{ terms()!.content }}</div>
 </app-detail-view>

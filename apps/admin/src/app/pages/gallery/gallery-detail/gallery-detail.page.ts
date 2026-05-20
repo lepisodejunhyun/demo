@@ -1,16 +1,17 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnInit, signal } from "@angular/core";
-import { Router, RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { DetailViewComponent } from "../../../components/detail-view/detail-view.component";
+import { ButtonComponent } from "../../../components/button/button.component";
 import { ToastrService } from 'ngx-toastr';
 import { Api, galleryControllerFindById, galleryControllerRemove, GalleryDto } from "@api-client";
 
 @Component({
     selector: 'app-gallery-detail',
     templateUrl: './gallery-detail.page.html',
-    imports: [CommonModule, RouterLink, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent]
+    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, ButtonComponent]
 })
 export default class GalleryDetailPage implements OnInit {
     private readonly api = inject(Api);

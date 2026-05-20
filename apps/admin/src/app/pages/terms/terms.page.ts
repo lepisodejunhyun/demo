@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, OnInit, signal } from "@angular/core";
-import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
+import { ButtonComponent } from "../../components/button/button.component";
 import { Api, termsControllerFindAll, TermsDto } from "@api-client";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
 import { DataTableComponent } from "../../components/data-table/data-table.component";
@@ -10,8 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
     selector: 'app-terms',
     templateUrl: './terms.page.html',
-    imports: [CommonModule, PageHeaderComponent, DataTableComponent, RouterLink],
-})
+    imports: [CommonModule, PageHeaderComponent, DataTableComponent, ButtonComponent] })
 export default class TermsPage implements OnInit {
 
     private readonly api = inject(Api);
@@ -40,8 +40,7 @@ export default class TermsPage implements OnInit {
         try {
             const result = await this.api.invoke(termsControllerFindAll, {
                 page,
-                limit: 10,
-            });
+                limit: 10 });
             this.terms.set(result.items ?? []);
             this.pageInfo.set(result.pageInfo ?? null);
         } catch (error) {
@@ -54,8 +53,7 @@ export default class TermsPage implements OnInit {
         this.router.navigate([], {
             queryParams: {
                 page
-            },
-        });
+            } });
     }
 
     goDetail(item: TermsDto): void {

@@ -10,27 +10,7 @@ export interface TabItem {
 @Component({
   selector: 'app-tab-nav',
   imports: [RouterLink, RouterLinkActive],
-  template: `
-    <div class="flex flex-wrap gap-2 border-b border-outline-variant pb-1">
-      @for (tab of items(); track tab.label) {
-        @if (tab.link) {
-          <a [routerLink]="tab.link" routerLinkActive="text-primary border-primary"
-            [routerLinkActiveOptions]="{ exact: false }"
-            class="px-4 py-2 text-sm font-semibold border-b-2 border-transparent transition-colors hover:text-primary -mb-[5px]">
-            {{ tab.label }}
-          </a>
-        } @else {
-          <button (click)="tabChange.emit(tab.id!)"
-            [class.text-primary]="activeId() === tab.id"
-            [class.border-primary]="activeId() === tab.id"
-            [class.border-transparent]="activeId() !== tab.id"
-            class="px-4 py-2 text-sm font-semibold border-b-2 transition-colors cursor-pointer hover:text-primary -mb-[5px]">
-            {{ tab.label }}
-          </button>
-        }
-      }
-    </div>
-  `,
+  templateUrl: './tab-nav.component.html',
 })
 export class TabNavComponent {
   items = input.required<TabItem[]>();

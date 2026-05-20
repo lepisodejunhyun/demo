@@ -1,16 +1,8 @@
 @if (gallery()) {
 <app-page-header [title]="gallery()!.title">
     <app-breadcrumb slot="breadcrumb" [items]="breadcrumbs" />
-    <a slot="actions" [routerLink]="'/gallery/' + gallery()!.id + '/edit'"
-        class="px-4 py-2 text-primary font-semibold text-xs rounded hover:bg-surface-container-low transition-colors flex items-center gap-1 cursor-pointer">
-        <span class="material-symbols-outlined text-[18px]">edit</span>
-        수정
-    </a>
-    <button slot="actions" (click)="onDelete()"
-        class="px-4 py-2 text-error font-semibold text-xs border border-transparent rounded hover:bg-error-container/20 transition-colors flex items-center gap-1 cursor-pointer">
-        <span class="material-symbols-outlined text-[18px]">delete</span>
-        삭제
-    </button>
+     <app-button slot="actions" variant="ghost-primary" icon="edit" label="수정" [link]="'/gallery/' + gallery()!.id + '/edit'" />
+    <app-button slot="actions" variant="ghost-error" icon="delete" label="삭제" (action)="onDelete()" />
 </app-page-header>
 
 <app-detail-view [createdAt]="gallery()!.createdAt" [updatedAt]="gallery()!.updatedAt">
