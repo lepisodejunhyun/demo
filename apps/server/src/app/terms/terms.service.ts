@@ -11,6 +11,16 @@ export class TermsService {
     ) { }
 
     /**
+     * @name create
+     * @description 약관 신규 등록
+     * @param {CreateTermsDto} data
+     * @returns {Promise<Terms>}
+     */
+    async create(data: CreateTermsDto): Promise<Terms> {
+        return this.prisma.terms.create({ data });
+    }
+
+    /**
      * @name findAll
      * @description 약관 페이지네이션 조회
      * @param {number} page - 페이지 번호 (기본값: 1)
@@ -46,16 +56,6 @@ export class TermsService {
     }
 
     /**
-     * @name create
-     * @description 약관 신규 등록
-     * @param {CreateTermsDto} data
-     * @returns {Promise<Terms>}
-     */
-    async create(data: CreateTermsDto): Promise<Terms> {
-        return this.prisma.terms.create({ data });
-    }
-
-    /**
      * @name update
      * @description 약관 수정
      * @param {string} id
@@ -63,7 +63,7 @@ export class TermsService {
      * @returns {Promise<Terms>}
      */
     async update(id: string, data: CreateTermsDto): Promise<Terms> {
-        await this.findById(id);
+        await this.assertExists(id);
 
         return this.prisma.terms.update({
             where: { id },
@@ -78,7 +78,7 @@ export class TermsService {
      * @returns {Promise<Terms>}
      */
     async remove(id: string): Promise<Terms> {
-        await this.findById(id);
+        await this.assertExists(id);
 
         return this.prisma.terms.update({
             where: { id },
@@ -86,5 +86,18 @@ export class TermsService {
                 deletedAt: new Date(),
             },
         });
+    }
+
+    /**
+     * @name assertExists
+     * @description 약관 존재 여부 확인. 존재하지 않으면 NotFoundException 던짐.
+     * @param {string} id
+     */
+    private async assertExists(id: string): Promise<void> {
+        const exists = await this.prisma.terms.findFirst({
+            where: { id, deletedAt: null },
+            select: { id: true },
+        });
+        if (!exists) throw new NotFoundException('약관을 찾을 수 없습니다.');
     }
 }

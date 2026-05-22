@@ -1,5 +1,5 @@
 import { CommonModule, Location } from "@angular/common";
-import { Component, inject, input, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from "@angular/core";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { FormViewComponent } from "../../../components/form-view/form-view.component";
@@ -8,7 +8,7 @@ import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModu
 import { Api, eventControllerCreate, eventControllerFindById, eventControllerUpdate } from "@api-client";
 import { Router } from "@angular/router";
 import { SupabaseService } from "../../../services/supabase.service";
-import { formatPhoneNumber } from "../../../shared/utils/format-phone";
+import { formatPhoneNumber } from "@org/shared/utils";
 import { FormInputComponent } from "../../../components/form-input/form-input.component";
 import { FormTextareaComponent } from "../../../components/form-textarea/form-textarea.component";
 import { ToastrService } from 'ngx-toastr';
@@ -62,7 +62,8 @@ function eventDateRangeValidator(control: AbstractControl): ValidationErrors | n
 @Component({
     selector: 'app-event-form',
     templateUrl: 'event-form.page.html',
-    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormsModule, ReactiveFormsModule, FormInputComponent, FormTextareaComponent, ImageUploadComponent]
+    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormsModule, ReactiveFormsModule, FormInputComponent, FormTextareaComponent, ImageUploadComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class EventFormPage implements OnInit {
     private readonly api = inject(Api);
@@ -76,7 +77,7 @@ export default class EventFormPage implements OnInit {
 
     get isEditMode(): boolean { return !!this.id(); }
 
-    breadcrumbs: Breadcrumb[] = [];
+    breadcrumbs = signal<Breadcrumb[]>([]);
 
     errorMessage = signal<string>('');
 
@@ -158,7 +159,7 @@ export default class EventFormPage implements OnInit {
         if (this.form.invalid) return;
 
         if (this.isEditMode) {
-            if (!await this.dialog.confirm({ title: '수정 확인', message: '정말 수정하시겠습니까?', variant: 'warning' })) return;
+            if (!await this.dialog.confirm({ title: '수정 확인', message: '수정하시겠습니까?', variant: 'warning' })) return;
         }
 
         try {
@@ -194,10 +195,10 @@ export default class EventFormPage implements OnInit {
     async ngOnInit(): Promise<void> {
         const id = this.id();
 
-        this.breadcrumbs = [
+        this.breadcrumbs.set([
             { label: '행사 관리', link: '/event' },
             { label: this.isEditMode ? '수정' : '등록' },
-        ];
+        ]);
 
         if (id) {
             const event = await this.api.invoke(eventControllerFindById, {

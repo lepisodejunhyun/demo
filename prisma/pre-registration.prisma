@@ -10,5 +10,8 @@ model PreRegistration {
     updatedAt       DateTime        @default(now()) @updatedAt
     deletedAt       DateTime?
 
+    @@index([deletedAt, createdAt])
+    @@index([eventId, deletedAt])
+
     agreements      TermsAgreement[]
 }

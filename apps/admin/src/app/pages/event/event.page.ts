@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
 import { Api, eventControllerFindAll, EventDto } from "@api-client";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -11,13 +12,15 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
     selector: 'app-event',
     templateUrl: './event.page.html',
-    imports: [CommonModule, PageHeaderComponent, DataTableComponent, ButtonComponent]
+    imports: [CommonModule, PageHeaderComponent, DataTableComponent, ButtonComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class EventPage implements OnInit {
+export default class EventPage {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly toast = inject(ToastrService);
+    private readonly queryParams = toSignal(this.route.queryParams);
 
     events = signal<EventDto[]>([]);
     pageInfo = signal<PageInfo | null>(null);
@@ -30,9 +33,9 @@ export default class EventPage implements OnInit {
         { field: 'createdAt', name: '등록일', type: 'date', width: 'w-44' },
     ];
 
-    ngOnInit(): void {
-        this.route.queryParams.subscribe(params => {
-            const page = Number(params['page']) || 1;
+    constructor() {
+        effect(() => {
+            const page = Number(this.queryParams()?.['page']) || 1;
             this.loadData(page);
         });
     }

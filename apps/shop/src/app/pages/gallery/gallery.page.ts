@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Api, galleryControllerFindAll, GalleryDto, PageInfoDto } from '@api-client-shop';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
@@ -14,19 +15,21 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [CommonModule, PageHeaderComponent, PaginationComponent, CardGridComponent, ImageCardComponent, ContentWrapperComponent],
   templateUrl: './gallery.page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class GalleryPage implements OnInit {
+export default class GalleryPage {
   private readonly api = inject(Api);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly toast = inject(ToastrService);
+  private readonly queryParams = toSignal(this.route.queryParams);
 
   galleries = signal<GalleryDto[]>([]);
   pageInfo = signal<PageInfoDto | null>(null);
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      const page = Number(params['page']) || 1;
+  constructor() {
+    effect(() => {
+      const page = Number(this.queryParams()?.['page']) || 1;
       this.loadData(page);
     });
   }

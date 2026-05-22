@@ -5,7 +5,7 @@
     <app-button slot="actions" variant="ghost-error" icon="delete" label="삭제" (action)="onDelete()" />
 </app-page-header>
 
-<app-detail-view [createdAt]="notice()!.createdAt" [updatedAt]="notice()!.updatedAt">
+<app-detail-view [createdAt]="notice()!.createdAt" [updatedAt]="notice()!.updatedAt" listUrl="/notices">
     <div class="whitespace-pre-wrap">{{ notice()!.content }}</div>
 </app-detail-view>
 }

@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ButtonComponent } from "../../components/button/button.component";
 import { Api, termsControllerFindAll, TermsDto } from "@api-client";
@@ -11,13 +12,16 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
     selector: 'app-terms',
     templateUrl: './terms.page.html',
-    imports: [CommonModule, PageHeaderComponent, DataTableComponent, ButtonComponent] })
-export default class TermsPage implements OnInit {
+    imports: [CommonModule, PageHeaderComponent, DataTableComponent, ButtonComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export default class TermsPage {
 
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly toast = inject(ToastrService);
+    private readonly queryParams = toSignal(this.route.queryParams);
 
     terms = signal<TermsDto[]>([]);
     pageInfo = signal<PageInfo | null>(null);
@@ -29,9 +33,9 @@ export default class TermsPage implements OnInit {
         { field: 'createdAt', name: '등록일', type: 'date', width: 'w-44' },
     ];
 
-    ngOnInit(): void {
-        this.route.queryParams.subscribe(params => {
-            const page = Number(params['page']) || 1;
+    constructor() {
+        effect(() => {
+            const page = Number(this.queryParams()?.['page']) || 1;
             this.loadData(page);
         });
     }

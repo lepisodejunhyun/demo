@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Api, inquiryControllerFindAll, InquiryDto } from "@api-client";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
@@ -11,13 +12,15 @@ import { ToastrService } from 'ngx-toastr';
     selector: 'app-inquiry',
     templateUrl: './inquiry.page.html',
     imports: [CommonModule, PageHeaderComponent, DataTableComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class InquiryPage implements OnInit {
+export default class InquiryPage {
 
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly toast = inject(ToastrService);
+    private readonly queryParams = toSignal(this.route.queryParams);
 
     inquiries = signal<InquiryDto[]>([]);
     pageInfo = signal<PageInfo | null>(null);
@@ -35,9 +38,9 @@ export default class InquiryPage implements OnInit {
         { field: 'createdAt', name: '등록일', type: 'date', width: 'w-44' },
     ];
 
-    ngOnInit(): void {
-        this.route.queryParams.subscribe(params => {
-            const page = Number(params['page']) || 1;
+    constructor() {
+        effect(() => {
+            const page = Number(this.queryParams()?.['page']) || 1;
             this.loadData(page);
         });
     }

@@ -4,7 +4,7 @@
      <app-button slot="actions" variant="ghost-error" icon="delete" label="삭제" (action)="onDelete()" />
 </app-page-header>
 
-<app-detail-view [createdAt]="inquiry()!.createdAt" [updatedAt]="inquiry()!.updatedAt">
+<app-detail-view [createdAt]="inquiry()!.createdAt" [updatedAt]="inquiry()!.updatedAt" listUrl="/inquiries">
     <!-- 문의 정보 -->
     <div class="mb-8">
         <h3 class="text-lg font-semibold mb-4">문의 내용</h3>

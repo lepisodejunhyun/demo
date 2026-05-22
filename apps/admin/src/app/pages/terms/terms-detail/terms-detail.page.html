@@ -5,7 +5,7 @@
     <app-button slot="actions" variant="ghost-error" icon="delete" label="삭제" (action)="onDelete()" />
 </app-page-header>
 
-<app-detail-view [createdAt]="terms()!.createdAt" [updatedAt]="terms()!.updatedAt">
+<app-detail-view [createdAt]="terms()!.createdAt" [updatedAt]="terms()!.updatedAt" listUrl="/terms">
     <div class="mb-6">
         <app-status-badge
             [label]="terms()!.isRequired ? '필수 약관' : '선택 약관'"

@@ -7,5 +7,7 @@ model Terms {
     updatedAt       DateTime        @default(now()) @updatedAt
     deletedAt       DateTime?
 
+    @@index([deletedAt, createdAt])
+
     agreements      TermsAgreement[]
 }

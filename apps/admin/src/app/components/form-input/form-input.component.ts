@@ -1,7 +1,6 @@
 import { Component, computed, forwardRef, input, signal } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { formatPhoneNumber } from "../../shared/utils/format-phone";
-import { formatBusinessNumber } from "../../shared/utils/format-biznum";
+import { formatPhoneNumber, formatBusinessNumber } from "@org/shared/utils";
 
 @Component({
     selector: 'app-form-input',

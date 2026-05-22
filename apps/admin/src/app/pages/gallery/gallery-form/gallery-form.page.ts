@@ -1,5 +1,5 @@
 import { CommonModule, Location } from "@angular/common";
-import { Component, inject, input, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from "@angular/core";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { FormViewComponent } from "../../../components/form-view/form-view.component";
@@ -16,7 +16,8 @@ import { DialogService } from '../../../components/confirm-dialog/confirm-dialog
 @Component({
     selector: 'app-gallery-form',
     templateUrl: 'gallery-form.page.html',
-    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormsModule, ReactiveFormsModule, FormInputComponent, FormTextareaComponent]
+    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormsModule, ReactiveFormsModule, FormInputComponent, FormTextareaComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class GalleryFormPage implements OnInit {
     private readonly api = inject(Api);
@@ -30,7 +31,7 @@ export default class GalleryFormPage implements OnInit {
 
     get isEditMode(): boolean { return !!this.id(); }
 
-    breadcrumbs: Breadcrumb[] = [];
+    breadcrumbs = signal<Breadcrumb[]>([]);
 
     errorMessage = signal<string>('');
 
@@ -86,7 +87,7 @@ export default class GalleryFormPage implements OnInit {
         if (this.form.invalid) return;
 
         if (this.isEditMode) {
-            if (!await this.dialog.confirm({ title: '수정 확인', message: '정말 수정하시겠습니까?', variant: 'warning' })) return;
+            if (!await this.dialog.confirm({ title: '수정 확인', message: '수정하시겠습니까?', variant: 'warning' })) return;
         }
 
         try {
@@ -131,10 +132,10 @@ export default class GalleryFormPage implements OnInit {
     async ngOnInit(): Promise<void> {
         const id = this.id();
 
-        this.breadcrumbs = [
+        this.breadcrumbs.set([
             { label: '갤러리 관리', link: '/gallery' },
             { label: this.isEditMode ? '수정' : '등록' },
-        ];
+        ]);
 
         if (id) {
             const gallery = await this.api.invoke(galleryControllerFindById, { id });

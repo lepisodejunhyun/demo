@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ButtonComponent } from "../../components/button/button.component";
 import { Api, noticeControllerFindAll, NoticeDto } from "@api-client";
@@ -13,12 +14,13 @@ import { ToastrService } from 'ngx-toastr';
     templateUrl: './notice.page.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, PageHeaderComponent, DataTableComponent, ButtonComponent] })
-export default class NoticePage implements OnInit {
+export default class NoticePage {
 
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly toast = inject(ToastrService);
+    private readonly queryParams = toSignal(this.route.queryParams);
 
     notices = signal<NoticeDto[]>([]);
     pageInfo = signal<PageInfo | null>(null);
@@ -29,9 +31,9 @@ export default class NoticePage implements OnInit {
         { field: 'createdAt', name: '등록일', type: 'date', width: 'w-44' },
     ];
 
-    ngOnInit(): void {
-        this.route.queryParams.subscribe(params => {
-            const page = Number(params['page']) || 1;
+    constructor() {
+        effect(() => {
+            const page = Number(this.queryParams()?.['page']) || 1;
             this.loadData(page);
         });
     }

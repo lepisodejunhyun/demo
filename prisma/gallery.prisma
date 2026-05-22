@@ -5,4 +5,6 @@ model Gallery {
     createdAt               DateTime                        @default(now())
     updatedAt               DateTime                        @default(now())         @updatedAt
     deletedAt               DateTime?
+
+    @@index([deletedAt, createdAt])
 }

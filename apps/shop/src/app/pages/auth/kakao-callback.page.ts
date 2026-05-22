@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
     selector: 'app-kakao-callback',
     templateUrl: './kakao-callback.page.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class KakaoCallbackPage implements OnInit {
     private readonly route = inject(ActivatedRoute);

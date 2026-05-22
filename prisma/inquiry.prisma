@@ -11,6 +11,9 @@ model Inquiry {
     createdAt       DateTime        @default(now())
     updatedAt       DateTime        @default(now()) @updatedAt
     deletedAt       DateTime?
+
+    @@index([deletedAt, createdAt])
+    @@index([memberId, deletedAt])
 }
 
 enum InquiryStatus {

@@ -40,6 +40,8 @@ export type { KakaoAuthControllerKakaoLogin$Params as KakaoAuthControllerKakaoLo
 export { kakaoAuthControllerKakaoLogin as kakaoAuthControllerKakaoLogin } from './fn/auth/kakao-auth-controller-kakao-login';
 export type { EventControllerFindAll$Params as EventControllerFindAll$Params } from './fn/event/event-controller-find-all';
 export { eventControllerFindAll as eventControllerFindAll } from './fn/event/event-controller-find-all';
+export type { EventControllerFindAvailableEvents$Params as EventControllerFindAvailableEvents$Params } from './fn/event/event-controller-find-available-events';
+export { eventControllerFindAvailableEvents as eventControllerFindAvailableEvents } from './fn/event/event-controller-find-available-events';
 export type { EventControllerFindById$Params as EventControllerFindById$Params } from './fn/event/event-controller-find-by-id';
 export { eventControllerFindById as eventControllerFindById } from './fn/event/event-controller-find-by-id';
 export type { NoticeControllerFindAll$Params as NoticeControllerFindAll$Params } from './fn/notice/notice-controller-find-all';
@@ -60,8 +62,6 @@ export type { InquiryControllerCreate$Params as InquiryControllerCreate$Params }
 export { inquiryControllerCreate as inquiryControllerCreate } from './fn/inquiry/inquiry-controller-create';
 export type { TermsControllerFindAll$Params as TermsControllerFindAll$Params } from './fn/terms/terms-controller-find-all';
 export { termsControllerFindAll as termsControllerFindAll } from './fn/terms/terms-controller-find-all';
-export type { PreRegistrationControllerFindAvailableEvents$Params as PreRegistrationControllerFindAvailableEvents$Params } from './fn/pre-registration/pre-registration-controller-find-available-events';
-export { preRegistrationControllerFindAvailableEvents as preRegistrationControllerFindAvailableEvents } from './fn/pre-registration/pre-registration-controller-find-available-events';
 export type { PreRegistrationControllerCreate$Params as PreRegistrationControllerCreate$Params } from './fn/pre-registration/pre-registration-controller-create';
 export { preRegistrationControllerCreate as preRegistrationControllerCreate } from './fn/pre-registration/pre-registration-controller-create';
 export type { BusinessInfoControllerFindOne$Params as BusinessInfoControllerFindOne$Params } from './fn/business-info/business-info-controller-find-one';

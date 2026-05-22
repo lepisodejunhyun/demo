@@ -5,7 +5,7 @@
     <app-button slot="actions" variant="ghost-error" icon="delete" (action)="onDelete()" />
 </app-page-header>
 
-<app-detail-view [createdAt]="faq()!.createdAt" [updatedAt]="faq()!.updatedAt">
+<app-detail-view [createdAt]="faq()!.createdAt" [updatedAt]="faq()!.updatedAt" listUrl="/faqs">
     <div class="whitespace-pre-wrap">{{ faq()!.answer }}</div>
 </app-detail-view>
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from "@angular/core";
 import { Router } from "@angular/router";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
@@ -13,7 +13,8 @@ import { DialogService } from "../../../components/confirm-dialog/confirm-dialog
 @Component({
     selector: 'app-event-detail',
     templateUrl: './event-detail.page.html',
-    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, ButtonComponent, DetailFieldComponent]
+    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, ButtonComponent, DetailFieldComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class EventDetailPage implements OnInit {
     private readonly api = inject(Api);
@@ -47,7 +48,7 @@ export default class EventDetailPage implements OnInit {
     }
 
     async onDelete(): Promise<void> {
-        if (!await this.dialog.confirm({ title: '행사 정보 삭제', message: '정말 삭제하시겠습니까?'})) return;
+        if (!await this.dialog.confirm({ title: '행사 정보 삭제', message: '삭제하시겠습니까?' })) return;
 
         try {
             await this.api.invoke(eventControllerRemove, {

@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Api, inquiryControllerFindAll, InquiryDto, PageInfoDto } from "@api-client-shop";
 import { PaginationComponent } from '../../components/pagination/pagination.component';
@@ -12,12 +13,14 @@ import { INQUIRY_STATUS_LABELS, getInquiryStatusStyle } from '../../shared/const
     selector: 'app-inquiry',
     imports: [CommonModule, RouterLink, PaginationComponent, ContentWrapperComponent, EmptyStateComponent],
     templateUrl: './inquiry.page.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class InquiryPage implements OnInit {
+export default class InquiryPage {
     private readonly api = inject(Api);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly toast = inject(ToastrService);
+    private readonly queryParams = toSignal(this.route.queryParams);
 
     inquiries = signal<InquiryDto[]>([]);
     pageInfo = signal<PageInfoDto | null>(null);
@@ -25,9 +28,9 @@ export default class InquiryPage implements OnInit {
     readonly statusLabels = INQUIRY_STATUS_LABELS;
     readonly getStatusStyle = getInquiryStatusStyle;
 
-    ngOnInit(): void {
-        this.route.queryParams.subscribe((params) => {
-            const page = Number(params['page']) || 1;
+    constructor() {
+        effect(() => {
+            const page = Number(this.queryParams()?.['page']) || 1;
             this.loadData(page);
         });
     }

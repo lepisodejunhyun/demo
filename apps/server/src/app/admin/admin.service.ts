@@ -17,17 +17,6 @@ export class AdminService {
   ) { }
 
   /**
-   * @name findAll
-   * @description 관리자 전체 목록 조회
-   * @returns {Promise<Admin[]>}
-   */
-  async findAll(): Promise<Admin[]> {
-    const admins = await this.prisma.admin.findMany({});
-
-    return admins;
-  }
-
-  /**
   * @name signIn
   * @description 관리자 로그인 — Access Token + Refresh Token 발급
   * @param {SignInAdminDto} data
@@ -65,6 +54,17 @@ export class AdminService {
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
     return { accessToken, refreshToken, admin };
+  }
+
+  /**
+   * @name findAll
+   * @description 관리자 전체 목록 조회
+   * @returns {Promise<Admin[]>}
+   */
+  async findAll(): Promise<Admin[]> {
+    const admins = await this.prisma.admin.findMany({});
+
+    return admins;
   }
 
   /**

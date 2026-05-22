@@ -4,14 +4,14 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router } from "@angular/router";
 import {
     Api,
-    AvailableEventDto,
+    EventDto,
+    eventControllerFindAvailableEvents,
     preRegistrationControllerCreate,
-    preRegistrationControllerFindAvailableEvents,
     preRegistrationControllerFindById,
     preRegistrationControllerUpdate,
     termsControllerFindAll,
 } from "@api-client";
-import { formatPhoneNumber } from "../../../shared/utils/format-phone";
+import { formatPhoneNumber } from "@org/shared/utils";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
 import { Breadcrumb, BreadcrumbComponent } from "../../../components/breadcrumb/breadcrumb.component";
 import { FormViewComponent } from "../../../components/form-view/form-view.component";
@@ -41,7 +41,7 @@ export default class PreRegistrationFormPage implements OnInit {
 
     breadcrumbs = signal<Breadcrumb[]>([]);
 
-    availableEvents = signal<AvailableEventDto[]>([]);
+    availableEvents = signal<EventDto[]>([]);
     eventTitle = signal<string>('');
     termsList = signal<{ id: string; title: string; isRequired: boolean; content: string; agreed: boolean }[]>([]);
 
@@ -79,7 +79,7 @@ export default class PreRegistrationFormPage implements OnInit {
         const { eventId, applicantName, contactNumber } = this.form.getRawValue();
         try {
             if (this.isEditMode) {
-                if (!await this.dialog.confirm({ title: '수정 확인', message: '정말 수정하시겠습니까?', variant: 'warning' })) return;
+                if (!await this.dialog.confirm({ title: '수정 확인', message: '수정하시겠습니까?', variant: 'warning' })) return;
                 await this.api.invoke(preRegistrationControllerUpdate, {
                     id: this.id()!,
                     body: {
@@ -116,7 +116,7 @@ export default class PreRegistrationFormPage implements OnInit {
 
         if (!this.isEditMode) {
             try {
-                this.availableEvents.set(await this.api.invoke(preRegistrationControllerFindAvailableEvents, {}));
+                this.availableEvents.set(await this.api.invoke(eventControllerFindAvailableEvents, {}));
                 const termsResult = await this.api.invoke(termsControllerFindAll, { page: 1, limit: 100 });
                 this.termsList.set((termsResult.items ?? []).map((t: any) => ({
                     id: t.id,

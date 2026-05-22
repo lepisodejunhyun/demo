@@ -3,7 +3,6 @@
 
 export type { AdminDto } from './models/admin-dto';
 export type { AttachmentDto } from './models/attachment-dto';
-export type { AvailableEventDto } from './models/available-event-dto';
 export type { BusinessInfoDto } from './models/business-info-dto';
 export type { CreateEventDto } from './models/create-event-dto';
 export type { CreateFaqDto } from './models/create-faq-dto';

@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from "@angular/core";
 import { Router } from "@angular/router";
 import { Api, termsControllerFindById, termsControllerRemove, TermsDto } from "@api-client";
 import { PageHeaderComponent } from "../../../components/page-header/page-header.component";
@@ -13,7 +13,8 @@ import { DialogService } from "../../../components/confirm-dialog/confirm-dialog
 @Component({
     selector: 'app-terms-detail',
     templateUrl: 'terms-detail.page.html',
-    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, ButtonComponent, StatusBadgeComponent]
+    imports: [CommonModule, PageHeaderComponent, BreadcrumbComponent, DetailViewComponent, ButtonComponent, StatusBadgeComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class TermsDetailPage implements OnInit {
     private readonly api = inject(Api);
@@ -48,7 +49,7 @@ export default class TermsDetailPage implements OnInit {
     }
 
     async onDelete(): Promise<void> {
-        if (!await this.dialog.confirm({ title: '약관 삭제', message: '정말 삭제하시겠습니까?'})) return;
+        if (!await this.dialog.confirm({ title: '약관 삭제', message: '삭제하시겠습니까?' })) return;
 
         try {
             await this.api.invoke(termsControllerRemove, {

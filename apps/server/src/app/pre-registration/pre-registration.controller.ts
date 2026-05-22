@@ -6,7 +6,6 @@ import { PreRegistrationDto } from "./dtos/pre-registration.dto";
 import { plainToInstance } from "class-transformer";
 import { CreatePreRegistrationDto } from "./dtos/create-pre-registration.dto";
 import { UpdatePreRegistrationDto } from "./dtos/update-pre-registration.dto";
-import { AvailableEventDto } from "./dtos/available-event.dto";
 import { JwtAuthGuard } from "../admin/guards/jwt-auth.guard";
 
 @ApiTags('pre-registration')
@@ -59,22 +58,6 @@ export class PreRegistrationController {
             items: plainToInstance(PreRegistrationDto, items),
             pageInfo,
         };
-    }
-
-    @ApiOperation({
-        summary: '사전 등록 가능한 행사 목록',
-        description: '사전 등록 기간이 설정되어 있고 현재 시각이 그 기간 내인 행사 목록을 반환합니다. (등록 폼 dropdown용)',
-    })
-    @ApiOkResponse({
-        description: '가능한 행사 목록 조회 성공',
-        type: AvailableEventDto,
-        isArray: true,
-    })
-    @Get('available-events')
-    async findAvailableEvents(): Promise<AvailableEventDto[]> {
-        const events = await this.preRegistrationService.findAvailableEvents();
-
-        return plainToInstance(AvailableEventDto, events);
     }
 
     @ApiParam({

@@ -14,9 +14,9 @@ export class GalleryService {
      * @name create
      * @description 갤러리 생성 (이미지 첨부 포함)
      * @param {CreateGalleryDto} data
-     * @returns {Promise<any>}
+     * @returns {Promise<Gallery>}
      */
-    async create(data: CreateGalleryDto): Promise<any> {
+    async create(data: CreateGalleryDto): Promise<Gallery> {
         const { title, content, imageUrls } = data;
 
         return this.prisma.$transaction(async (tx) => {
@@ -110,10 +110,10 @@ export class GalleryService {
      * @description 갤러리 수정 (기존 이미지 교체)
      * @param {string} id
      * @param {CreateGalleryDto} data
-     * @returns {Promise<any>}
+     * @returns {Promise<Gallery>}
      */
-    async update(id: string, data: CreateGalleryDto): Promise<any> {
-        await this.findById(id);
+    async update(id: string, data: CreateGalleryDto): Promise<Gallery> {
+        await this.assertExists(id);
 
         const { title, content, imageUrls } = data;
 
@@ -165,5 +165,18 @@ export class GalleryService {
         });
 
         return gallery;
+    }
+
+    /**
+     * @name assertExists
+     * @description 갤러리 존재 여부 확인. 존재하지 않으면 NotFoundException 던짐.
+     * @param {string} id
+     */
+    private async assertExists(id: string): Promise<void> {
+        const exists = await this.prisma.gallery.findFirst({
+            where: { id, deletedAt: null },
+            select: { id: true },
+        });
+        if (!exists) throw new NotFoundException('갤러리를 찾을 수 없습니다.');
     }
 }

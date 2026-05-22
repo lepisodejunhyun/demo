@@ -11,7 +11,7 @@
 
     @if (gallery.images && gallery.images.length > 0) {
     <div class="space-y-6">
-      @for (image of gallery.images; track $index) {
+      @for (image of gallery.images; track image.id) {
       <div class="w-full overflow-hidden bg-slate-100 flex justify-center items-center">
         <img [src]="image.url" alt="갤러리 이미지" class="max-w-full h-auto object-contain shadow-sm" />
       </div>

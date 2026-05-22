@@ -8,7 +8,6 @@ export { Api } from './api';
 
 export type { AdminDto } from './models/admin-dto';
 export type { AttachmentDto } from './models/attachment-dto';
-export type { AvailableEventDto } from './models/available-event-dto';
 export type { BusinessInfoDto } from './models/business-info-dto';
 export type { CreateEventDto } from './models/create-event-dto';
 export type { CreateFaqDto } from './models/create-faq-dto';
@@ -67,6 +66,8 @@ export type { EventControllerCreate$Params as EventControllerCreate$Params } fro
 export { eventControllerCreate as eventControllerCreate } from './fn/event/event-controller-create';
 export type { EventControllerFindAll$Params as EventControllerFindAll$Params } from './fn/event/event-controller-find-all';
 export { eventControllerFindAll as eventControllerFindAll } from './fn/event/event-controller-find-all';
+export type { EventControllerFindAvailableEvents$Params as EventControllerFindAvailableEvents$Params } from './fn/event/event-controller-find-available-events';
+export { eventControllerFindAvailableEvents as eventControllerFindAvailableEvents } from './fn/event/event-controller-find-available-events';
 export type { EventControllerFindById$Params as EventControllerFindById$Params } from './fn/event/event-controller-find-by-id';
 export { eventControllerFindById as eventControllerFindById } from './fn/event/event-controller-find-by-id';
 export type { EventControllerRemove$Params as EventControllerRemove$Params } from './fn/event/event-controller-remove';
@@ -99,8 +100,6 @@ export type { PreRegistrationControllerCreate$Params as PreRegistrationControlle
 export { preRegistrationControllerCreate as preRegistrationControllerCreate } from './fn/pre-registration/pre-registration-controller-create';
 export type { PreRegistrationControllerFindAll$Params as PreRegistrationControllerFindAll$Params } from './fn/pre-registration/pre-registration-controller-find-all';
 export { preRegistrationControllerFindAll as preRegistrationControllerFindAll } from './fn/pre-registration/pre-registration-controller-find-all';
-export type { PreRegistrationControllerFindAvailableEvents$Params as PreRegistrationControllerFindAvailableEvents$Params } from './fn/pre-registration/pre-registration-controller-find-available-events';
-export { preRegistrationControllerFindAvailableEvents as preRegistrationControllerFindAvailableEvents } from './fn/pre-registration/pre-registration-controller-find-available-events';
 export type { PreRegistrationControllerFindById$Params as PreRegistrationControllerFindById$Params } from './fn/pre-registration/pre-registration-controller-find-by-id';
 export { preRegistrationControllerFindById as preRegistrationControllerFindById } from './fn/pre-registration/pre-registration-controller-find-by-id';
 export type { PreRegistrationControllerRemove$Params as PreRegistrationControllerRemove$Params } from './fn/pre-registration/pre-registration-controller-remove';

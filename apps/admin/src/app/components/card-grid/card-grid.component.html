@@ -1,5 +1,5 @@
 <div class="grid gap-6" [ngStyle]="{ 'grid-template-columns': 'repeat(' + columns() + ', minmax(0, 1fr))' }">
-    @for (item of items(); track $index) {
+    @for (item of items(); track item.id) {
     <div (click)="onCardClick(item)"
         class="group overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer">
         <div class="aspect-[4/3] overflow-hidden bg-surface-container">

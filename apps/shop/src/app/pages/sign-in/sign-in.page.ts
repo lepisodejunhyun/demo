@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router, RouterLink, ActivatedRoute } from "@angular/router";
 import { AuthService } from "../../shared/services/auth.service";
@@ -8,6 +8,7 @@ import { FormFieldComponent } from '../../components/form-field/form-field.compo
     selector: 'app-sign-in',
     imports: [ReactiveFormsModule, RouterLink, FormFieldComponent],
     templateUrl: './sign-in.page.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class SignInPage {
 
@@ -22,7 +23,7 @@ export default class SignInPage {
         }),
     });
 
-    errorMessage = '';
+    errorMessage = signal<string>('');
 
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
@@ -40,7 +41,7 @@ export default class SignInPage {
             this.router.navigateByUrl(returnUrl);
 
         } catch (error: any) {
-            this.errorMessage = error?.error?.message || '이메일 또는 비밀번호가 올바르지 않습니다.';
+            this.errorMessage.set(error?.error?.message || '이메일 또는 비밀번호가 올바르지 않습니다.');
         }
     }
 

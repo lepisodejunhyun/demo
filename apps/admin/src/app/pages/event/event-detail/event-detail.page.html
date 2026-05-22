@@ -5,7 +5,7 @@
     <app-button slot="actions" variant="ghost-error" icon="delete" label="삭제" (action)="onDelete()" />
 </app-page-header>
 
-<app-detail-view [createdAt]="event()!.createdAt" [updatedAt]="event()!.updatedAt">
+<app-detail-view [createdAt]="event()!.createdAt" [updatedAt]="event()!.updatedAt" listUrl="/events">
     <div class="flex gap-10">
 
         @if (event()!.posterImage) {

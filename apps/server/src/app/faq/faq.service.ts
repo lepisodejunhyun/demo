@@ -66,7 +66,7 @@ export class FaqService {
      * @returns {Promise<Faq>}
      */
     async update(id: string, data: CreateFaqDto): Promise<Faq> {
-        await this.findById(id);
+        await this.assertExists(id);
 
         const faq = await this.prisma.faq.update({
             where: { id },
@@ -89,5 +89,18 @@ export class FaqService {
         });
 
         return faq;
+    }
+
+    /**
+     * @name assertExists
+     * @description FAQ 존재 여부 확인. 존재하지 않으면 NotFoundException 던짐.
+     * @param {string} id
+     */
+    private async assertExists(id: string): Promise<void> {
+        const exists = await this.prisma.faq.findFirst({
+            where: { id, deletedAt: null },
+            select: { id: true },
+        });
+        if (!exists) throw new NotFoundException('FAQ를 찾을 수 없습니다.');
     }
 }

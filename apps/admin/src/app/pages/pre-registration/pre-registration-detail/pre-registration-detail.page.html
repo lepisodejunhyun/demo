@@ -5,7 +5,7 @@
     <app-button slot="actions" variant="ghost-error" icon="delete" label="삭제" (action)="onDelete()" />
 </app-page-header>
 
-<app-detail-view [createdAt]="preRegistration()!.createdAt" [updatedAt]="preRegistration()!.updatedAt">
+<app-detail-view [createdAt]="preRegistration()!.createdAt" [updatedAt]="preRegistration()!.updatedAt" listUrl="/pre-registrations">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
             <app-detail-field label="행사명" variant="stack">{{ preRegistration()!.eventTitle }}</app-detail-field>

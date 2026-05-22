@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { Api } from "@api-client";
 
@@ -9,6 +9,7 @@ import { PageHeaderComponent } from "../../components/page-header/page-header.co
     selector: 'app-dashboard',
     templateUrl: './dashboard.page.html',
     imports: [CommonModule, PageHeaderComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class DashboardPage {
     private readonly api = inject(Api);

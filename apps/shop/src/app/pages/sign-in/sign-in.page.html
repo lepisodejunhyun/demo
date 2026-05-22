@@ -29,8 +29,8 @@
                         class="w-full px-4 py-3.5 bg-surface-container-lowest border border-outline-variant rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-outline" />
                 </app-form-field>
 
-                @if (errorMessage) {
-                <p class="text-error text-sm mb-4">{{ errorMessage }}</p>
+                @if (errorMessage()) {
+                <p class="text-error text-sm mb-4">{{ errorMessage() }}</p>
                 }
 
                 <!-- Submit -->

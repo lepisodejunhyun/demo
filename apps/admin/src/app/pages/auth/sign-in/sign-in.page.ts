@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { adminControllerSignin, Api } from "@api-client";
 import { AdminStore } from "../../../stores/admin.store";
@@ -10,6 +10,7 @@ import { AuthService } from "../../../services/auth.service";
     selector: 'app-sign-in',
     templateUrl: './sign-in.page.html',
     imports: [CommonModule, ReactiveFormsModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class SignInPage {
     private readonly api = inject(Api);
@@ -49,14 +50,11 @@ export default class SignInPage {
     async submit(): Promise<void> {
         if (this.form.invalid) return;
 
-        const values = this.form.getRawValue();
+        const body = this.form.getRawValue();
 
         try {
             const result = await this.api.invoke(adminControllerSignin, {
-                body: {
-                    email: values.email,
-                    password: values.password,
-                },
+                body,
             });
 
             this.authService.setToken(result.accessToken);

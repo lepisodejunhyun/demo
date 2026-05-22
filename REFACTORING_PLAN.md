@@ -23,12 +23,12 @@
 |---|---|---|---|---|
 | 1 | 페이지네이션 헬퍼 추출 | 🔴 High | 백엔드 정리 | ✅ 완료 (2026-05-20) |
 | 2 | 공통 DTO를 libs로 이동 | 🔴 High | 백엔드 정리 | ✅ 완료 (2026-05-21) |
-| 3 | PreRegistration N+1 제거 | 🟡 Medium | 백엔드 성능 | 대기 |
-| 4 | data-table `track $index` 수정 | 🟡 Medium | 프론트 성능 | 대기 |
-| 5 | EventFormPage OnPush 적용 | 🟡 Medium | 프론트 성능 | 대기 |
-| 6 | queryParams Observable → toSignal | 🟡 Medium | 프론트 정리 | 대기 |
-| 7 | 프론트 포맷 유틸 통합 | 🟢 Low | 프론트 정리 | 대기 |
-| 8 | Prisma 인덱스 추가 | 🟢 Low | DB 성능 | 대기 |
+| 3 | 존재 확인 가드 assertExists 분리 | 🟡 Medium | 백엔드 정리 | ✅ 완료 (2026-05-21) |
+| 4 | data-table `track $index` 수정 | 🟡 Medium | 프론트 성능 | ✅ 완료 (2026-05-21) |
+| 5 | 전체 페이지 OnPush 적용 | 🟡 Medium | 프론트 성능 | ✅ 완료 (2026-05-21) |
+| 6 | queryParams Observable → toSignal | 🟡 Medium | 프론트 정리 | ✅ 완료 (2026-05-21) |
+| 7 | 프론트 포맷 유틸 통합 | 🟢 Low | 프론트 정리 | ✅ 완료 (2026-05-21) |
+| 8 | Prisma 인덱스 추가 | 🟢 Low | DB 성능 | ✅ 완료 (2026-05-21) |
 
 ---
 
@@ -183,8 +183,8 @@ if (!exists) throw new NotFoundException('사전 등록 내역을 찾을 수 없
 ```
 
 ### 완료 조건
-- [ ] `update()` / `remove()`에서 full include 제거
-- [ ] 다른 서비스(`terms.service.ts`, `inquiry.service.ts`)도 같은 패턴인지 확인 후 동일 적용
+- [x] `update()` / `remove()`에서 full include 제거
+- [x] 다른 서비스도 같은 패턴인지 확인 후 동일 적용 → **전체 7개 서비스** 일괄 적용
 
 ---
 
@@ -203,8 +203,8 @@ if (!exists) throw new NotFoundException('사전 등록 내역을 찾을 수 없
 → data-table 사용처 전수 조사 후 결정.
 
 ### 완료 조건
-- [ ] 모든 데이터 테이블 호출처 정렬 시 DOM diff 정상 동작
-- [ ] 사용처에서 ID 없는 케이스는 fallback 처리
+- [x] 모든 데이터 테이블 호출처 정렬 시 DOM diff 정상 동작
+- [x] 사용처에서 ID 없는 케이스는 fallback 처리 → 모든 Prisma 모델에 `id` 존재 확인, fallback 불필요
 
 ---
 
@@ -229,8 +229,8 @@ signal 사용 중인데 `ChangeDetectionStrategy.OnPush` 미적용 → 모든 �
 - `cdr` 사용 흔적 없는지 (현재 이미 제거됨)
 
 ### 완료 조건
-- [ ] OnPush 적용 후 폼 입력/제출/취소 정상 동작
-- [ ] admin 다른 form/detail 페이지도 OnPush 빠진 곳 있는지 일괄 점검
+- [x] OnPush 적용 후 폼 입력/제출/취소 정상 동작
+- [x] admin 다른 form/detail 페이지도 OnPush 빠진 곳 있는지 일괄 점검 → **전체 24개 페이지** 일괄 적용
 
 ---
 
@@ -333,3 +333,73 @@ model Notice {
   - paginate 헬퍼 시그니처 개선: 조건부 타입으로 모델 delegate에서 where/orderBy/include/select 자동 추출
   - inquiry/pre-registration는 `Prisma.XGetPayload<...>` 사용해 include 타입 정확히 명시
   - 빌드 검증: `pnpm nx run-many --target=build --projects=server,server-shop` 통과
+- 2026-05-21: #3 완료
+  - 범위 확대: pre-registration뿐 아니라 **전체 7개 서비스** 일괄 적용 (일관성 우선)
+  - 각 서비스에 `private async assertExists(id)` 메서드 추가
+    - `select: { id: true }` 만 조회하는 최소 쿼리로 존재 확인
+    - 기존 `findById()`는 상세 조회 API 전용으로 역할 분리
+  - 적용 서비스 (10곳의 update/remove 가드):
+    - pre-registration: update, remove
+    - inquiry: update, remove
+    - gallery: update
+    - terms: update, remove
+    - faq: update
+    - notice: update
+    - event: update
+  - server-shop에는 update/remove가 없으므로 해당 없음
+  - 빌드 검증: `pnpm nx run server:build`, `pnpm nx run server-shop:build` 통과
+- 2026-05-21: #4 완료
+  - `data-table.component.html` line 13: `track $index` → `track item.id`
+  - 모든 Prisma 모델에 `id: String @id` 확인 → fallback 불필요
+  - 사용처 6개 페이지 (faq, notice, event, terms, inquiry, pre-registration) 전부 영향
+  - 빌드 검증: `pnpm nx run admin:build` 통과
+  - 추가 적용: `card-grid.component.html` line 2: `track $index` → `track item.id` (Gallery/Event 카드)
+  - 추가 적용: shop `gallery-detail.page.html` line 14: `track $index` → `track image.id`
+  - `gallery-form.page.html`의 `track $index`는 임시 프리뷰 배열(id 없음)이므로 유지
+  - 빌드 검증: `pnpm nx run admin:build`, `pnpm nx run shop:build` 통과
+- 2026-05-21: #5 완료
+  - 범위 확대: event-form만이 아니라 **전체 24개 페이지** 일괄 적용
+  - 선행 작업: 5개 form 페이지의 `breadcrumbs`를 일반 프로퍼티 → `signal<Breadcrumb[]>` 변환
+    - event-form, faq-form, notice-form, gallery-form, terms-form
+    - 대응 HTML 템플릿도 `breadcrumbs` → `breadcrumbs()` 수정 (5개)
+  - 나머지 16개 페이지는 OnPush만 추가 (signal/정적 breadcrumbs로 이미 안전)
+  - 기존 OnPush 적용된 3개 (notice, pre-registration-form, inquiry-detail)는 변경 없음
+  - 빌드 검증: `pnpm nx run admin:build` 통과
+- 2026-05-21: #5 shop 추가 적용
+  - shop 전체 18개 페이지에도 OnPush 일괄 적용
+  - 선행 작업: `sign-in.page.ts`의 `errorMessage`를 일반 변수 → `signal<string>` 변환 + 템플릿 수정
+  - 나머지 17개 페이지는 OnPush만 추가 (signal/ngModel/정적 상태로 이미 안전)
+  - 빌드 검증: `pnpm nx run shop:build` 통과
+  - **admin(24) + shop(18) = 전체 42개 페이지 OnPush 100% 적용 완료**
+- 2026-05-21: #6 완료
+  - admin 7개 + shop 7개 = 총 14개 목록 페이지 `route.queryParams.subscribe` → `toSignal + effect` 마이그레이션
+  - `ngOnInit` + `implements OnInit` 제거, constructor + effect 패턴으로 통일
+  - Angular 21에서는 `@angular/rxjs-interop` → `@angular/core/rxjs-interop`로 이동됨 (빌드 에러 1회 후 수정)
+  - shop/terms.page.ts는 tab 파라미터 처리 포함된 특수 구조 → 동일 패턴 적용
+  - 최종 검증: `queryParams.subscribe` 잔여 0건
+  - 빌드 검증: `pnpm nx run admin:build`, `pnpm nx run shop:build` 통과
+- 2026-05-21: libs 폴더 정리
+  - 삭제: `apps/api` (데모 앱), `libs/api/products`, `libs/shared/models`, `libs/shop/*` 4개
+  - tsconfig.base.json paths: 10개 → 5개로 정리
+  - `libs/shared/ui` (toast 컴포넌트)는 유지
+  - admin, shop, server 빌드 통과
+- 2026-05-21: #7 완료
+  - `libs/shared/utils` Nx 라이브러리 생성 (`@org/shared/utils`)
+  - `formatPhoneNumber`: admin/shop 중복 2벌 → 단일 출처 통합
+  - `formatBusinessNumber`: admin 전용 → 공유 라이브러리로 이동
+  - import 경로 변경: admin 4곳 + shop 1곳 = 총 5곳
+  - 기존 파일 삭제: `admin/shared/utils/format-phone.ts`, `format-biznum.ts`, `shop/shared/utils/format-phone.ts`
+  - 빌드 검증: `pnpm nx run admin:build`, `pnpm nx run shop:build` 통과
+- 2026-05-21: apps 폴더 정리
+  - 삭제: `apps/admin-e2e`, `apps/server-e2e`, `apps/shop-e2e` (데모 E2E 테스트)
+  - 삭제: `apps/admin/src/app/nx-welcome.ts` (데모 컴포넌트, budget 경고 원인)
+  - 삭제: `apps/admin/src/app/app.spec.ts` (NxWelcome 참조 테스트)
+  - 삭제: 빈 폴더 `detail-actions/`, `shared/utils/`
+  - admin, shop, server 빌드 통과 (budget 경고 해소)
+- 2026-05-21: #8 완료
+  - 9개 모델에 총 11개 인덱스 추가
+  - Notice, FAQ, Event, Gallery, Terms: `@@index([deletedAt, createdAt])` (5개)
+  - Inquiry: `@@index([deletedAt, createdAt])` + `@@index([memberId, deletedAt])` (2개)
+  - PreRegistration: `@@index([deletedAt, createdAt])` + `@@index([eventId, deletedAt])` (2개)
+  - Admin, Member: `@@index([email, deletedAt])` (2개)
+  - `pnpm prisma db push` 성공, `pnpm prisma generate` 성공

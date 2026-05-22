@@ -59,6 +59,22 @@ export class EventController {
         };
     }
 
+    @ApiOperation({
+        summary: '사전 등록 가능한 행사 목록',
+        description: '사전 등록 기간이 설정되어 있고 현재 시각이 그 기간 내인 행사 목록을 반환합니다. (등록 폼 dropdown용)',
+    })
+    @ApiOkResponse({
+        description: '가능한 행사 목록 조회 성공',
+        type: EventDto,
+        isArray: true,
+    })
+    @Get('available-events')
+    async findAvailableEvents(): Promise<EventDto[]> {
+        const events = await this.eventService.findAvailableEvents();
+
+        return plainToInstance(EventDto, events);
+    }
+
     @ApiParam({
         name: 'id',
         type: String,

@@ -1,5 +1,5 @@
 import { CommonModule, Location } from "@angular/common";
-import { Component, inject, input, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Api, termsControllerCreate, termsControllerFindById, termsControllerUpdate } from "@api-client";
@@ -17,6 +17,7 @@ import { DialogService } from "../../../components/confirm-dialog/confirm-dialog
     selector: 'app-terms-form',
     templateUrl: './terms-form.page.html',
     imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormInputComponent, FormTextareaComponent, FormToggleComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class TermsFormPage implements OnInit {
     private readonly api = inject(Api);
@@ -29,7 +30,7 @@ export default class TermsFormPage implements OnInit {
 
     get isEditMode(): boolean { return !!this.id(); }
 
-    breadcrumbs: Breadcrumb[] = [];
+    breadcrumbs = signal<Breadcrumb[]>([]);
 
     form = new FormGroup({
         title: new FormControl('', {
@@ -56,7 +57,7 @@ export default class TermsFormPage implements OnInit {
         const body = this.form.getRawValue();
         try {
             if (this.isEditMode) {
-                if (!await this.dialog.confirm({ title: '수정 확인', message: '정말 수정하시겠습니까?', variant: 'warning' })) return;
+                if (!await this.dialog.confirm({ title: '수정 확인', message: '수정하시겠습니까?', variant: 'warning' })) return;
                 await this.api.invoke(termsControllerUpdate, {
                     id: this.id()!,
                     body,
@@ -75,10 +76,10 @@ export default class TermsFormPage implements OnInit {
     async ngOnInit(): Promise<void> {
         const id = this.id();
 
-        this.breadcrumbs = [
+        this.breadcrumbs.set([
             { label: '약관 관리', link: '/terms' },
             { label: this.isEditMode ? '수정' : '작성' },
-        ];
+        ]);
 
         if (id) {
             const terms = await this.api.invoke(termsControllerFindById, { id });

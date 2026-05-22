@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Api, termsControllerFindAll, TermsDto } from '@api-client-shop';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
@@ -11,11 +12,13 @@ import { ToastrService } from 'ngx-toastr';
     selector: 'app-terms',
     imports: [CommonModule, PageHeaderComponent, ContentWrapperComponent, TabNavComponent],
     templateUrl: './terms.page.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class TermsPage implements OnInit {
+export default class TermsPage {
     private readonly api = inject(Api);
     private readonly route = inject(ActivatedRoute);
     private readonly toast = inject(ToastrService);
+    private readonly queryParams = toSignal(this.route.queryParams);
 
     termsList = signal<TermsDto[]>([]);
     selectedId = signal<string | null>(null);
@@ -24,9 +27,9 @@ export default class TermsPage implements OnInit {
         this.termsList().map(t => ({ label: t.title, id: t.id }))
     );
 
-    ngOnInit(): void {
-        this.route.queryParams.subscribe((params) => {
-            this.selectedId.set(params['tab'] || null);
+    constructor() {
+        effect(() => {
+            this.selectedId.set(this.queryParams()?.['tab'] || null);
             if (this.termsList().length > 0 && !this.selectedId()) {
                 this.selectedId.set(this.termsList()[0].id);
             }

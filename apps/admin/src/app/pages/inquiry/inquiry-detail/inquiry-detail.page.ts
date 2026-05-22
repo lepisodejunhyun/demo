@@ -101,7 +101,7 @@ export default class InquiryDetailPage implements OnInit {
         this.successMessage.set('');
 
         try {
-            if (!await this.dialog.confirm({ title: '수정 확인', message: '정말 수정하시겠습니까?', variant: 'warning' })) return;
+            if (!await this.dialog.confirm({ title: '저장 확인', message: '답변을 저장하시겠습니까?', variant: 'primary' })) return;
             this.inquiry.set(await this.api.invoke(inquiryControllerUpdate, {
                 id: this.inquiry()!.id,
                 body: {
@@ -116,7 +116,7 @@ export default class InquiryDetailPage implements OnInit {
     }
 
     async onDelete(): Promise<void> {
-        if (!await this.dialog.confirm({ title: '1:1문의 삭제', message: '정말 삭제하시겠습니까?'})) return;
+        if (!await this.dialog.confirm({ title: '1:1문의 삭제', message: '삭제하시겠습니까?' })) return;
 
         try {
             await this.api.invoke(inquiryControllerRemove, {

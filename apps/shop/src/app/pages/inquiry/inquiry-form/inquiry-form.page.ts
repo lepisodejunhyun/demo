@@ -1,5 +1,5 @@
 import { CommonModule, Location } from "@angular/common";
-import { Component, inject, input, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Api, inquiryControllerCreate, inquiryControllerFindById, inquiryControllerUpdate } from "@api-client-shop";
@@ -12,6 +12,7 @@ import { FormActionsComponent } from '../../../components/form-actions/form-acti
     selector: 'app-inquiry-form',
     imports: [CommonModule, ReactiveFormsModule, ContentWrapperComponent, FormFieldComponent, FormActionsComponent],
     templateUrl: './inquiry-form.page.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class InquiryFormPage implements OnInit {
     private readonly api = inject(Api);

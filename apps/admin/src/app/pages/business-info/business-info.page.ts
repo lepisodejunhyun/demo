@@ -1,8 +1,8 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Api, businessInfoControllerFindOne, businessInfoControllerUpsert, BusinessInfoDto } from "@api-client";
-import { formatPhoneNumber } from "../../shared/utils/format-phone";
+import { formatPhoneNumber } from "@org/shared/utils";
 import { PageHeaderComponent } from "../../components/page-header/page-header.component";
 import { FormViewComponent } from "../../components/form-view/form-view.component";
 import { FormFieldComponent } from "../../components/form-field/form-field.component";
@@ -15,6 +15,7 @@ import { EmptyStateComponent } from "../../components/empty-state/empty-state.co
     selector: 'app-business-info',
     templateUrl: './business-info.page.html',
     imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, FormViewComponent, FormFieldComponent, FormInputComponent, DetailFieldComponent, EmptyStateComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class BusinessInfoPage implements OnInit {
     private readonly api = inject(Api);

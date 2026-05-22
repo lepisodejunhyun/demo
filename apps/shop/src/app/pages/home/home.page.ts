@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { Api, eventControllerFindAll, EventDto } from "@api-client-shop";
 import { ToastrService } from 'ngx-toastr';
@@ -10,6 +10,7 @@ import { getEventStatus } from '../../shared/utils/event-status.util';
     selector: 'app-home',
     imports: [CommonModule, RouterLink, ImageCardComponent],
     templateUrl: './home.page.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class HomePage implements OnInit {
     private readonly api = inject(Api);

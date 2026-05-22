@@ -1,5 +1,5 @@
 import { CommonModule, Location } from "@angular/common";
-import { Component, inject, input, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Api, faqControllerCreate, faqControllerFindById, faqControllerUpdate } from "@api-client";
@@ -16,6 +16,7 @@ import { DialogService } from "../../../components/confirm-dialog/confirm-dialog
     selector: 'app-faq-form',
     templateUrl: './faq-form.page.html',
     imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent, BreadcrumbComponent, FormViewComponent, FormFieldComponent, FormInputComponent, FormTextareaComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class FaqFormPage implements OnInit {
     private readonly api = inject(Api);
@@ -28,7 +29,7 @@ export default class FaqFormPage implements OnInit {
 
     get isEditMode(): boolean { return !!this.id(); }
 
-    breadcrumbs: Breadcrumb[] = [];
+    breadcrumbs = signal<Breadcrumb[]>([]);
 
     form = new FormGroup({
         question: new FormControl('', {
@@ -53,7 +54,7 @@ export default class FaqFormPage implements OnInit {
 
         try {
             if (this.isEditMode) {
-                if (!await this.dialog.confirm({ title: '수정 확인', message: '정말 수정하시겠습니까?', variant: 'warning' })) return;
+                if (!await this.dialog.confirm({ title: '수정 확인', message: '수정하시겠습니까?', variant: 'warning' })) return;
                 await this.api.invoke(faqControllerUpdate, {
                     id: this.id()!,
                     body,
@@ -72,10 +73,10 @@ export default class FaqFormPage implements OnInit {
     async ngOnInit(): Promise<void> {
         const id = this.id();
 
-        this.breadcrumbs = [
+        this.breadcrumbs.set([
             { label: 'FAQ 관리', link: '/faq' },
             { label: this.isEditMode ? '수정' : '작성' },
-        ];
+        ]);
 
         if (id) {
             const faq = await this.api.invoke(faqControllerFindById, { id });

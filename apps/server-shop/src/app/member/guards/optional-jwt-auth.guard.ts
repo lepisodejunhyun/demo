@@ -1,5 +1,6 @@
 import { Injectable, ExecutionContext } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import { Member } from "@prisma/client";
 
 /**
  * 로그인 여부에 관계없이 요청을 통과시키는 Optional JWT Guard.
@@ -8,11 +9,7 @@ import { AuthGuard } from "@nestjs/passport";
  */
 @Injectable()
 export class OptionalJwtAuthGuard extends AuthGuard('jwt') {
-    canActivate(context: ExecutionContext) {
-        return super.canActivate(context);
-    }
-
-    handleRequest(err: any, user: any) {
+    handleRequest(err: any, user: Member | false): Member | null {
         // JWT가 없거나 유효하지 않아도 에러를 던지지 않음
         return user || null;
     }

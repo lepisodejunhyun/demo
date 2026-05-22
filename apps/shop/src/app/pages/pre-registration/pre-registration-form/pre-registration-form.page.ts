@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -11,7 +11,7 @@ import {
   TermsDto,
 } from '@api-client-shop';
 import { AuthService } from '../../../shared/services/auth.service';
-import { formatPhoneNumber } from '../../../shared/utils/format-phone';
+import { formatPhoneNumber } from '@org/shared/utils';
 import { ToastrService } from 'ngx-toastr';
 import { PageHeaderComponent } from '../../../components/page-header/page-header.component';
 import { ContentWrapperComponent } from '../../../components/content-wrapper/content-wrapper.component';
@@ -23,6 +23,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
   selector: 'app-pre-registration-form',
   imports: [CommonModule, FormsModule, PageHeaderComponent, ContentWrapperComponent, FormFieldComponent, FormActionsComponent, LoadingSpinnerComponent],
   templateUrl: './pre-registration-form.page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class PreRegistrationFormPage implements OnInit {
   private readonly api = inject(Api);

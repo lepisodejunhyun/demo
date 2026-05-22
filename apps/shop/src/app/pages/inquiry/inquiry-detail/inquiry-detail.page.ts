@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Api, inquiryControllerFindById, InquiryDto } from '@api-client-shop';
 import { ToastrService } from 'ngx-toastr';
@@ -13,6 +13,7 @@ import { INQUIRY_STATUS_LABELS, getInquiryStatusStyle } from '../../../shared/co
     selector: 'app-inquiry-detail',
     imports: [CommonModule, RouterLink, ContentWrapperComponent, BackButtonComponent, ArticleViewComponent, LoadingSpinnerComponent],
     templateUrl: './inquiry-detail.page.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class InquiryDetailPage implements OnInit {
     private readonly api = inject(Api);

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Api, noticeControllerFindById, NoticeDto } from '@api-client-shop';
 import { ToastrService } from 'ngx-toastr';
@@ -13,6 +13,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
   standalone: true,
   imports: [CommonModule, ContentWrapperComponent, BackButtonComponent, ArticleViewComponent, LoadingSpinnerComponent],
   templateUrl: './notice-detail.page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class NoticeDetailPage implements OnInit {
   private readonly api = inject(Api);

@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Api, EventDto, PageInfoDto, preRegistrationControllerFindAvailableEvents } from '@api-client-shop';
+import { Api, EventDto, PageInfoDto, eventControllerFindAvailableEvents } from '@api-client-shop';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { CardGridComponent } from '../../components/card-grid/card-grid.component';
@@ -15,28 +16,30 @@ import { getDday } from '../../shared/utils/event-status.util';
   standalone: true,
   imports: [CommonModule, PageHeaderComponent, PaginationComponent, CardGridComponent, ImageCardComponent, ContentWrapperComponent],
   templateUrl: './pre-registration.page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class PreRegistrationPage implements OnInit {
+export default class PreRegistrationPage {
   private readonly api = inject(Api);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly toast = inject(ToastrService);
+  private readonly queryParams = toSignal(this.route.queryParams);
 
   events = signal<EventDto[]>([]);
   pageInfo = signal<PageInfoDto | null>(null);
 
   readonly getDday = getDday;
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      const page = Number(params['page']) || 1;
+  constructor() {
+    effect(() => {
+      const page = Number(this.queryParams()?.['page']) || 1;
       this.loadData(page);
     });
   }
 
   async loadData(page: number): Promise<void> {
     try {
-      const result = await this.api.invoke(preRegistrationControllerFindAvailableEvents, {
+      const result = await this.api.invoke(eventControllerFindAvailableEvents, {
         page,
         limit: 8,
       });

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Api, eventControllerFindById, EventDto } from '@api-client-shop';
 import { ToastrService } from 'ngx-toastr';
@@ -14,6 +14,7 @@ import { getEventStatus, isPreRegistrationOpen } from '../../../shared/utils/eve
   standalone: true,
   imports: [CommonModule, RouterLink, ContentWrapperComponent, BackButtonComponent, ArticleViewComponent, LoadingSpinnerComponent],
   templateUrl: './event-detail.page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class EventDetailPage implements OnInit {
   private readonly api = inject(Api);

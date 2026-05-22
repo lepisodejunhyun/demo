@@ -39,6 +39,34 @@ export class EventController {
         };
     }
 
+    @ApiOperation({
+        summary: '사전 등록 가능한 행사 목록',
+        description: '현재 사전등록 기간 내인 행사 목록을 조회합니다.',
+    })
+    @ApiResponse({
+        description: '사전 등록 가능 행사 목록 조회 성공',
+        schema: {
+            properties: {
+                items: {
+                    type: 'array',
+                    items: { $ref: '#/components/schemas/EventDto' },
+                },
+                pageInfo: {
+                    $ref: '#/components/schemas/PageInfoDto',
+                },
+            },
+        },
+    })
+    @Get('available-events')
+    async findAvailableEvents(@Query() query: PaginationQueryDto): Promise<OffsetPaginationDto<EventDto>> {
+        const { items, pageInfo } = await this.eventService.findAvailableEvents(query.page, query.limit);
+
+        return {
+            items: plainToInstance(EventDto, items),
+            pageInfo,
+        };
+    }
+
     @ApiParam({
         name: 'id',
         type: String,
